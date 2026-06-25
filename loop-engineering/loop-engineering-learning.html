@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Loop Engineering — 学习文件</title>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<style>
+  :root {
+    --bg: #faf9f7;
+    --card-bg: #fff;
+    --text: #1a1a1a;
+    --text-secondary: #555;
+    --accent: #d97706;
+    --accent-light: #fef3c7;
+    --border: #e5e0d8;
+    --code-bg: #f5f5f5;
+    --quote-border: #d97706;
+    --success: #059669;
+    --danger: #dc2626;
+    --warn: #d97706;
+    --gap-big: #dc2626;
+    --gap-mid: #d97706;
+    --gap-small: #059669;
+    --gap-tiny: #6b7280;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', 'SF Pro Display', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.75;
+    font-size: 17px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .container {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 60px 24px 80px;
+  }
+
+  /* Hero */
+  .hero {
+    padding: 48px 0 40px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 48px;
+  }
+  .hero h1 {
+    font-size: 42px;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1.2;
+    margin-bottom: 12px;
+  }
+  .hero .subtitle {
+    font-size: 20px;
+    color: var(--text-secondary);
+    font-weight: 400;
+  }
+  .hero .meta {
+    margin-top: 20px;
+    font-size: 14px;
+    color: var(--text-secondary);
+  }
+
+  /* Sections */
+  h2 {
+    font-size: 28px;
+    font-weight: 700;
+    margin: 48px 0 20px;
+    letter-spacing: -0.02em;
+    padding-top: 8px;
+    border-top: 1px solid var(--border);
+  }
+  h2:first-of-type { border-top: none; margin-top: 0; }
+  h3 {
+    font-size: 21px;
+    font-weight: 600;
+    margin: 32px 0 12px;
+    color: #1a1a1a;
+  }
+  h4 {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 24px 0 8px;
+    color: #333;
+  }
+
+  p { margin-bottom: 16px; }
+
+  /* Blockquote */
+  blockquote {
+    border-left: 3px solid var(--quote-border);
+    padding: 12px 20px;
+    margin: 20px 0;
+    background: var(--accent-light);
+    border-radius: 0 6px 6px 0;
+    font-style: italic;
+    color: #7c5e10;
+  }
+  blockquote p { margin-bottom: 8px; }
+  blockquote p:last-child { margin-bottom: 0; }
+
+  /* Inline code */
+  code {
+    background: var(--code-bg);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.9em;
+    font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+    color: #d04b2d;
+  }
+
+  /* Code blocks */
+  pre {
+    background: #2d2d2d;
+    color: #e0e0e0;
+    padding: 20px 24px;
+    border-radius: 8px;
+    overflow-x: auto;
+    font-size: 14px;
+    line-height: 1.6;
+    margin: 16px 0;
+  }
+  pre code {
+    background: none;
+    padding: 0;
+    color: inherit;
+    font-size: inherit;
+  }
+
+  /* Tables */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 15px;
+  }
+  th, td {
+    text-align: left;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+  }
+  th {
+    font-weight: 600;
+    color: var(--text-secondary);
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    background: #faf9f7;
+  }
+  tr:hover td { background: #fefcf7; }
+
+  /* Links */
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* Mermaid diagrams */
+  .mermaid {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 24px;
+    margin: 24px 0;
+    text-align: center;
+  }
+
+  /* Progress bars for gap analysis */
+  .gap-bar-wrap {
+    margin: 8px 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .gap-bar-label {
+    width: 140px;
+    font-size: 14px;
+    text-align: right;
+    color: var(--text-secondary);
+    flex-shrink: 0;
+  }
+  .gap-bar-track {
+    flex: 1;
+    height: 10px;
+    background: #e5e0d8;
+    border-radius: 5px;
+    overflow: hidden;
+  }
+  .gap-bar-fill {
+    height: 100%;
+    border-radius: 5px;
+    transition: width 0.3s;
+  }
+  .gap-bar-fill.big { background: var(--gap-big); }
+  .gap-bar-fill.mid { background: var(--gap-mid); }
+  .gap-bar-fill.small { background: var(--gap-small); }
+  .gap-bar-pct {
+    font-size: 13px;
+    color: var(--text-secondary);
+    width: 36px;
+    text-align: left;
+  }
+
+  /* Callout cards */
+  .callout {
+    border-left: 3px solid var(--accent);
+    background: var(--accent-light);
+    padding: 16px 20px;
+    margin: 20px 0;
+    border-radius: 0 6px 6px 0;
+  }
+  .callout.danger {
+    border-left-color: var(--danger);
+    background: #fef2f2;
+  }
+  .callout p { margin-bottom: 0; }
+
+  /* Star badge */
+  .star { color: var(--accent); }
+
+  /* Lists */
+  ul, ol {
+    padding-left: 24px;
+    margin-bottom: 16px;
+  }
+  li { margin-bottom: 6px; }
+
+  /* Horizontal rule */
+  hr {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 40px 0;
+  }
+
+  /* TOC */
+  .toc {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px 24px;
+    margin: 32px 0;
+  }
+  .toc h3 { margin-top: 0; font-size: 16px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .toc ol { margin-bottom: 0; }
+  .toc a { font-size: 15px; }
+
+  /* Decision tree inline */
+  .decision {
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 14px;
+    line-height: 1.8;
+    white-space: pre;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px 24px;
+    margin: 16px 0;
+    overflow-x: auto;
+  }
+
+  /* Summary card */
+  .summary-card {
+    background: linear-gradient(135deg, #fef3c7 0%, #fff7ed 100%);
+    border: 1px solid var(--accent);
+    border-radius: 8px;
+    padding: 20px 24px;
+    margin: 32px 0;
+  }
+  .summary-card p { margin-bottom: 0; }
+
+  /* Responsive */
+  @media (max-width: 600px) {
+    .container { padding: 32px 16px 48px; }
+    .hero h1 { font-size: 30px; }
+    h2 { font-size: 22px; }
+    .gap-bar-label { width: 100px; font-size: 12px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- HERO -->
+<div class="hero">
+  <h1>Loop Engineering</h1>
+  <p class="subtitle">别再让一个 agent 从头跑到尾了。把任务拆给多个独立 subagent，互相检查，保证质量。</p>
+  <p class="meta">基于 Anthropic Claude Code Dynamic Workflows（2026-06-02）蒸馏 &middot; Hermes 适配 &middot; 2026-06-25</p>
+</div>
+
+<!-- TOC -->
+<div class="toc">
+  <h3>目录</h3>
+  <ol>
+    <li><a href="#s1">这篇文章在讲什么</a></li>
+    <li><a href="#s2">为什么要搞这个 — 三大失败模式</a></li>
+    <li><a href="#s3">怎么搞 — 六大工作流模式</a></li>
+    <li><a href="#s4">你和 Anthropic 的差距</a></li>
+    <li><a href="#s5">蒸馏出的 Skills</a></li>
+    <li><a href="#s6">落地路线图</a></li>
+    <li><a href="#s7">附录</a></li>
+  </ol>
+</div>
+
+<!-- SECTION 1 -->
+<h2 id="s1">1. 这篇文章在讲什么</h2>
+
+<h3>1.1 一句话总结</h3>
+<blockquote>
+  <p><strong>别再让一个 agent 从头跑到尾了。</strong> 把任务拆给多个独立 subagent，各自有干净的 context window，用结构化模式（对抗验证 / 分拆合成 / 锦标赛 / 循环）保证质量和收敛。</p>
+</blockquote>
+
+<h3>1.2 核心主张</h3>
+<p>Anthropic 发现了<strong>一个硬问题</strong>：单体 agent 在长任务中必然退化。不管 prompt 写得多好，agent 跑着跑着就会：</p>
+<ul>
+  <li><strong>懒</strong> — 做一半就交差</li>
+  <li><strong>自欺</strong> — 自己审自己的产出判为无误</li>
+  <li><strong>忘记目标</strong> — context 太长，压缩吃掉了边界条件</li>
+</ul>
+<p>解决方案不是写更好的 prompt，而是<strong>换架构</strong>——从<em>"一个 agent 扛全部"</em>变成<em>"多个 agent 协同，每个只扛一小块，互相检查"</em>。</p>
+<p>这就是 <strong>Dynamic Workflows</strong>：Claude 在运行时自己写 JS 脚本来编排 subagent，而不是用预设的固定流程。</p>
+
+<h3>1.3 关键概念速查</h3>
+<table>
+  <tr><th>概念</th><th>一句话</th></tr>
+  <tr><td>Harness（挽具）</td><td>agent 的执行框架 — 决定它怎么跑循环、怎么 spawn 子任务</td></tr>
+  <tr><td>Dynamic workflow</td><td>agent 在运行时自己写的 harness，不是预设固定流程</td></tr>
+  <tr><td>Subagent</td><td>独立 context window 的子 agent，执行单一任务</td></tr>
+  <tr><td>Adversarial verification</td><td>用一个独立 agent 审查另一个 agent 的产出</td></tr>
+  <tr><td>Context isolation</td><td>每个 subagent 有自己的 context，互不污染</td></tr>
+</table>
+
+<!-- SECTION 2 -->
+<h2 id="s2">2. 为什么要搞这个 — 三大失败模式</h2>
+
+<p>这三个问题是单体 agent 的<strong>结构性缺陷</strong>，不是"prompt 没写好"能解决的。</p>
+
+<h3>2.1 Agentic Laziness（代理懒散）</h3>
+<blockquote>
+  <p><em>"addressing 35 of the 50 items in a security review and declares the job done."</em></p>
+</blockquote>
+<p>Agent 在长任务中会提前交差 — 做了一部分就说做完了。context 太长，失去对"还有哪些没做"的追踪。</p>
+<p><strong>根因</strong>：单体 context window 无法可靠追踪大规模任务完成度。</p>
+<p><strong>解决</strong>：把 50 项拆成 50 个独立 subagent，每个只做一项 + 验证一项。没有"做一半交差"的空间。</p>
+
+<h3>2.2 Self-preferential Bias（自我偏好偏差）</h3>
+<blockquote>
+  <p><em>"Claude's tendency to prefer its own results or findings, especially when asked to verify or judge them against a rubric."</em></p>
+</blockquote>
+<p><strong>自己检查自己的产出</strong>——判自己的结果是无误的。"自审"是结构性的盲区。</p>
+<p><strong>根因</strong>：产出 agent 和验证 agent 是同一个，没有独立视角。</p>
+<p><strong>解决</strong>：spawn 独立 verifier subagent，不和产出 agent 共享 prompt/身份。verifier 只知道"按 rubric 审查这个结果"，不知道是谁做的。</p>
+
+<h3>2.3 Goal Drift（目标漂移）</h3>
+<blockquote>
+  <p><em>"The gradual loss of fidelity to the original objective across many turns, especially after compaction."</em></p>
+</blockquote>
+<p>多轮对话后，原始目标被压缩丢失。每次 summarization 是有损的，"别做 X""边界条件"这些细节优先被吞。</p>
+<p><strong>根因</strong>：长上下文压缩是 lossy compression。</p>
+<p><strong>解决</strong>：break 成多个短上下文 subagent，每个在"新鲜的" context 里从明确 prompt 开始。原始目标不经过压缩。</p>
+
+<h3>2.4 三者关系</h3>
+
+<div class="mermaid">
+flowchart TD
+    A["单体 agent 长任务"] --> B["Laziness<br/>做不完"]
+    A --> C["Bias<br/>自欺"]
+    A --> D["Drift<br/>忘记目标"]
+    B --> E["三大失败叠加 = 质量崩塌"]
+    C --> E
+    D --> E
+    E --> F["换架构<br/>多 agent + 独立 context"]
+</div>
+
+<div class="summary-card">
+  <p><strong>一句话：</strong>一个 agent 跑久了必然懒 + 自欺 + 忘目标。每个 subagent 只跑一小段，这些问题自然消失。</p>
+</div>
+
+<!-- SECTION 3 -->
+<h2 id="s3">3. 怎么搞 — 六大工作流模式</h2>
+
+<h3>3.1 模式全景</h3>
+
+<div class="mermaid">
+flowchart TD
+    START["任务入口"] --> C{"Classify-and-act<br/>分类路由"}
+    START --> F["Fan-out<br/>分拆并行"]
+    START --> T["Tournament<br/>竞争选优"]
+    C --> ROUTE["路由到对应 agent"]
+    F --> N["N agent 并行执行"]
+    T --> N2["N agent 竞争同任务"]
+    ROUTE --> AV["Adversarial Verification<br/>独立 agent 审查产出"]
+    N --> AV
+    N2 --> AV
+    AV -->|"✅ pass"| DELIVER["交付"]
+    AV -->|"❌ fail"| FIX["修正回环"]
+    FIX --> LOOP["Loop Until Done<br/>循环直到条件满足"]
+    LOOP --> AV
+</div>
+
+<table>
+  <tr><th>#</th><th>模式</th><th>一句话</th><th>Hermes 有没有</th></tr>
+  <tr><td>1</td><td>Classify-and-act</td><td>先分类，再决定谁做</td><td>⚠️ 手动</td></tr>
+  <tr><td>2</td><td>Fan-out-and-synthesize</td><td>拆 N 份，并行跑，最后合</td><td>✅ 有</td></tr>
+  <tr><td>3</td><td><span class="star">⭐</span> <strong>Adversarial Verification</strong></td><td>另一个 agent 来审你的活</td><td>❌ <strong>没有</strong></td></tr>
+  <tr><td>4</td><td>Generate-and-filter</td><td>批量生成 → 过滤去重</td><td>⚠️ 手动组合</td></tr>
+  <tr><td>5</td><td>Tournament</td><td>N 个 agent 竞争，pairwise 评判</td><td>⚠️ 手动组合</td></tr>
+  <tr><td>6</td><td>Loop until done</td><td>循环跑，直到停止条件满足</td><td>⚠️ 循环有，停止条件没标准化</td></tr>
+</table>
+
+<h3>3.2 <span class="star">⭐</span> Adversarial Verification（对抗性验证）— P0 缺口</h3>
+
+<p>整个文章里<strong>最有价值的单个模式</strong>，也是你当前最大的缺口。</p>
+
+<div class="mermaid">
+flowchart TD
+    PROD["<strong>产出版 agent</strong><br/>生成交付物<br/>📊 日报/报表/代码"] --> FILE["产出文件"]
+    FILE --> VERIFY["<strong>验证版 agent</strong><br/>独立 spawn，不同 prompt<br/>🔒 不知道产出 agent 的 prompt/身份"]
+    VERIFY --> CHECK{"审查结果"}
+    CHECK -->|"✅ pass"| DELIVER["<strong>交付</strong>"]
+    CHECK -->|"❌ fail"| FIX["<strong>修正</strong><br/>最多 3 轮"]
+    FIX --> PROD
+    CHECK -->|"⚠️ inconclusive"| HUMAN["<strong>上报人</strong>"]
+</div>
+
+<h4>验证 rubric 模板</h4>
+<pre><code>1. 数据源完整性：{检查项}
+2. 计算准确性：{抽样 N 条验证}
+3. 边界值：{极值/空值/异常值}
+4. 逻辑一致性：{前后数据自洽}
+5. {任务特定检查项}</code></pre>
+
+<h3>3.3 Fan-out-and-Synthesize（分拆合成）— 已有</h3>
+
+<div class="mermaid">
+flowchart TD
+    MAIN["主 agent：拆任务"] --> SA["Sub A"]
+    MAIN --> SB["Sub B"]
+    MAIN --> SC["Sub C"]
+    SA --> MERGE["主 agent：合成<br/>去重 + 交叉验证 + 补遗漏"]
+    SB --> MERGE
+    SC --> MERGE
+</div>
+
+<p>Hermes 的 <code>delegate_task(tasks=[...])</code> 原生支持。你已经在用了。</p>
+
+<h3>3.4 Loop Until Done（循环到完成）— P1</h3>
+
+<div class="mermaid">
+flowchart TD
+    START(["开始"]) --> EXEC["执行"]
+    EXEC --> CHECK{"检查条件"}
+    CHECK -->|"✅ 不满足"| EXEC
+    CHECK -->|"✅ 满足"| DONE(["完成"])
+    CHECK -->|"⚠️ max_iterations"| ALERT["上报人"]
+</div>
+
+<p><strong>停止条件至少一个</strong>：无新发现 / 错误清零 / 质量达标。设 <code>max_iterations</code> 兜底（如 10）。</p>
+
+<h3>3.5 Tournament（锦标赛）</h3>
+<p>多个 agent 竞争同一任务，用不同方法。pairwise comparison agent 评判，逐轮淘汰直到胜者。适合有明确评判标准、需要最优解的场景（如 CLI 工具命名、方案优选）。</p>
+
+<h3>3.6 模式决策树</h3>
+
+<div class="mermaid">
+flowchart TD
+    Q{"你的任务类型？"}
+    Q -->|"不知道分给谁"| C["Classify-and-act"]
+    Q -->|"大量可并行小任务"| F["Fan-out-and-synthesize"]
+    F -->|"产出质量关键"| AV["+ Adversarial Verification"]
+    Q -->|"需最优解、有评判标准"| T["Tournament"]
+    Q -->|"工作量不确定"| L["Loop Until Done"]
+    Q -->|"简单一步"| X["❌ 别用 workflow<br/>浪费 token"]
+</div>
+
+<!-- SECTION 4 -->
+<h2 id="s4">4. 你和 Anthropic 的差距</h2>
+
+<h3>4.1 现有基础设施</h3>
+<p>你已经有了一套相当完整的多 agent 系统：</p>
+<table>
+  <tr><th>组件</th><th>作用</th><th>对标</th></tr>
+  <tr><td>4 个 Hermes profile</td><td>按领域分 agent</td><td>≈ Claude Code 多 project context</td></tr>
+  <tr><td>kanban 编排</td><td>卡片流转驱动执行</td><td>≈ workflow 编排层</td></tr>
+  <tr><td>delegate_task batch</td><td>并行 spawn subagent</td><td>≈ Fan-out-and-synthesize</td></tr>
+  <tr><td>skill 系统</td><td>可复用操作模板</td><td>≈ Claude Code skills</td></tr>
+  <tr><td>cron + 通知式串行</td><td>定时 + 跨 profile 联动</td><td>≈ Claude Code /loop</td></tr>
+</table>
+
+<h3>4.2 差距矩阵</h3>
+
+<div class="gap-bar-wrap">
+  <span class="gap-bar-label">多 agent 编排</span>
+  <div class="gap-bar-track"><div class="gap-bar-fill small" style="width:80%"></div></div>
+  <span class="gap-bar-pct">80%</span>
+</div>
+<div class="gap-bar-wrap">
+  <span class="gap-bar-label">Fan-out 并行</span>
+  <div class="gap-bar-track"><div class="gap-bar-fill small" style="width:90%"></div></div>
+  <span class="gap-bar-pct">90%</span>
+</div>
+<div class="gap-bar-wrap">
+  <span class="gap-bar-label">对抗性验证</span>
+  <div class="gap-bar-track"><div class="gap-bar-fill big" style="width:0%"></div></div>
+  <span class="gap-bar-pct">0% ⚠️</span>
+</div>
+<div class="gap-bar-wrap">
+  <span class="gap-bar-label">循环终止标准化</span>
+  <div class="gap-bar-track"><div class="gap-bar-fill mid" style="width:40%"></div></div>
+  <span class="gap-bar-pct">40%</span>
+</div>
+<div class="gap-bar-wrap">
+  <span class="gap-bar-label">模式标准化(skill)</span>
+  <div class="gap-bar-track"><div class="gap-bar-fill mid" style="width:20%"></div></div>
+  <span class="gap-bar-pct">20%</span>
+</div>
+<div class="gap-bar-wrap">
+  <span class="gap-bar-label">模型智能路由</span>
+  <div class="gap-bar-track"><div class="gap-bar-fill big" style="width:0%"></div></div>
+  <span class="gap-bar-pct">0%</span>
+</div>
+<div class="gap-bar-wrap">
+  <span class="gap-bar-label">Context 隔离</span>
+  <div class="gap-bar-track"><div class="gap-bar-fill small" style="width:80%"></div></div>
+  <span class="gap-bar-pct">80%</span>
+</div>
+<div class="gap-bar-wrap">
+  <span class="gap-bar-label">中断恢复</span>
+  <div class="gap-bar-track"><div class="gap-bar-fill small" style="width:90%"></div></div>
+  <span class="gap-bar-pct">90%</span>
+</div>
+
+<h3>4.3 核心缺口</h3>
+
+<div class="callout danger">
+  <p><strong>最大的 gap：没有"独立验证"机制。</strong></p>
+  <p>你现在 agent 做完日报、报表、代码改动 — 谁来审查？agent 自己。这就是 self-preferential bias 的直接体现。</p>
+  <p>Anthropic 的答案是：<strong>永远不要让产出 agent 验证自己。</strong> spawn 一个独立的 verifier，用不同 prompt，不看产出 agent 的 reasoning。</p>
+</div>
+
+<p>在 Hermes 里只需要：</p>
+<pre><code>delegate_task(goal="完成日报")
+→ delegate_task(goal="按 rubric 审查日报",
+    context="你是独立验证者，不共享产出 agent 的 prompt")</code></pre>
+
+<!-- SECTION 5 -->
+<h2 id="s5">5. 蒸馏出的 Skills</h2>
+
+<h3>5.1 loop-engineering skill v0.0.0</h3>
+<p>已创建：<code>~/.hermes/profiles/prof_bot/skills/devops/loop-engineering/SKILL.md</code></p>
+<p><strong>触发条件</strong>：agent 执行复杂 / 长运行 / 可验证目标的任务时加载。</p>
+<p><strong>包含内容</strong>：</p>
+<ul>
+  <li>三大失败模式速查（知道在对抗什么）</li>
+  <li>六大模式速查表 + Hermes 映射</li>
+  <li><strong>P0：Adversarial Verification</strong>（步骤 + rubric 模板 + 实现示例）</li>
+  <li><strong>P1：Loop Until Done</strong>（stopping condition 设计 + max_iterations 兜底）</li>
+  <li><strong>P2：Fan-out-and-Synthesize</strong>（已有基础设施的使用要点）</li>
+  <li>适用边界 + 失败条件（何时不该用）</li>
+</ul>
+
+<h3>5.2 各模式 Hermes 落地方式</h3>
+<table>
+  <tr><th>模式</th><th>Hermes 实现</th><th>一条命令</th></tr>
+  <tr><td>Adversarial Verification</td><td>delegate_task(做) + delegate_task(审)</td><td>spawn 两个独立 subagent</td></tr>
+  <tr><td>Fan-out</td><td>delegate_task(tasks=[...]) batch</td><td>原生支持</td></tr>
+  <tr><td>Loop Until Done</td><td>kanban 循环卡片 + stopping_condition</td><td>卡片 type=loop + 每轮 eval</td></tr>
+  <tr><td>Tournament</td><td>delegate_task N agent + pairwise compare</td><td>手动组合</td></tr>
+  <tr><td>Classify-and-act</td><td>prof_bot 先分类，路由到对应 profile</td><td>手动分派</td></tr>
+</table>
+
+<h3>5.3 使用指南</h3>
+<p>下次关键任务（日报、报表、良率计算）时：</p>
+<ol>
+  <li>执行前判断：产出有质量风险吗？</li>
+  <li>如果有 → 加载 <code>loop-engineering</code> skill → 启用 Adversarial Verification</li>
+  <li>产出版做完 → spawn 验证版 → 按 rubric 审查 → pass 才交付</li>
+</ol>
+
+<!-- SECTION 6 -->
+<h2 id="s6">6. 落地路线图</h2>
+
+<h3>6.1 今天一个改动</h3>
+<div class="callout">
+  <p>在<strong>下一次日报生成任务</strong>中，加一行：<br/>
+  <em>"做完日报后，spawn 一个独立 verifier agent 按以下 rubric 审查：数据源完整性 / 计算准确性抽样 5 条 / 边界值 / 逻辑一致性"</em></p>
+  <p>这是 P0 对抗性验证的第一次实战。</p>
+</div>
+
+<h3>6.2 本周验证</h3>
+<ul>
+  <li>跑 3–5 次带对抗验证的日报 / 报表任务</li>
+  <li>记录 verifier 抓到的问题数量 vs 传统自审</li>
+  <li>评估 token 成本（验证版确实会多烧 token）</li>
+</ul>
+
+<h3>6.3 迭代方向</h3>
+<table>
+  <tr><th>优先级</th><th>动作</th><th>触发时机</th></tr>
+  <tr><td>P0</td><td>对抗性验证常态化</td><td>本周日报开始</td></tr>
+  <tr><td>P1</td><td>Loop Until Done stopping condition 标准化</td><td>遇到工作量不确定的迭代任务</td></tr>
+  <tr><td>P2</td><td>Tournament / Generate-filter 模板化</td><td>遇到竞赛 / 筛选类任务</td></tr>
+  <tr><td>P3</td><td>模型智能路由</td><td>当前手动分派够用，不急</td></tr>
+</table>
+
+<!-- SECTION 7 -->
+<h2 id="s7">7. 附录</h2>
+
+<h3>7.1 原文章链接</h3>
+<ul>
+  <li><a href="https://claude.com/blog/a-harness-for-every-task-dynamic-workflows-in-claude-code">A harness for every task — dynamic workflows in Claude Code</a>（Anthropic, 2026-06-02）</li>
+</ul>
+
+<h3>7.2 LLM Wiki 页面</h3>
+<ul>
+  <li><code>concepts/loop-engineering.md</code></li>
+  <li><code>concepts/agent-orchestration.md</code>（已更新，新增模式 3）</li>
+  <li><code>raw/articles/anthropic-dynamic-workflows-2026.md</code></li>
+</ul>
+
+<h3>7.3 Skill 路径</h3>
+<ul>
+  <li><code>~/.hermes/profiles/prof_bot/skills/devops/loop-engineering/SKILL.md</code></li>
+  <li><code>workspace/loop-engineering-distill-draft.md</code>（完整蒸馏文档）</li>
+  <li><code>workspace/loop-engineering-learning.md</code>（本学习文件 markdown 源）</li>
+</ul>
+
+<hr />
+
+<blockquote>
+  <p><em>"Creating a workflow helps combat these by orchestrating separate Claude subagents with their own context windows and focused, isolated goals."</em></p>
+  <p>— Anthropic, June 2026</p>
+</blockquote>
+
+</div>
+
+<script>
+  mermaid.initialize({ startOnLoad: true, theme: 'neutral', securityLevel: 'loose' });
+</script>
+</body>
+</html>
