@@ -265,6 +265,37 @@ Hermes 的 `delegate_task(tasks=[...])` 原生支持。你已经在用了。
 
 ---
 
+---
+
+## 3.8 上层架构：五步骤框架（Orange Book）
+
+> 来源：HuaShu Orange Book，基于 Anthropic 工程师公开言论。Loop engineering 是第四层（prompt → context → harness → **loop**）。
+
+| # | 步骤 | 英文 | 核心问题 | 对应六大模式 |
+|---|------|------|---------|------------|
+| 1 | 发现 | Discovery | 有什么需要做的？ | Classify-and-act |
+| 2 | 交接 | Handoff | 谁来做？ | Fan-out / Tournament |
+| 3 | 验证 | Verification | 做对了吗？ | Adversarial Verification |
+| 4 | 持久化 | Persistence | 结果存哪？ | — |
+| 5 | 调度 | Scheduling | 下次什么时候跑？ | Loop Until Done |
+
+**五步骤是上层流程骨架，六大模式是实现各步骤的具体方法。**
+
+## 3.9 四种隐性成本（Orange Book）
+
+Loop engineering **不是免费的**。设计 loop 前必须评估：
+
+| # | 成本 | 英文 | 表现 | 怎么防 |
+|---|------|------|------|--------|
+| 1 | 验证债 | Verification debt | 未处理的验证失败堆积 | 连续 fail≥3 强制人介入 |
+| 2 | 理解腐烂 | Comprehension rot | agent 长期跑后偏离原意图 | N 轮后 reset context |
+| 3 | 认知投降 | Cognitive surrender | 人过度信任自动输出 | Adversarial Verification 本身就是解 |
+| 4 | Token 爆炸 | Token blowout | 嵌套 loop 烧 token 指数增 | 简单任务不用 loop |
+
+> **核心金句**：*"Loops make generation nearly free and leave judgment as the scarce resource."*
+
+---
+
 ## 4. 你和 Anthropic 的差距
 
 ### 4.1 现有基础设施
@@ -312,19 +343,24 @@ delegate_task(goal="完成日报")
 
 ## 5. 蒸馏出的 Skills
 
-### 5.1 loop-engineering skill v0.0.0
+### 5.1 loop-engineering skill v0.2.1
 
 已创建，路径：`~/.hermes/profiles/prof_bot/skills/devops/loop-engineering/SKILL.md`
 
-**触发条件**：agent 执行复杂/长运行/可验证目标的任务时加载。
+**版本演进**：
 
-**包含内容**：
-- 三大失败模式速查（知道在对抗什么）
-- 六大模式速查表 + Hermes 映射
-- **P0：Adversarial Verification**（步骤 + rubric 模板 + Hermes 实现示例）
-- **P1：Loop Until Done**（stopping condition 设计 + max_iterations 兜底）
-- **P2：Fan-out-and-Synthesize**（已有基础设施的使用要点）
-- 适用边界 + 失败条件（何时不该用）
+| 版本 | 新增 |
+|:--:|------|
+| v0.0.0 | 创立，三大失败模式 + 六大模式速查 + Adversarial Verification |
+| v0.1.0 | Loop Until Done 可执行模板 + Tournament（含 pairwise 评判代码） |
+| v0.2.0 | 推广模式：通用嵌入法 + 日报/良率/邮件三套 rubric 模板 + 决策表 |
+| v0.2.1 | 五步骤框架 + 四种隐性成本（Orange Book） |
+
+**当前全貌**：
+- 三大失败模式 + 四种隐性成本（知道在对抗什么 + 花什么代价）
+- 五步骤框架 + 六大模式（道 + 术）
+- 推广模式：如何嵌入到日报/良率/邮件等 pipeline
+- 适用边界 + 失败条件 + 反模式（何时不该用）
 
 ### 5.2 各模式 Hermes 落地方式
 
@@ -363,21 +399,24 @@ delegate_task(goal="完成日报")
 
 ### 6.3 迭代方向
 
-| 优先级 | 动作 | 触发 |
-|--------|------|------|
-| P0 | 对抗性验证常态化 | 本周日报就开始 |
-| P1 | Loop Until Done stopping condition 标准化 | 遇到工作量不确定的迭代任务时启用 |
-| P2 | Tournament / Generate-filter 模板化 | 遇到竞赛/筛选类任务时写 |
-| P3 | 模型智能路由（classifier → 分派到不同 profile） | 当前手动分派够用，不急 |
+| 优先级 | 动作 | 状态 |
+|--------|------|:--:|
+| P0 | 对抗性验证常态化（daily-card-update v0.1.0 Step 4） | ✅ 已嵌入 |
+| P0 | 推广模式（通用嵌入法 + rubric 模板） | ✅ v0.2.0 |
+| P1 | Loop Until Done stopping condition 标准化 | ⏳ 模板已写，待实战 |
+| P2 | Tournament / Generate-filter 模板化 | ⏳ 模板已写，待实战 |
+| P3 | 模型智能路由 | 待做 |
 
----
-
-## 7. 附录
+### 7. 附录
 
 ### 7.1 原文章链接
 - [Anthropic: A harness for every task — dynamic workflows in Claude Code](https://claude.com/blog/a-harness-for-every-task-dynamic-workflows-in-claude-code)（2026-06-02）
+- **Orange Book**: Loop Engineering: The Anthropic Playbook（HuaShu 整理，基于 Addy Osmani / Peter Steinberger 公开言论）— 五步骤框架 + 四种隐性成本
 
-### 7.2 LLM Wiki 页面
+### 7.2 跨域验证
+- [ComPilot: Agentic Auto-Scheduling (arXiv 2511.00592)](https://arxiv.org/abs/2511.00592) — closed-loop 比 open-loop 好 23-40%；agent premature stopping；multi-run K=5 最优边际收益。编译器领域的 loop 实验为 agent orchestration loop 提供了独立量化验证。
+
+### 7.3 LLM Wiki 页面
 - `LLM Wiki/concepts/loop-engineering.md`
 - `LLM Wiki/concepts/agent-orchestration.md`（已更新，新增模式 3）
 - `LLM Wiki/raw/articles/anthropic-dynamic-workflows-2026.md`
