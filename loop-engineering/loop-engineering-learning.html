@@ -475,6 +475,39 @@ flowchart TD
     Q -->|"简单一步"| X["❌ 别用 workflow<br/>浪费 token"]
 </div>
 
+<h3>3.8 上层架构：五步骤框架（Orange Book）</h3>
+
+<div class="callout">
+  <p><strong>Loop engineering 是第四层</strong> — prompt → context → harness → <strong>loop</strong>。来源：HuaShu Orange Book，基于 Anthropic 工程师公开言论。</p>
+</div>
+
+<table>
+  <tr><th>#</th><th>步骤</th><th>英文</th><th>核心问题</th><th>对应六大模式</th></tr>
+  <tr><td>1</td><td>发现</td><td>Discovery</td><td>有什么需要做的？</td><td>Classify-and-act</td></tr>
+  <tr><td>2</td><td>交接</td><td>Handoff</td><td>谁来做？</td><td>Fan-out / Tournament</td></tr>
+  <tr><td>3</td><td>验证</td><td>Verification</td><td>做对了吗？</td><td>Adversarial Verification</td></tr>
+  <tr><td>4</td><td>持久化</td><td>Persistence</td><td>结果存哪？</td><td>—</td></tr>
+  <tr><td>5</td><td>调度</td><td>Scheduling</td><td>下次什么时候跑？</td><td>Loop Until Done</td></tr>
+</table>
+
+<p><strong>五步骤是上层流程骨架，六大模式是实现各步骤的具体方法。</strong></p>
+
+<h3>3.9 四种隐性成本（Orange Book）</h3>
+
+<p>Loop engineering <strong>不是免费的</strong>。设计 loop 前必须评估：</p>
+
+<table>
+  <tr><th>#</th><th>成本</th><th>英文</th><th>表现</th><th>怎么防</th></tr>
+  <tr><td>1</td><td>验证债</td><td>Verification debt</td><td>未处理的验证失败堆积</td><td>连续 fail≥3 强制人介入</td></tr>
+  <tr><td>2</td><td>理解腐烂</td><td>Comprehension rot</td><td>agent 长期跑后偏离原意图</td><td>N 轮后 reset context</td></tr>
+  <tr><td>3</td><td>认知投降</td><td>Cognitive surrender</td><td>人过度信任自动输出</td><td>Adversarial Verification 本身就是解</td></tr>
+  <tr><td>4</td><td>Token 爆炸</td><td>Token blowout</td><td>嵌套 loop 烧 token 指数增</td><td>简单任务不用 loop</td></tr>
+</table>
+
+<blockquote>
+  <p><em>"Loops make generation nearly free and leave judgment as the scarce resource."</em></p>
+</blockquote>
+
 <!-- SECTION 4 -->
 <h2 id="s4">4. 你和 Anthropic 的差距</h2>
 
@@ -548,17 +581,14 @@ flowchart TD
 <!-- SECTION 5 -->
 <h2 id="s5">5. 蒸馏出的 Skills</h2>
 
-<h3>5.1 loop-engineering skill v0.0.0</h3>
+<h3>5.1 loop-engineering skill v0.2.1</h3>
 <p>已创建：<code>~/.hermes/profiles/prof_bot/skills/devops/loop-engineering/SKILL.md</code></p>
-<p><strong>触发条件</strong>：agent 执行复杂 / 长运行 / 可验证目标的任务时加载。</p>
-<p><strong>包含内容</strong>：</p>
+<p><strong>当前全貌 (v0.2.1)</strong>：</p>
 <ul>
-  <li>三大失败模式速查（知道在对抗什么）</li>
-  <li>六大模式速查表 + Hermes 映射</li>
-  <li><strong>P0：Adversarial Verification</strong>（步骤 + rubric 模板 + 实现示例）</li>
-  <li><strong>P1：Loop Until Done</strong>（stopping condition 设计 + max_iterations 兜底）</li>
-  <li><strong>P2：Fan-out-and-Synthesize</strong>（已有基础设施的使用要点）</li>
-  <li>适用边界 + 失败条件（何时不该用）</li>
+  <li>三大失败模式 + 四种隐性成本（知道在对抗什么 + 花什么代价）</li>
+  <li>五步骤框架 + 六大模式（道 + 术）</li>
+  <li>推广模式：如何嵌入到日报/良率/邮件等 pipeline（含三套 rubric 模板）</li>
+  <li>适用边界 + 失败条件 + 反模式</li>
 </ul>
 
 <h3>5.2 各模式 Hermes 落地方式</h3>
@@ -599,10 +629,11 @@ flowchart TD
 <h3>6.3 迭代方向</h3>
 <table>
   <tr><th>优先级</th><th>动作</th><th>触发时机</th></tr>
-  <tr><td>P0</td><td>对抗性验证常态化</td><td>本周日报开始</td></tr>
-  <tr><td>P1</td><td>Loop Until Done stopping condition 标准化</td><td>遇到工作量不确定的迭代任务</td></tr>
-  <tr><td>P2</td><td>Tournament / Generate-filter 模板化</td><td>遇到竞赛 / 筛选类任务</td></tr>
-  <tr><td>P3</td><td>模型智能路由</td><td>当前手动分派够用，不急</td></tr>
+  <tr><th>P0</th><td>对抗性验证常态化（daily-card-update v0.1.0 Step 4）</td><td>✅ 已嵌入</td></tr>
+  <tr><th>P0</th><td>推广模式（通用嵌入法 + rubric 模板）</td><td>✅ v0.2.0</td></tr>
+  <tr><th>P1</th><td>Loop Until Done stopping condition 标准化</td><td>⏳ 模板已写，待实战</td></tr>
+  <tr><th>P2</th><td>Tournament / Generate-filter 模板化</td><td>⏳ 模板已写，待实战</td></tr>
+  <tr><th>P3</th><td>模型智能路由</td><td>待做</td></tr>
 </table>
 
 <!-- SECTION 7 -->
