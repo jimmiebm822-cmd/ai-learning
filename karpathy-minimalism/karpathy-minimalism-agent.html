@@ -5,112 +5,105 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Karpathy 极简主义 — Agent Architecture 哲学</title>
 <style>
-  :root {
-    --bg: #faf9f7; --text: #1a1a1a; --text-secondary: #555;
-    --accent: #d97706; --accent-light: #fef3c7; --border: #e5e0d8;
-    --code-bg: #f5f5f5; --quote-border: #d97706;
-    --sidebar-w: 220px;
-  }
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body {
-    font-family: 'Inter', 'SF Pro Display', system-ui, -apple-system, sans-serif;
-    background: var(--bg); color: var(--text); line-height: 1.75; font-size: 17px;
-    -webkit-font-smoothing: antialiased;
-    display: flex; min-height: 100vh;
-  }
+:root {
+  --bg: #faf9f7; --text: #1a1a1a; --text-secondary: #555;
+  --accent: #d97706; --accent-light: #fef3c7; --border: #e5e0d8;
+  --sidebar-w: 220px;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: 'Inter', 'SF Pro Display', system-ui, -apple-system, sans-serif;
+  background: var(--bg); color: var(--text); line-height: 1.75; font-size: 17px;
+  -webkit-font-smoothing: antialiased;
+}
 
-  /* Sidebar */
-  .sidebar {
-    width: var(--sidebar-w); flex-shrink: 0;
-    position: sticky; top: 0; height: 100vh;
-    overflow-y: auto; overflow-x: hidden;
-    padding: 48px 20px 40px;
-    background: #fff; border-right: 1px solid var(--border);
-    font-size: 14px; line-height: 1.6;
-  }
-  .sidebar-title {
-    font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em;
-    color: var(--text-secondary); margin-bottom: 16px; font-weight: 600;
-  }
-  .sidebar a {
-    display: block; color: var(--text-secondary); text-decoration: none;
-    padding: 3px 0; border-radius: 4px; transition: color 0.15s;
-  }
-  .sidebar a:hover, .sidebar a.active { color: var(--accent); }
-  .sidebar a.sub { padding-left: 14px; font-size: 13px; }
-  .sidebar hr { border: none; border-top: 1px solid var(--border); margin: 14px 0; }
-  .sidebar-toggle {
-    display: none; position: fixed; top: 12px; left: 12px; z-index: 100;
-    background: #fff; border: 1px solid var(--border); border-radius: 6px;
-    padding: 6px 10px; font-size: 14px; cursor: pointer;
-  }
+/* ── Sidebar (html-generator v3.0 three-zone) ── */
+.page-container { display:flex; min-height:100vh; }
+#toc-sidebar {
+  position:sticky; top:0; width:var(--sidebar-w); flex-shrink:0;
+  background:#fff; height:100vh; display:flex; flex-direction:column;
+  border-right:1px solid var(--border); padding:0 16px; z-index:100;
+}
+.sidebar-logo {
+  display:flex; align-items:center; gap:10px; padding:18px 4px 14px;
+  border-bottom:1px solid var(--border); flex-shrink:0;
+}
+.sidebar-logo .logo-icon { font-size:20px; }
+.sidebar-logo .logo-word { font-size:14px; font-weight:700; color:var(--accent); }
+#toc-sidebar nav {
+  flex:1; overflow-y:auto; padding:10px 0;
+  scrollbar-width:thin;
+}
+#toc-sidebar nav a {
+  display:block; font-size:13px; line-height:1.5; color:var(--text-secondary);
+  text-decoration:none; padding:4px 8px; border-radius:4px; margin-bottom:1px;
+  transition:all .15s; border-left:3px solid transparent;
+}
+#toc-sidebar nav a:hover { background:var(--accent-light); color:var(--accent); }
+#toc-sidebar nav a.active { background:var(--accent-light); color:var(--accent); font-weight:600; border-left-color:var(--accent); }
+#toc-sidebar nav a.toc-h3 { padding-left:18px; font-size:12px; }
+.sidebar-footer {
+  padding:12px 0; font-size:12px; color:#999;
+  border-top:1px solid var(--border); text-align:center; flex-shrink:0;
+}
+.sidebar-toggle {
+  display:none; position:fixed; top:12px; left:12px; z-index:101;
+  background:#fff; border:1px solid var(--border); border-radius:6px;
+  padding:6px 12px; font-size:14px; cursor:pointer;
+}
 
-  /* Main */
-  .main {
-    flex: 1; max-width: 720px;
-    padding: 60px 48px 80px 56px;
-  }
-  .hero { padding-bottom: 40px; border-bottom: 1px solid var(--border); margin-bottom: 48px; }
-  .hero h1 { font-size: 42px; font-weight: 700; letter-spacing: -0.03em; line-height: 1.2; margin-bottom: 12px; }
-  .hero .subtitle { font-size: 20px; color: var(--text-secondary); }
-  .hero .meta { margin-top: 20px; font-size: 14px; color: var(--text-secondary); }
-  h2 { font-size: 28px; font-weight: 700; margin: 48px 0 20px; padding-top: 8px; border-top: 1px solid var(--border); }
-  h2:first-of-type { border-top: none; margin-top: 0; }
-  h3 { font-size: 21px; font-weight: 600; margin: 32px 0 12px; }
-  h4 { font-size: 18px; font-weight: 600; margin: 24px 0 8px; color: #333; }
-  p { margin-bottom: 16px; }
-  blockquote {
-    border-left: 3px solid var(--quote-border); padding: 12px 20px; margin: 20px 0;
-    background: var(--accent-light); border-radius: 0 6px 6px 0; font-style: italic; color: #7c5e10;
-  }
-  code { background: var(--code-bg); padding: 2px 6px; border-radius: 4px; font-size: 0.9em; font-family: 'SF Mono', monospace; color: #d04b2d; }
-  pre { background: #2d2d2d; color: #e0e0e0; padding: 20px 24px; border-radius: 8px; overflow-x: auto; font-size: 14px; line-height: 1.6; margin: 16px 0; }
-  pre code { background: none; padding: 0; color: inherit; }
-  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 15px; }
-  th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--border); }
-  th { font-weight: 600; color: var(--text-secondary); font-size: 13px; text-transform: uppercase; letter-spacing: 0.04em; background: #faf9f7; }
-  a { color: var(--accent); text-decoration: none; }
-  .summary-card {
-    background: linear-gradient(135deg, #fef3c7 0%, #fff7ed 100%);
-    border: 1px solid var(--accent); border-radius: 8px; padding: 20px 24px; margin: 32px 0;
-  }
-  .cross-card {
-    border-left: 3px solid #059669; background: #ecfdf5; padding: 16px 20px; margin: 20px 0;
-    border-radius: 0 6px 6px 0;
-  }
+/* ── Main Content (Claude style) ── */
+#main-content { flex:1; max-width:720px; padding:60px 48px 80px 56px; }
+.hero { padding-bottom:40px; border-bottom:1px solid var(--border); margin-bottom:48px; }
+.hero h1 { font-size:42px; font-weight:700; letter-spacing:-0.03em; line-height:1.2; margin-bottom:12px; }
+.hero .subtitle { font-size:20px; color:var(--text-secondary); }
+.hero .meta { margin-top:20px; font-size:14px; color:var(--text-secondary); }
+h2 { font-size:28px; font-weight:700; margin:48px 0 20px; padding-top:8px; border-top:1px solid var(--border); scroll-margin-top:20px; }
+h2:first-of-type { border-top:none; margin-top:0; }
+h3 { font-size:21px; font-weight:600; margin:32px 0 12px; scroll-margin-top:20px; }
+h4 { font-size:18px; font-weight:600; margin:24px 0 8px; color:#333; }
+p { margin-bottom:16px; }
+blockquote {
+  border-left:3px solid var(--accent); padding:12px 20px; margin:20px 0;
+  background:var(--accent-light); border-radius:0 6px 6px 0; font-style:italic; color:#7c5e10;
+}
+code { background:#f5f5f5; padding:2px 6px; border-radius:4px; font-size:0.9em; font-family:'SF Mono',monospace; color:#d04b2d; }
+pre { background:#2d2d2d; color:#e0e0e0; padding:20px 24px; border-radius:8px; overflow-x:auto; font-size:14px; line-height:1.6; margin:16px 0; }
+pre code { background:none; padding:0; color:inherit; }
+table { width:100%; border-collapse:collapse; margin:20px 0; font-size:15px; }
+th,td { text-align:left; padding:10px 14px; border-bottom:1px solid var(--border); }
+th { font-weight:600; color:var(--text-secondary); font-size:13px; text-transform:uppercase; letter-spacing:0.04em; background:#faf9f7; }
+a { color:var(--accent); text-decoration:none; }
+.summary-card { background:linear-gradient(135deg,var(--accent-light) 0%,#fff7ed 100%); border:1px solid var(--accent); border-radius:8px; padding:20px 24px; margin:32px 0; }
+.cross-card { border-left:3px solid #059669; background:#ecfdf5; padding:16px 20px; margin:20px 0; border-radius:0 6px 6px 0; }
 
-  @media (max-width: 900px) {
-    body { display: block; }
-    .sidebar {
-      display: none; position: fixed; top: 0; left: 0; z-index: 99;
-      width: 260px; height: 100vh; box-shadow: 2px 0 12px rgba(0,0,0,.08);
-    }
-    .sidebar.open { display: block; }
-    .sidebar-toggle { display: block; }
-    .main { max-width: 100%; padding: 60px 24px 80px; }
-  }
+@media (max-width:900px) {
+  .page-container { display:block; }
+  #toc-sidebar { display:none; position:fixed; top:0; left:0; z-index:100; width:260px; height:100vh; box-shadow:2px 0 12px rgba(0,0,0,.08); }
+  #toc-sidebar.open { display:flex; }
+  .sidebar-toggle { display:block; }
+  #main-content { max-width:100%; padding:60px 24px 80px; }
+}
 </style>
 </head>
 <body>
 
-<button class="sidebar-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">☰ 目录</button>
+<button class="sidebar-toggle" onclick="document.getElementById('toc-sidebar').classList.toggle('open')">☰ 目录</button>
 
-<nav class="sidebar">
-  <div class="sidebar-title">目录</div>
-  <a href="#s1">1. microgpt：200行完整GPT</a>
-  <a href="#s2">2. 极简主义三个原则</a>
-  <a href="#s3">3. 从microgpt到agent</a>
-  <a href="#s4">4. Karpathy × Loop交叉点</a>
-  <a href="#s5">5. 对工作的启示</a>
-  <a href="#s6" class="sub">5.1 不过度设计</a>
-  <a href="#s7" class="sub">5.2 Feedback=训练数据</a>
-  <a href="#s8" class="sub">5.3 极简验证原则</a>
-  <a href="#s9">6. 附录</a>
-  <hr>
-  <a href="https://jimmiebm822-cmd.github.io/ai-learning/" style="color:var(--accent); font-weight:600;">← AI Learning Hub</a>
-</nav>
+<div class="page-container">
 
-<div class="main">
+<div id="toc-sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-icon">🤖</div>
+    <div class="logo-word">AI Learning</div>
+  </div>
+  <nav id="toc-nav"></nav>
+  <div class="sidebar-footer">
+    <a href="https://jimmiebm822-cmd.github.io/ai-learning/" style="color:var(--accent);">← Hub</a>
+  </div>
+</div>
+
+<div id="main-content">
 
 <div class="hero">
   <h1>Karpathy 极简主义 — Agent Architecture 哲学</h1>
@@ -142,21 +135,21 @@
 
 <h2 id="s2">2. 极简主义的三个原则</h2>
 
-<h3>原则 1：核心算法极简</h3>
+<h3 id="s2a">原则 1：核心算法极简</h3>
 <blockquote><p>去掉所有优化、并行、缓存、分布式——核心还能剩什么？</p></blockquote>
 <p>Agent 的核心 loop 应该能在 ~50 行里描述（plan → execute → observe → verify）。Adversarial Verification 的核心只需要 spawn 两个 agent。</p>
 
-<h3>原则 2：从数据中学</h3>
+<h3 id="s2b">原则 2：从数据中学</h3>
 <blockquote><p>microgpt 不需要手工规则来生成名字。它从 32,000 个名字里学。</p></blockquote>
 <p>Agent 从 <strong>verification feedback</strong> 中学。Closed-loop feedback = agent 的"训练数据"。ComPilot 论文也证实：feedback 闭环比 open-loop 好 23-40%。</p>
 
-<h3>原则 3：看原始输出</h3>
+<h3 id="s2c">原则 3：看原始输出</h3>
 <blockquote><p>Karpathy：直接看 loss curve、看生成的样本。不要只看汇总指标。</p></blockquote>
 <p><strong>不要只看 verification_report.json 的 pass/fail。</strong> 要看 verifier 的具体 issues。Cognitive surrender 的解药就是"看原始输出"。</p>
 
 <h2 id="s3">3. 从 microgpt 到 agent architecture</h2>
 
-<h3>Training Loop → Agent Iteration Loop</h3>
+<h3 id="s3a">Training Loop → Agent Iteration Loop</h3>
 <pre><code>microgpt training loop:           Agent iteration loop:
 ─────────────────────────         ─────────────────────
 for step in range(num_steps):     for iter in range(max_iterations):
@@ -167,19 +160,17 @@ for step in range(num_steps):     for iter in range(max_iterations):
     optimizer.step()                  if stopping_condition_met(): break
     if step % eval_interval == 0:
         print(loss.item())</code></pre>
-
 <p><strong>同构</strong>：forward = 执行，backward = 验证，update = 修正，evaluate = 停止条件。</p>
 
-<h3>Inference Loop → Agent Execution Loop</h3>
+<h3 id="s3b">Inference Loop → Agent Execution Loop</h3>
 <pre><code>microgpt inference:               Agent execution:
 ───────────────────               ───────────────
 context = [token]                  context = [user_prompt]
-while len(output) &lt; max_tokens:    while not done:
+while len(output) < max_tokens:    while not done:
     logits = model(context)            plan = think(context)
     probs = softmax(logits[-1])        action = decide(plan)
     next_token = sample(probs)         result = execute(action)
     context.append(next_token)         context.append(result)</code></pre>
-
 <p>两者都是 autoregressive loop——每一步基于累积的 context 决定下一步。</p>
 
 <h2 id="s4">4. Karpathy 哲学 × Loop Engineering 交叉点</h2>
@@ -199,16 +190,16 @@ while len(output) &lt; max_tokens:    while not done:
 
 <h2 id="s5">5. 对你工作的启示</h2>
 
-<h3 id="s6">5.1 不要过度设计</h3>
+<h3 id="s5a">5.1 不要过度设计</h3>
 <p>microgpt 200 行 = 完整 GPT。你的 loop-engineering 三层（core + adversarial + patterns）= ~260 行。<strong>刚好 Karpathy 尺度。</strong></p>
 
-<h3 id="s7">5.2 Feedback 就是 agent 的训练数据</h3>
+<h3 id="s5b">5.2 Feedback 就是 agent 的训练数据</h3>
 <p>每次 verifier 抓到问题 → 一条训练样本。积累 verification_report.json → agent 的"dataset"。未来 agent 可从 feedback 自我改进。</p>
 
-<h3 id="s8">5.3 极简验证原则</h3>
+<h3 id="s5c">5.3 极简验证原则</h3>
 <p><strong>看 verifier 写的具体 issues。</strong> 一条 issue 比一个 pass/fail 值 100 倍。</p>
 
-<h2 id="s9">6. 附录</h2>
+<h2 id="s6">6. 附录</h2>
 
 <h3>microgpt 源码</h3>
 <ul>
@@ -235,41 +226,83 @@ while len(output) &lt; max_tokens:    while not done:
 </blockquote>
 
 </div>
+</div>
 
 <script>
-(function() {
-  const links = document.querySelectorAll('.sidebar a[href^="#"]');
-  const sections = [...document.querySelectorAll('h2[id],h3[id]')];
-  if (!sections.length) return;
+(function(){
+  const main = document.getElementById('main-content');
+  const nav  = document.getElementById('toc-nav');
+  const headings = main.querySelectorAll('h2[id],h3[id]');
+  if(!headings.length) return;
 
-  const observer = new IntersectionObserver((entries) => {
-    // Find the first visible section
-    const visible = entries.filter(e => e.isIntersecting).sort((a,b) => a.target.offsetTop - b.target.offsetTop);
-    if (!visible.length) return;
-    const currentId = visible[0].target.id;
-    links.forEach(a => {
-      a.classList.toggle('active', a.getAttribute('href') === '#' + currentId);
+  let num = 0;
+  headings.forEach(h => {
+    if(h.tagName === 'H2') num++;
+    const a = document.createElement('a');
+    a.href = '#' + h.id;
+    a.className = h.tagName === 'H3' ? 'toc-h3' : '';
+    a.textContent = (h.tagName === 'H2' ? num + '. ' : '') + h.textContent.trim();
+    nav.appendChild(a);
+  });
+
+  const links = nav.querySelectorAll('a');
+  let clickLock = false, lockTimer = null, activeId = null;
+
+  function computeActive() {
+    let current = null;
+    headings.forEach(h => {
+      if(h.getBoundingClientRect().top <= 80) current = h.id;
     });
-  }, { rootMargin: '-10% 0px -75% 0px', threshold: 0 });
+    return current || headings[0].id;
+  }
 
-  sections.forEach(el => observer.observe(el));
+  function setActive(id) {
+    if(id === activeId) return;
+    activeId = id;
+    links.forEach(l => l.classList.toggle('active', l.getAttribute('href') === '#' + id));
+  }
 
-  // Smooth scroll on sidebar click
-  document.querySelector('.sidebar').addEventListener('click', (e) => {
-    const a = e.target.closest('a[href^="#"]');
-    if (!a) return;
+  function update() {
+    if(clickLock) return;
+    const id = computeActive();
+    if(id) setActive(id);
+  }
+
+  // Scroll-driven highlight
+  let raf = null;
+  window.addEventListener('scroll', () => {
+    if(raf) return;
+    raf = requestAnimationFrame(() => { raf = null; update(); });
+  }, {passive:true});
+
+  // IntersectionObserver fallback
+  new IntersectionObserver(() => update(), {rootMargin:'-20px 0px -80% 0px'})
+    .observe(main);
+
+  // Click: smooth scroll + lock
+  nav.addEventListener('click', e => {
+    const a = e.target.closest('a');
+    if(!a) return;
     e.preventDefault();
-    const target = document.getElementById(a.getAttribute('href').slice(1));
-    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    const id = a.getAttribute('href').slice(1);
+    const target = document.getElementById(id);
+    if(!target) return;
+    clickLock = true; clearTimeout(lockTimer);
+    setActive(id);
+    target.scrollIntoView({behavior:'smooth', block:'start'});
+    lockTimer = setTimeout(() => { clickLock = false; update(); }, 300);
   });
 
-  // Close mobile sidebar on link click
-  document.querySelector('.sidebar').addEventListener('click', (e) => {
-    if (e.target.closest('a')) {
-      document.querySelector('.sidebar').classList.remove('open');
-    }
-  });
+  // Prevent scroll-through at nav edges
+  nav.addEventListener('wheel', e => {
+    const atTop = nav.scrollTop <= 0;
+    const atBottom = nav.scrollTop + nav.clientHeight >= nav.scrollHeight - 1;
+    if((e.deltaY > 0 && atBottom) || (e.deltaY < 0 && atTop)) e.preventDefault();
+  }, {passive:false});
+
+  update();
 })();
 </script>
+
 </body>
 </html>
