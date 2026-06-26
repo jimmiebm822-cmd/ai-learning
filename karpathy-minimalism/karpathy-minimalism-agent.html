@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Karpathy 极简主义 — Agent Architecture 哲学</title>
+<style>
+  :root {
+    --bg: #faf9f7; --card-bg: #fff; --text: #1a1a1a; --text-secondary: #555;
+    --accent: #d97706; --accent-light: #fef3c7; --border: #e5e0d8;
+    --code-bg: #f5f5f5; --quote-border: #d97706;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Inter', 'SF Pro Display', system-ui, -apple-system, sans-serif;
+    background: var(--bg); color: var(--text); line-height: 1.75; font-size: 17px;
+    -webkit-font-smoothing: antialiased;
+  }
+  .container { max-width: 720px; margin: 0 auto; padding: 60px 24px 80px; }
+  .hero { padding: 48px 0 40px; border-bottom: 1px solid var(--border); margin-bottom: 48px; }
+  .hero h1 { font-size: 42px; font-weight: 700; letter-spacing: -0.03em; line-height: 1.2; margin-bottom: 12px; }
+  .hero .subtitle { font-size: 20px; color: var(--text-secondary); }
+  .hero .meta { margin-top: 20px; font-size: 14px; color: var(--text-secondary); }
+  h2 { font-size: 28px; font-weight: 700; margin: 48px 0 20px; padding-top: 8px; border-top: 1px solid var(--border); }
+  h2:first-of-type { border-top: none; margin-top: 0; }
+  h3 { font-size: 21px; font-weight: 600; margin: 32px 0 12px; }
+  h4 { font-size: 18px; font-weight: 600; margin: 24px 0 8px; color: #333; }
+  p { margin-bottom: 16px; }
+  blockquote {
+    border-left: 3px solid var(--quote-border); padding: 12px 20px; margin: 20px 0;
+    background: var(--accent-light); border-radius: 0 6px 6px 0; font-style: italic; color: #7c5e10;
+  }
+  code { background: var(--code-bg); padding: 2px 6px; border-radius: 4px; font-size: 0.9em; font-family: 'SF Mono', monospace; color: #d04b2d; }
+  pre { background: #2d2d2d; color: #e0e0e0; padding: 20px 24px; border-radius: 8px; overflow-x: auto; font-size: 14px; line-height: 1.6; margin: 16px 0; }
+  pre code { background: none; padding: 0; color: inherit; }
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 15px; }
+  th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--border); }
+  th { font-weight: 600; color: var(--text-secondary); font-size: 13px; text-transform: uppercase; letter-spacing: 0.04em; background: #faf9f7; }
+  a { color: var(--accent); text-decoration: none; }
+  .summary-card {
+    background: linear-gradient(135deg, #fef3c7 0%, #fff7ed 100%);
+    border: 1px solid var(--accent); border-radius: 8px; padding: 20px 24px; margin: 32px 0;
+  }
+  .toc { background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 20px 24px; margin: 32px 0; }
+  .toc h3 { margin-top: 0; font-size: 16px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .toc ol { margin-bottom: 0; }
+  .cross-card {
+    border-left: 3px solid #059669; background: #ecfdf5; padding: 16px 20px; margin: 20px 0;
+    border-radius: 0 6px 6px 0;
+  }
+  @media (max-width: 600px) {
+    .container { padding: 32px 16px 48px; }
+    .hero h1 { font-size: 30px; }
+    h2 { font-size: 22px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="hero">
+  <h1>Karpathy 极简主义 — Agent Architecture 哲学</h1>
+  <p class="subtitle">200 行纯 Python = 一个完整 GPT。核心极简，其他都是效率。</p>
+  <p class="meta">基于 microgpt（2026-02-12）+ LLM Wiki pattern + Karpathy 公开言论蒸馏 &middot; 2026-06-26</p>
+</div>
+
+<div class="toc">
+  <h3>提纲</h3>
+  <ol>
+    <li><a href="#s1">microgpt：200 行的完整 GPT</a></li>
+    <li><a href="#s2">极简主义的三个原则</a></li>
+    <li><a href="#s3">从 microgpt 到 agent architecture</a></li>
+    <li><a href="#s4">Karpathy 哲学 × Loop Engineering 交叉点</a></li>
+    <li><a href="#s5">对你工作的启示</a></li>
+    <li><a href="#s6">附录</a></li>
+  </ol>
+</div>
+
+<h2 id="s1">1. microgpt：200 行的完整 GPT</h2>
+
+<blockquote>
+  <p><em>"This script is the culmination of multiple projects (micrograd, makemore, nanogpt) and a decade-long obsession to simplify LLMs to their bare essentials, and I think it is beautiful."</em></p>
+</blockquote>
+
+<p>Karpathy 用 <strong>200 行纯 Python、零依赖</strong> 实现了一个完整的 GPT：数据集（names.txt，32,000 个名字）、Tokenizer（character-level）、Autograd 引擎、GPT-2-like 神经网络架构、Adam 优化器、<strong>Training loop</strong>、<strong>Inference loop</strong>。</p>
+
+<div class="summary-card">
+  <p><strong>核心金句</strong>："This file contains the full algorithmic content of what is needed. Everything else is just efficiency."</p>
+</div>
+
+<h3>200 行里有什么</h3>
+
+<table>
+  <tr><th>组件</th><th style="text-align:center">行数</th><th>对应 agent 概念</th></tr>
+  <tr><td>Dataset + Tokenizer</td><td style="text-align:center">~30</td><td>Agent 的输入源 + 解析</td></tr>
+  <tr><td>Neural Net Architecture</td><td style="text-align:center">~50</td><td>Agent 的推理引擎</td></tr>
+  <tr><td>Autograd Engine</td><td style="text-align:center">~40</td><td>Agent 的反馈信号</td></tr>
+  <tr><td>Training Loop</td><td style="text-align:center">~30</td><td>Agent 的<strong>闭环迭代</strong></td></tr>
+  <tr><td>Inference Loop</td><td style="text-align:center">~20</td><td>Agent 的<strong>执行产出</strong></td></tr>
+  <tr><td>其余（Adam/Opt）</td><td style="text-align:center">~30</td><td>Agent 的优化策略</td></tr>
+</table>
+
+<p><strong>总共 200 行。一个完整的 learning system。</strong></p>
+
+<h2 id="s2">2. 极简主义的三个原则</h2>
+
+<h3>原则 1：核心算法极简</h3>
+<blockquote><p>去掉所有优化、并行、缓存、分布式——核心还能剩什么？</p></blockquote>
+<p>microgpt 证明了：一个完整的学习系统核心只需要 200 行。同样原则适用于 agent design：<strong>Agent 的核心 loop 应该能在 ~50 行里描述</strong>（plan → execute → observe → verify）。Adversarial Verification 的核心只需要 spawn 两个 agent。</p>
+
+<h3>原则 2：从数据中学</h3>
+<blockquote><p>microgpt 不需要手工规则来生成名字。它从 32,000 个名字里学。</p></blockquote>
+<p>Agent 同理：不需要手工写的"验证规则"——它从 <strong>verification feedback</strong> 中学。Closed-loop 的 feedback 就是 agent 的"训练数据"。和 ComPilot 论文的发现一致：feedback 闭环比 open-loop 好 23-40%。</p>
+
+<h3>原则 3：看原始输出</h3>
+<blockquote><p>Karpathy 反复强调：直接看 loss curve、看生成的样本、看 attention pattern。不要只看汇总指标。</p></blockquote>
+<p>Agent 同理：<strong>不要只看 verification_report.json 的 pass/fail</strong>。要看 verifier 的具体 issues、看 agent 的 reasoning trace。Cognitive surrender 的解药就是"看原始输出"。</p>
+
+<h2 id="s3">3. 从 microgpt 到 agent architecture</h2>
+
+<h3>Training Loop → Agent Iteration Loop</h3>
+
+<pre><code>microgpt training loop:           Agent iteration loop:
+─────────────────────────         ─────────────────────
+for step in range(num_steps):     for iter in range(max_iterations):
+    # forward pass                    # 执行任务
+    logits = model(x)                 result = delegate_task(...)
+    loss = cross_entropy(logits, y)   # 验证产出
+    # backward pass                   issues = verify(result, rubric)
+    model.zero_grad()                 # 收集反馈
+    loss.backward()                   feedback = extract_lessons(issues)
+    # update                          # 更新策略
+    optimizer.step()                  strategy.update(feedback)
+    # evaluate                        # 检查条件
+    if step % eval_interval == 0:     if stopping_condition_met():
+        print(f"step {step},              break
+              loss {loss.item()}")</code></pre>
+
+<p><strong>同构</strong>：forward pass = agent 执行，backward pass = 对抗验证，update = 修正策略，evaluate = 检查停止条件。</p>
+
+<h3>Inference Loop → Agent Execution Loop</h3>
+
+<pre><code>microgpt inference:               Agent execution:
+───────────────────               ───────────────
+context = [token]                  context = [user_prompt]
+while len(output) &lt; max_tokens:    while not done:
+    logits = model(context)            plan = think(context)
+    probs = softmax(logits[-1])        action = decide(plan)
+    next_token = sample(probs)         result = execute(action)
+    context.append(next_token)         context.append(result)</code></pre>
+
+<p><strong>同构</strong>：两者都是 autoregressive loop——每一步基于累积的 context 决定下一步。</p>
+
+<h2 id="s4">4. Karpathy 哲学 × Loop Engineering 交叉点</h2>
+
+<table>
+  <tr><th>维度</th><th>Karpathy 哲学</th><th>Loop Engineering</th><th>交叉</th></tr>
+  <tr><td>复杂度</td><td>核心 200 行，其他是效率</td><td>core ~120 行，模板放 references</td><td>⚡ 同构</td></tr>
+  <tr><td>学习机制</td><td>Data → Model → Loss → Backprop</td><td>执行 → 验证 → 反馈 → 修正</td><td>⚡ 同构</td></tr>
+  <tr><td>极简验证</td><td>"看原始输出，不看汇总"</td><td>"看 verifier 的具体 issues"</td><td>⚡ 同构</td></tr>
+  <tr><td>数据集</td><td>数据越多模型越好</td><td>反馈越多 agent 越好</td><td>⚡ 同构</td></tr>
+  <tr><td>规模</td><td>microgpt → GPT-4</td><td>单 agent → 多 pipeline</td><td>同样可 scale</td></tr>
+</table>
+
+<div class="cross-card">
+  <p><strong>核心共鸣</strong>：Loop engineering 的核心算法 = Plan → Execute → Verify → Feedback → Repeat。5 行。其他都是效率。</p>
+</div>
+
+<h2 id="s5">5. 对你工作的启示</h2>
+
+<h3>5.1 不要过度设计</h3>
+<p>microgpt 证明了你可以用 200 行纯 Python 做一个完整 GPT。你的 agent loop 不应该需要 5 个 skill 文件才跑起来。<strong>回头看 loop-engineering 的三层拆分（core + adversarial + patterns）——三个文件、合计 ~260 行。刚好是 Karpathy 尺度。</strong></p>
+
+<h3>5.2 Feedback 就是 agent 的训练数据</h3>
+<p>Karpathy 说 GPT 从数据集中学。Agent 从 verification feedback 中学。每次 verifier 抓到问题 → 就是一条训练样本。积累足够多的 verification_report.json → agent 的"dataset"。未来的 agent 可以从这些 feedback 中自我改进。</p>
+
+<h3>5.3 极简验证原则</h3>
+<p>不要只看 <code>verification_report.pass = true/false</code>。<strong>要看 verifier 写的具体 issues。</strong>一条 issue 比一个 pass/fail 值 100 倍。</p>
+
+<h3>5.4 等待 xurl 后的补充</h3>
+<p>Karpathy 最近（2025-2026）在 X 上发表了大量关于 agent architecture 的 thread。包括：Agent 作为 LLM OS 的进程、Agent 的 cognitive architecture、Reward modeling for agent verification。待 xurl 配置后可系统抓取。</p>
+
+<h2 id="s6">6. 附录</h2>
+
+<h3>6.1 microgpt 源码</h3>
+<ul>
+  <li><a href="https://karpathy.github.io/2026/02/12/microgpt/">microgpt blog post</a></li>
+  <li><a href="https://karpathy.ai/microgpt.html">Interactive demo</a></li>
+</ul>
+
+<h3>6.2 Karpathy 关键项目（极简主义系列）</h3>
+
+<table>
+  <tr><th>项目</th><th style="text-align:center">行数</th><th>内容</th><th>年份</th></tr>
+  <tr><td>micrograd</td><td style="text-align:center">~150</td><td>Autograd 引擎</td><td>2020</td></tr>
+  <tr><td>makemore</td><td style="text-align:center">~300</td><td>Character-level LM</td><td>2022</td></tr>
+  <tr><td>nanogpt</td><td style="text-align:center">~500</td><td>GPT-2 复现</td><td>2023</td></tr>
+  <tr><td>llm.c</td><td style="text-align:center">~1000</td><td>LLM 训练</td><td>2024</td></tr>
+  <tr><td><strong>microgpt</strong></td><td style="text-align:center"><strong>~200</strong></td><td><strong>完整 GPT（极简）</strong></td><td><strong>2026</strong></td></tr>
+</table>
+
+<p>每个项目都在说同一件事：<strong>核心算法极简，其他是效率。</strong></p>
+
+<h3>6.3 与本系列其他学习文件的关系</h3>
+<ul>
+  <li><code>loop-engineering/</code> — Anthropic 六大模式 + 五步骤框架</li>
+  <li>本文 — Karpathy 极简哲学 = loop engineering 的理论根基</li>
+  <li>下一站（待 xurl）— Karpathy 的 agent architecture X threads</li>
+</ul>
+
+<hr />
+
+<blockquote>
+  <p><em>"I cannot simplify this any further."</em> — Andrej Karpathy, microgpt, 2026</p>
+</blockquote>
+
+</div>
+</body>
+</html>
