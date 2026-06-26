@@ -5,122 +5,132 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AI 学习日报 — 2026-06-25</title>
 <style>
-  :root {
-    --bg: #faf9f7; --card-bg: #fff; --text: #1a1a1a; --text-secondary: #555;
-    --accent: #d97706; --accent-light: #fef3c7; --border: #e5e0d8;
-    --code-bg: #f5f5f5; --quote-border: #d97706;
-    --success: #059669; --danger: #dc2626; --warn: #d97706;
-  }
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body {
-    font-family: 'Inter', 'SF Pro Display', system-ui, -apple-system, sans-serif;
-    background: var(--bg); color: var(--text); line-height: 1.75;
-    font-size: 17px; -webkit-font-smoothing: antialiased;
-  }
-  .container { max-width: 720px; margin: 0 auto; padding: 60px 24px 80px; }
+:root {
+  --bg: #faf9f7; --text: #1a1a1a; --text-secondary: #555;
+  --accent: #d97706; --accent-light: #fef3c7; --border: #e5e0d8;
+  --code-bg: #f5f5f5; --quote-border: #d97706;
+  --sidebar-w: 220px;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Inter', 'SF Pro Display', system-ui, -apple-system, sans-serif;
+  background: var(--bg); color: var(--text); line-height: 1.75; font-size: 17px;
+  -webkit-font-smoothing: antialiased;
+  display: flex; min-height: 100vh;
+}
 
-  .hero { padding: 48px 0 40px; border-bottom: 1px solid var(--border); margin-bottom: 48px; }
-  .hero h1 { font-size: 42px; font-weight: 700; letter-spacing: -0.03em; line-height: 1.2; margin-bottom: 12px; }
-  .hero .subtitle { font-size: 20px; color: var(--text-secondary); font-weight: 400; }
-  .hero .meta { margin-top: 20px; font-size: 14px; color: var(--text-secondary); }
+/* Sidebar */
+.sidebar {
+  width: var(--sidebar-w); flex-shrink: 0;
+  position: sticky; top: 0; height: 100vh;
+  overflow-y: auto;
+  padding: 48px 20px 40px;
+  background: #fff; border-right: 1px solid var(--border);
+  font-size: 14px; line-height: 1.6;
+}
+.sidebar-title {
+  font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em;
+  color: var(--text-secondary); margin-bottom: 16px; font-weight: 600;
+}
+.sidebar a {
+  display: block; color: var(--text-secondary); text-decoration: none;
+  padding: 3px 0; border-radius: 4px;
+}
+.sidebar a:hover { color: var(--accent); }
+.sidebar hr { border: none; border-top: 1px solid var(--border); margin: 14px 0; }
+.sidebar-toggle {
+  display: none; position: fixed; top: 12px; left: 12px; z-index: 100;
+  background: #fff; border: 1px solid var(--border); border-radius: 6px;
+  padding: 6px 10px; font-size: 14px; cursor: pointer;
+}
 
-  h2 { font-size: 28px; font-weight: 700; margin: 48px 0 20px; letter-spacing: -0.02em; padding-top: 8px; border-top: 1px solid var(--border); }
-  h2:first-of-type { border-top: none; margin-top: 0; }
-  h3 { font-size: 21px; font-weight: 600; margin: 32px 0 12px; }
-  h4 { font-size: 18px; font-weight: 600; margin: 24px 0 8px; color: #333; }
-  p { margin-bottom: 16px; }
+/* Main content */
+.main { flex: 1; max-width: 720px; padding: 60px 48px 80px 56px; }
+.hero { padding-bottom: 40px; border-bottom: 1px solid var(--border); margin-bottom: 48px; }
+.hero h1 { font-size: 42px; font-weight: 700; letter-spacing: -0.03em; line-height: 1.2; }
+.hero .subtitle { font-size: 20px; color: var(--text-secondary); margin-top: 8px; }
+.hero .meta { margin-top: 20px; font-size: 14px; color: var(--text-secondary); }
 
-  blockquote {
-    border-left: 3px solid var(--quote-border); padding: 12px 20px; margin: 20px 0;
-    background: var(--accent-light); border-radius: 0 6px 6px 0; font-style: italic; color: #7c5e10;
-  }
-  blockquote p { margin-bottom: 8px; }
-  blockquote p:last-child { margin-bottom: 0; }
+h2 { font-size: 28px; font-weight: 700; margin: 48px 0 20px; padding-top: 8px; border-top: 1px solid var(--border); scroll-margin-top: 24px; }
+h2:first-of-type { border-top: none; margin-top: 0; }
+h3 { font-size: 21px; font-weight: 600; margin: 32px 0 12px; }
+h4 { font-size: 18px; font-weight: 600; margin: 24px 0 8px; }
+p { margin-bottom: 16px; }
 
-  code { background: var(--code-bg); padding: 2px 6px; border-radius: 4px; font-size: 0.9em; font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace; color: #d04b2d; }
-  pre { background: #2d2d2d; color: #e0e0e0; padding: 20px 24px; border-radius: 8px; overflow-x: auto; font-size: 14px; line-height: 1.6; margin: 16px 0; }
-  pre code { background: none; padding: 0; color: inherit; font-size: inherit; }
+blockquote {
+  border-left: 3px solid var(--quote-border); padding: 12px 20px; margin: 20px 0;
+  background: var(--accent-light); border-radius: 0 6px 6px 0; font-style: italic; color: #7c5e10;
+}
+blockquote p { margin-bottom: 8px; }
+blockquote p:last-child { margin-bottom: 0; }
 
-  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 15px; }
-  th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--border); }
-  th { font-weight: 600; color: var(--text-secondary); font-size: 13px; text-transform: uppercase; letter-spacing: 0.04em; background: #faf9f7; }
-  tr:hover td { background: #fefcf7; }
+code { background: var(--code-bg); padding: 2px 6px; border-radius: 4px; font-size: 0.9em; font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace; color: #d04b2d; }
+pre { background: #2d2d2d; color: #e0e0e0; padding: 20px 24px; border-radius: 8px; overflow-x: auto; font-size: 14px; line-height: 1.6; margin: 16px 0; }
+pre code { background: none; padding: 0; color: inherit; font-size: inherit; }
 
-  a { color: var(--accent); text-decoration: none; }
-  a:hover { text-decoration: underline; }
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
 
-  .callout {
-    border-left: 3px solid var(--accent); background: var(--accent-light);
-    padding: 16px 20px; margin: 20px 0; border-radius: 0 6px 6px 0;
-  }
-  .callout p { margin-bottom: 0; }
+table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 15px; }
+th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--border); }
+th { font-weight: 600; color: var(--text-secondary); font-size: 13px; text-transform: uppercase; letter-spacing: 0.04em; background: #faf9f7; }
+tr:hover td { background: #fefcf7; }
 
-  /* TOC */
-  .toc { background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 20px 24px; margin: 32px 0; }
-  .toc h3 { margin-top: 0; font-size: 16px; text-transform: uppercase; letter-spacing: 0.05em; }
-  .toc ol { margin-bottom: 0; }
-  .toc a { font-size: 15px; }
+.summary-card {
+  background: linear-gradient(135deg, #fef3c7 0%, #fff7ed 100%);
+  border: 1px solid var(--accent); border-radius: 8px; padding: 20px 24px; margin: 32px 0;
+}
 
-  /* Read cards */
-  .read-card {
-    background: #fff; border: 1px solid var(--border); border-radius: 8px;
-    padding: 20px 24px; margin: 20px 0;
-  }
-  .read-card h4 { margin-top: 0; font-size: 18px; }
-  .read-card .source { font-size: 13px; color: var(--text-secondary); margin-bottom: 8px; }
-  .read-card .source a { font-weight: 600; }
-  .read-card .phase-tag {
-    display: inline-block; padding: 2px 10px; border-radius: 4px;
-    font-size: 12px; font-weight: 600; background: var(--accent-light); color: var(--accent); margin-top: 8px;
-  }
+.stats { display: flex; gap: 16px; margin: 24px 0; flex-wrap: wrap; }
+.stat-item { background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 16px 20px; text-align: center; flex: 1; min-width: 90px; }
+.stat-num { font-size: 32px; font-weight: 700; color: var(--text); display: block; }
+.stat-lbl { font-size: 12px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-top: 4px; }
 
-  /* Stat bar */
-  .stats { display: flex; gap: 16px; margin: 24px 0; flex-wrap: wrap; }
-  .stat-item { background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 16px 20px; text-align: center; flex: 1; min-width: 100px; }
-  .stat-num { font-size: 32px; font-weight: 700; color: var(--text); display: block; }
-  .stat-lbl { font-size: 12px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-top: 4px; }
+.read-card { background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 20px 24px; margin: 20px 0; }
+.read-card h4 { margin-top: 0; font-size: 18px; }
+.read-card .source { font-size: 13px; color: var(--text-secondary); margin-bottom: 8px; }
+.read-card .source a { font-weight: 600; }
+.read-card .phase-tag { display: inline-block; padding: 2px 10px; border-radius: 4px; font-size: 12px; font-weight: 600; background: var(--accent-light); color: var(--accent); margin-top: 8px; }
 
-  /* Summary card */
-  .summary-card { background: linear-gradient(135deg, #fef3c7 0%, #fff7ed 100%); border: 1px solid var(--accent); border-radius: 8px; padding: 20px 24px; margin: 32px 0; }
-  .summary-card p { margin-bottom: 0; }
+.callout { border-left: 3px solid var(--accent); background: var(--accent-light); padding: 16px 20px; margin: 20px 0; border-radius: 0 6px 6px 0; }
+.callout p { margin-bottom: 0; }
 
-  ul, ol { padding-left: 24px; margin-bottom: 16px; }
-  li { margin-bottom: 6px; }
+ul, ol { padding-left: 24px; margin-bottom: 16px; }
+li { margin-bottom: 6px; }
 
-  /* Tags */
-  .tag { display: inline-block; padding: 2px 8px; border-radius: 3px; font-size: 12px; font-weight: 600; margin: 0 4px; background: var(--accent-light); color: var(--accent); }
+hr { border: none; border-top: 1px solid var(--border); margin: 40px 0; }
+.footer { text-align: center; color: var(--text-secondary); font-size: 13px; margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--border); }
 
-  hr { border: none; border-top: 1px solid var(--border); margin: 40px 0; }
-
-  .footer { text-align: center; color: var(--text-secondary); font-size: 13px; margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--border); }
-
-  @media (max-width: 600px) {
-    .container { padding: 32px 16px 48px; }
-    .hero h1 { font-size: 30px; }
-    h2 { font-size: 22px; }
-    .stats { flex-direction: column; }
-  }
+@media (max-width: 900px) {
+  body { display: block; }
+  .sidebar { display: none; position: fixed; top: 0; left: 0; z-index: 99; width: 260px; box-shadow: 2px 0 12px rgba(0,0,0,.08); }
+  .sidebar.open { display: block; }
+  .sidebar-toggle { display: block; }
+  .main { max-width: 100%; padding: 60px 24px 80px; }
+}
 </style>
 </head>
 <body>
-<div class="container">
+
+<button class="sidebar-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">☰ 目录</button>
+
+<nav class="sidebar">
+  <div class="sidebar-title">目录</div>
+  <a href="#s1">1. 今日必读（5 篇）</a>
+  <a href="#s2">2. 学习路径映射</a>
+  <a href="#s3">3. 核心收获（6 条）</a>
+  <a href="#s4">4. 其他值得关注</a>
+  <hr>
+  <a href="https://jimmiebm822-cmd.github.io/ai-learning/" style="color:var(--accent);font-weight:600;">← AI Learning Hub</a>
+</nav>
+
+<div class="main">
 
 <!-- HERO -->
 <div class="hero">
   <h1>🤖 AI 学习日报</h1>
   <p class="subtitle">Agentic AI · Vibe Coding · LLM 前沿 — 每日精选，聚焦你能用的</p>
   <p class="meta">2026-06-25 &middot; 覆盖 06-24 ~ 06-25 &middot; arXiv · Hacker News · 核心博客 &middot; 45+ 次搜索</p>
-</div>
-
-<!-- TOC -->
-<div class="toc">
-  <h3>目录</h3>
-  <ol>
-    <li><a href="#s1">今日必读（5 篇）</a></li>
-    <li><a href="#s2">学习路径映射</a></li>
-    <li><a href="#s3">核心收获（6 条）</a></li>
-    <li><a href="#s4">其他值得关注</a></li>
-  </ol>
 </div>
 
 <!-- Stats -->
@@ -131,63 +141,63 @@
   <div class="stat-item"><span class="stat-num">6</span><span class="stat-lbl">核心收获</span></div>
 </div>
 
-<!-- Section 1: Must-Read -->
-<h2 id="s1">🔥 今日必读（5 篇，按优先级）</h2>
+<!-- Section 1 -->
+<h2 id="s1">🔥 今日必读（5 篇）</h2>
 
 <div class="read-card">
   <h4>⭐ #1 — Lilian Weng：Scaling Laws, Carefully</h4>
   <p class="source"><a href="https://lilianweng.github.io/posts/2026-06-24-scaling-laws/" target="_blank">lilianweng.github.io</a> · Jun 24, 2026</p>
-  <p>从 Amari (1992) 到 Kaplan → Chinchilla → 2026 前沿的 scaling laws 全景。核心洞察：幂律指数是<strong>任务域属性</strong>而非架构属性；Kaplan vs Chinchilla 的矛盾源于数据假设差异；小规模实验外推到大模型时的 3 个常见陷阱。</p>
-  <blockquote><p>对 Daddy 的意义：你正在从「用模型」过渡到「设计 agent 系统」。理解模型能力的成本-性能 tradeoff 是底层基本功。今天就可以开始读，它比原学习路径里任何一篇文章都更适合作为阶段 1 的起点——先懂模型，再懂 agent。</p></blockquote>
+  <p>从 Amari (1992) 到 Kaplan → Chinchilla → 2026 前沿的 scaling laws 全景。核心洞察：幂律指数是<strong>任务域属性</strong>而非架构属性；Kaplan vs Chinchilla 的矛盾源于数据假设差异；小规模实验外推到大模型时的 3 个常见陷阱。这是目前最好的 scaling laws 参考文章。</p>
+  <blockquote><p>对 Daddy 的意义：正在从「用模型」过渡到「设计 agent 系统」——理解模型能力的成本-性能 tradeoff 是底层基本功。今天就可以开始读，它比原学习路径里任何一篇文章都更适合作为阶段 1 的起点。</p></blockquote>
   <span class="phase-tag">阶段 1：LLM 基础</span>
 </div>
 
 <div class="read-card">
   <h4>⭐ #2 — arXiv：Instruction Bleed — 多 prompt 模块间的隐性干扰</h4>
   <p class="source"><a href="https://arxiv.org/abs/2606.26356" target="_blank">arXiv 2606.26356</a> · Jun 24, 2026</p>
-  <p>首次形式化 CBL（Compositional Behavioral Leakage）：编辑一个 prompt 模块会<strong>悄无声息地改变另一个模块的行为</strong>。根因是 transformer 自注意力在共享上下文窗口中不隔离。</p>
-  <blockquote><p>对 Daddy 的意义：你的每个 skill 都是多 prompt 模块组成的（system prompt + tool descriptions + 输出格式 + 边界规则）。这篇论文直接告诉你——<strong>模块化 prompt 是一个有漏洞的抽象</strong>。之前 yield-report-base 的代码审计里没覆盖这一点。</p></blockquote>
+  <p>首次形式化 <strong>CBL</strong>（Compositional Behavioral Leakage）：编辑一个 prompt 模块会悄无声息地改变另一个模块的行为。根因是 transformer 自注意力在共享上下文窗口中不隔离。即使两个模块没有共享变量或依赖，干扰依然发生。</p>
+  <blockquote><p>对 Daddy 的意义：每个 skill 都是多 prompt 模块组成——system prompt + tool descriptions + 输出格式 + 边界规则。这篇论文直接告诉你：<strong>模块化 prompt 是有漏洞的抽象</strong>。必须做整体测试，不能只测单个模块。之前 yield-report-base 的代码审计没覆盖这一点。</p></blockquote>
   <span class="phase-tag">阶段 2：Agent 架构</span>
 </div>
 
 <div class="read-card">
-  <h4>⭐ #3 — rtrvr.ai：DeepSeek Flash 的 Code-as-Plan 颠覆 Agent 经济学</h4>
+  <h4>⭐ #3 — rtrvr.ai：Code-as-Plan 颠覆 Agent 经济学</h4>
   <p class="source"><a href="https://www.rtrvr.ai/blog/code-as-plan-deepseek-flash-text-only-browser-agent" target="_blank">rtrvr.ai</a> · Jun 25, 2026</p>
   <p>模型一次性生成完整工作流代码，本地 harness 执行——<strong>80+ 次 API 调用 → 1 次</strong>。DeepSeek V4 Flash 便宜、开源、代码能力够用。核心金句：<em>"Developers were being milked for runtime, not intelligence."</em></p>
-  <blockquote><p>对 Daddy 的意义：你的 agent 如果每个 task 烧几十次模型调用，架构成本就是竞争劣势。护城河从「有模型访问权」变成「harness 设计质量」。直接影响 FIL 日报和 yield-report 的重构方向。</p></blockquote>
+  <blockquote><p>对 Daddy 的意义：如果 agent 每个 task 烧几十次模型调用，架构成本就是竞争劣势。护城河从「有模型访问权」变成「harness 设计质量」。直接影响 FIL 日报和 yield-report 的重构方向。</p></blockquote>
   <span class="phase-tag">阶段 3-4：实践 + 评测</span>
 </div>
 
 <div class="read-card">
-  <h4>#4 — arXiv：67 个模型的 Co-Failure Ceiling</h4>
+  <h4>#4 — arXiv：67 模型的 Co-Failure Ceiling</h4>
   <p class="source"><a href="https://arxiv.org/abs/2606.27288" target="_blank">arXiv 2606.27288</a> · Jun 25, 2026</p>
-  <p>多模型系统（routing / voting / mixture-of-agents）的准确率永远超不过 <strong>1 − β</strong>（β = 所有模型同时出错的概率）。单模型准确率再高，如果 β 也高，组合系统白花钱。</p>
+  <p>多模型系统（routing / voting / mixture-of-agents）的准确率永远超不过 <strong>1 − β</strong>（β = 所有模型同时出错的概率）。只看单模型准确率会漏掉这个关键指标——高准确率 + 高 β = 组合系统白花钱。</p>
   <span class="phase-tag">阶段 4：评测方法论</span>
 </div>
 
 <div class="read-card">
   <h4>#5 — Simon Willison：Prompt Injection 的根因是「角色混淆」</h4>
   <p class="source"><a href="https://simonwillison.net/2026/Jun/22/prompt-injection-as-role-confusion/" target="_blank">simonwillison.net</a> · Jun 22, 2026</p>
-  <p>LLM 遵循的是文本<strong>风格</strong>，不是 <code>&lt;system&gt;</code> / <code>&lt;user&gt;</code> 角色标签。去风格化（destyling）把攻击成功率从 61% 降到 10%。在模型真正具备角色感知之前，注入防御就是打地鼠。</p>
-  <blockquote><p>对 Daddy 的意义：别把 system prompt 当安全边界。agent 在公开渠道运行时，用户输入可以模仿你的 prompt 风格来逃逸。防御策略是降到风格层。</p></blockquote>
+  <p>LLM 遵循的是文本<strong>风格</strong>，不是 <code>&lt;system&gt;</code> / <code>&lt;user&gt;</code> 这类角色标签。去风格化（destyling）把攻击成功率从 61% 降到 10%。结论：在模型真正具备角色感知能力之前，注入防御就是打地鼠。</p>
+  <blockquote><p>对 Daddy 的意义：别把 system prompt 当安全边界。agent 在公开渠道运行时，用户输入可以模仿你的 prompt 风格来逃逸。防御策略要降到风格层。</p></blockquote>
   <span class="phase-tag">全阶段：安全</span>
 </div>
 
-<!-- Section 2: Mapping -->
+<!-- Section 2 -->
 <h2 id="s2">🎯 学习路径映射</h2>
 
 <table>
   <thead><tr><th>发现</th><th>对应阶段</th><th>即时行动</th></tr></thead>
   <tbody>
-    <tr><td><strong>Scaling Laws</strong></td><td>阶段 1：LLM 基础</td><td>今天作为阶段 1 的第 1 篇精读</td></tr>
-    <tr><td><strong>Instruction Bleed</strong></td><td>阶段 2：Agent 架构</td><td>现有 skill prompt 模块需要整体测试</td></tr>
-    <tr><td><strong>Code-as-Plan</strong></td><td>阶段 3-4：实践 + 评测</td><td>agent loop 设计权衡两种范式</td></tr>
-    <tr><td><strong>Co-Failure Ceiling</strong></td><td>阶段 4：评测方法论</td><td>多模型 routing 必测 β</td></tr>
-    <tr><td><strong>Prompt Injection</strong></td><td>全阶段：安全</td><td>公开部署 agent 需 destyling 防御</td></tr>
+    <tr><td><strong>Scaling Laws</strong></td><td>阶段 1：LLM 基础</td><td>今天作为阶段 1 的第 1 篇精读——先懂模型再懂 agent</td></tr>
+    <tr><td><strong>Instruction Bleed</strong></td><td>阶段 2：Agent 架构</td><td>现有 skill 的 prompt 模块需要整体测试，非单模块</td></tr>
+    <tr><td><strong>Code-as-Plan</strong></td><td>阶段 3-4：实践+评测</td><td>agent loop 设计权衡「生成代码」vs「逐步 tool-calling」</td></tr>
+    <tr><td><strong>Co-Failure Ceiling</strong></td><td>阶段 4：评测方法论</td><td>如果用多模型 routing，β 是最重要的指标</td></tr>
+    <tr><td><strong>Prompt Injection</strong></td><td>全阶段：安全</td><td>每个公开部署的 agent 都需要 destyling 防御</td></tr>
   </tbody>
 </table>
 
-<!-- Section 3: Takeaways -->
+<!-- Section 3 -->
 <h2 id="s3">💡 今日核心收获（6 条）</h2>
 
 <ol>
@@ -196,14 +206,14 @@
   <li><strong>角色标签不是安全边界</strong>——LLM 看的是风格，不是 <code>&lt;system&gt;</code> vs <code>&lt;user&gt;</code></li>
   <li><strong>Co-Failure Rate（β）是多模型系统的关键指标</strong>——高准确率 ≠ 低共败率</li>
   <li><strong>Agentic Engineering &gt; Vibe Coding</strong>——结构化 prompt + plan + review</li>
-  <li><strong>Agent 配置是治理问题</strong>——集中管理、版本控制，不散落</li>
+  <li><strong>Agent 配置是治理问题</strong>——集中管理、版本控制，不散落在各个 repo</li>
 </ol>
 
 <div class="summary-card">
   <p><strong>📌 一句话总结今天</strong>：Scaling Laws 给你模型的底层直觉，Instruction Bleed 告诉你 prompt 设计的边界，Code-as-Plan 改变你对 agent 经济模型的认知。这三篇今天必读。</p>
 </div>
 
-<!-- Section 4: Other -->
+<!-- Section 4 -->
 <h2 id="s4">📋 其他值得关注</h2>
 
 <h3>Agent 架构 &amp; 安全</h3>
@@ -226,6 +236,6 @@
   <p>关联：<a href="https://jimmiebm822-cmd.github.io/ai-learning/">ai-learning</a> &middot; 下一篇：2026-06-26 &middot; Generated by Prof.Bot</p>
 </div>
 
-</div>
+</div><!-- .main -->
 </body>
 </html>
