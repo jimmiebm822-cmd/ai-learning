@@ -19,7 +19,7 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-.page-container { display:flex; min-height:100vh; max-width:1300px; margin:0 auto; }
+.page-container { display:flex; min-height:100vh; max-width:1300px; margin:0 auto; justify-content:center; }
 #toc-sidebar {
   position:sticky; top:0; width:var(--sidebar-w); flex-shrink:0;
   background:#fff; height:100vh; display:flex; flex-direction:column;
@@ -227,7 +227,7 @@ flowchart TD
   <tr><td>6</td><td>Loop until done</td><td>循环跑，直到停止条件满足</td><td>⚠️ 循环有，停止条件没标准化</td></tr>
 </table>
 
-<h3>3.2 <span class="star">⭐</span> Adversarial Verification（对抗性验证）— P0 缺口</h3>
+<h3 id="s3b">3.2 <span class="star">⭐</span> Adversarial Verification（对抗性验证）— P0 缺口</h3>
 
 <p>整个文章里<strong>最有价值的单个模式</strong>，也是你当前最大的缺口。</p>
 
@@ -502,7 +502,8 @@ flowchart TD
 
   let num = 0;
   headings.forEach(h => {
-    if(h.tagName === 'H2') num++;
+    if(!h.id) h.id = 'sec-' + (h.tagName === 'H3' ? 'sub-' : '') + num++;
+    else if(h.tagName === 'H2') num++;
     const a = document.createElement('a');
     a.href = '#' + h.id;
     a.className = h.tagName === 'H3' ? 'toc-h3' : '';

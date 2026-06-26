@@ -18,7 +18,7 @@ body {
 }
 
 /* ── Sidebar (html-generator v3.0 three-zone) ── */
-.page-container { display:flex; min-height:100vh; max-width:1300px; margin:0 auto; }
+.page-container { display:flex; min-height:100vh; max-width:1300px; margin:0 auto; justify-content:center; }
 #toc-sidebar {
   position:sticky; top:0; width:var(--sidebar-w); flex-shrink:0;
   background:#fff; height:100vh; display:flex; flex-direction:column;
@@ -201,13 +201,13 @@ while len(output) < max_tokens:    while not done:
 
 <h2 id="s6">6. 附录</h2>
 
-<h3>microgpt 源码</h3>
+<h3 id="s6a">microgpt 源码</h3>
 <ul>
   <li><a href="https://karpathy.github.io/2026/02/12/microgpt/">microgpt blog post</a></li>
   <li><a href="https://karpathy.ai/microgpt.html">Interactive demo</a></li>
 </ul>
 
-<h3>Karpathy 极简主义项目</h3>
+<h3 id="s6b">Karpathy 极简主义项目</h3>
 <table>
   <tr><th>项目</th><th style="text-align:center">行数</th><th>内容</th><th>年份</th></tr>
   <tr><td>micrograd</td><td style="text-align:center">~150</td><td>Autograd 引擎</td><td>2020</td></tr>
@@ -237,7 +237,9 @@ while len(output) < max_tokens:    while not done:
 
   let num = 0;
   headings.forEach(h => {
-    if(h.tagName === 'H2') num++;
+    // Auto-assign id if missing
+    if(!h.id) h.id = 'sec-' + (h.tagName === 'H3' ? 'sub-' : '') + num++;
+    else if(h.tagName === 'H2') num++;
     const a = document.createElement('a');
     a.href = '#' + h.id;
     a.className = h.tagName === 'H3' ? 'toc-h3' : '';
