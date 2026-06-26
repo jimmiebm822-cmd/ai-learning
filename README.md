@@ -30,3 +30,8 @@ ai-learning/
 ---
 
 *"Creating a workflow helps combat agent failure modes by orchestrating separate subagents with their own context windows and focused, isolated goals."* — Anthropic, June 2026
+
+### Karpathy Minimalism (June 2026)
+- **Source**: [microgpt](https://karpathy.github.io/2026/02/12/microgpt/) — 200 lines of pure Python = a complete GPT
+- **Learning file**: [karpathy-minimalism/karpathy-minimalism-agent.md](karpathy-minimalism/karpathy-minimalism-agent.md)
+- **Key takeaway**: Core algorithm is minimal — training loop ≈ agent iteration loop. Feedback is the agent's training data.
