@@ -235,5 +235,41 @@ while len(output) &lt; max_tokens:    while not done:
 </blockquote>
 
 </div>
+
+<script>
+(function() {
+  const links = document.querySelectorAll('.sidebar a[href^="#"]');
+  const sections = [...document.querySelectorAll('h2[id],h3[id]')];
+  if (!sections.length) return;
+
+  const observer = new IntersectionObserver((entries) => {
+    // Find the first visible section
+    const visible = entries.filter(e => e.isIntersecting).sort((a,b) => a.target.offsetTop - b.target.offsetTop);
+    if (!visible.length) return;
+    const currentId = visible[0].target.id;
+    links.forEach(a => {
+      a.classList.toggle('active', a.getAttribute('href') === '#' + currentId);
+    });
+  }, { rootMargin: '-10% 0px -75% 0px', threshold: 0 });
+
+  sections.forEach(el => observer.observe(el));
+
+  // Smooth scroll on sidebar click
+  document.querySelector('.sidebar').addEventListener('click', (e) => {
+    const a = e.target.closest('a[href^="#"]');
+    if (!a) return;
+    e.preventDefault();
+    const target = document.getElementById(a.getAttribute('href').slice(1));
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+
+  // Close mobile sidebar on link click
+  document.querySelector('.sidebar').addEventListener('click', (e) => {
+    if (e.target.closest('a')) {
+      document.querySelector('.sidebar').classList.remove('open');
+    }
+  });
+})();
+</script>
 </body>
 </html>
