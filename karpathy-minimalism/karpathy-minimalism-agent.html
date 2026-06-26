@@ -8,7 +8,7 @@
 :root {
   --bg: #faf9f7; --text: #1a1a1a; --text-secondary: #555;
   --accent: #d97706; --accent-light: #fef3c7; --border: #e5e0d8;
-  --sidebar-w: 220px;
+  --sidebar-w: 240px;
 }
 * { margin:0; padding:0; box-sizing:border-box; }
 body {
@@ -18,7 +18,7 @@ body {
 }
 
 /* ── Sidebar (html-generator v3.0 three-zone) ── */
-.page-container { display:flex; min-height:100vh; }
+.page-container { display:flex; min-height:100vh; max-width:1300px; margin:0 auto; }
 #toc-sidebar {
   position:sticky; top:0; width:var(--sidebar-w); flex-shrink:0;
   background:#fff; height:100vh; display:flex; flex-direction:column;
