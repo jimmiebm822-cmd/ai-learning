@@ -35,3 +35,14 @@ ai-learning/
 - **Source**: [microgpt](https://karpathy.github.io/2026/02/12/microgpt/) — 200 lines of pure Python = a complete GPT
 - **Learning file**: [karpathy-minimalism/karpathy-minimalism-agent.md](karpathy-minimalism/karpathy-minimalism-agent.md)
 - **Key takeaway**: Core algorithm is minimal — training loop ≈ agent iteration loop. Feedback is the agent's training data.
+
+## Skills
+
+Synced from Hermes prof_bot profile. These are the executable agent skills, not just documentation.
+
+| Skill | File | Purpose |
+|-------|------|---------|
+| loop-engineering (core) | [skills/loop-engineering/loop-engineering-core.md](skills/loop-engineering/loop-engineering-core.md) | 三大失败模式 + 五步骤 + 四种成本 + 速查 |
+| loop-engineering-adversarial | [skills/loop-engineering/loop-engineering-adversarial.md](skills/loop-engineering/loop-engineering-adversarial.md) | 对抗性验证完整模板 |
+| loop-engineering-patterns | [skills/loop-engineering/loop-engineering-patterns.md](skills/loop-engineering/loop-engineering-patterns.md) | Loop Until Done + Tournament |
+| rubric templates | [skills/loop-engineering/references/rubric-templates.md](skills/loop-engineering/references/rubric-templates.md) | 日报/良率/邮件实例化rubric |
