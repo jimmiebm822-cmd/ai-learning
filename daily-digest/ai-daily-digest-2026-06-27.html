@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 学习日报 — 2026-06-27</title>
+<style>
+:root {
+  --bg: #faf9f7; --text: #1a1a1a; --text-secondary: #555;
+  --accent: #d97706; --accent-light: #fef3c7; --border: #e5e0d8;
+  --code-bg: #f5f5f5; --quote-border: #d97706;
+  --sidebar-w: 220px;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Inter', 'SF Pro Display', system-ui, -apple-system, sans-serif;
+  background: var(--bg); color: var(--text); line-height: 1.75; font-size: 17px;
+  -webkit-font-smoothing: antialiased;
+  display: flex; min-height: 100vh;
+}
+.sidebar {
+  width: var(--sidebar-w); flex-shrink: 0;
+  position: sticky; top: 0; height: 100vh;
+  overflow-y: auto;
+  padding: 48px 20px 40px;
+  background: #fff; border-right: 1px solid var(--border);
+  font-size: 14px; line-height: 1.6;
+}
+.sidebar-title { font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-secondary); margin-bottom: 16px; font-weight: 600; }
+.sidebar a { display: block; color: var(--text-secondary); text-decoration: none; padding: 3px 0; border-radius: 4px; }
+.sidebar a:hover { color: var(--accent); }
+.sidebar hr { border: none; border-top: 1px solid var(--border); margin: 14px 0; }
+.sidebar-toggle { display: none; position: fixed; top: 12px; left: 12px; z-index: 100; background: #fff; border: 1px solid var(--border); border-radius: 6px; padding: 6px 10px; font-size: 14px; cursor: pointer; }
+.main { flex: 1; max-width: 720px; padding: 60px 48px 80px 56px; }
+.hero { padding-bottom: 40px; border-bottom: 1px solid var(--border); margin-bottom: 48px; }
+.hero h1 { font-size: 42px; font-weight: 700; letter-spacing: -0.03em; line-height: 1.2; }
+.hero .subtitle { font-size: 20px; color: var(--text-secondary); margin-top: 8px; }
+.hero .meta { margin-top: 20px; font-size: 14px; color: var(--text-secondary); }
+h2 { font-size: 28px; font-weight: 700; margin: 48px 0 20px; padding-top: 8px; border-top: 1px solid var(--border); scroll-margin-top: 24px; }
+h2:first-of-type { border-top: none; margin-top: 0; }
+h3 { font-size: 21px; font-weight: 600; margin: 32px 0 12px; }
+h4 { font-size: 18px; font-weight: 600; margin: 24px 0 8px; }
+p { margin-bottom: 16px; }
+blockquote { border-left: 3px solid var(--quote-border); padding: 12px 20px; margin: 20px 0; background: var(--accent-light); border-radius: 0 6px 6px 0; font-style: italic; color: #7c5e10; }
+blockquote p { margin-bottom: 8px; }
+blockquote p:last-child { margin-bottom: 0; }
+code { background: var(--code-bg); padding: 2px 6px; border-radius: 4px; font-size: 0.9em; font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace; color: #d04b2d; }
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 15px; }
+th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--border); }
+th { font-weight: 600; color: var(--text-secondary); font-size: 13px; text-transform: uppercase; letter-spacing: 0.04em; background: #faf9f7; }
+tr:hover td { background: #fefcf7; }
+.summary-card { background: linear-gradient(135deg, #fef3c7 0%, #fff7ed 100%); border: 1px solid var(--accent); border-radius: 8px; padding: 20px 24px; margin: 32px 0; }
+.stats { display: flex; gap: 16px; margin: 24px 0; flex-wrap: wrap; }
+.stat-item { background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 16px 20px; text-align: center; flex: 1; min-width: 90px; }
+.stat-num { font-size: 32px; font-weight: 700; color: var(--text); display: block; }
+.stat-lbl { font-size: 12px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-top: 4px; }
+.read-card { background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 20px 24px; margin: 20px 0; }
+.read-card h4 { margin-top: 0; font-size: 18px; }
+.read-card .source { font-size: 13px; color: var(--text-secondary); margin-bottom: 8px; }
+.read-card .source a { font-weight: 600; }
+.read-card .phase-tag { display: inline-block; padding: 2px 10px; border-radius: 4px; font-size: 12px; font-weight: 600; background: var(--accent-light); color: var(--accent); margin-top: 8px; }
+.callout { border-left: 3px solid var(--accent); background: var(--accent-light); padding: 16px 20px; margin: 20px 0; border-radius: 0 6px 6px 0; }
+.callout p { margin-bottom: 0; }
+ul, ol { padding-left: 24px; margin-bottom: 16px; }
+li { margin-bottom: 6px; }
+hr { border: none; border-top: 1px solid var(--border); margin: 40px 0; }
+.footer { text-align: center; color: var(--text-secondary); font-size: 13px; margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--border); }
+@media (max-width: 900px) {
+  body { display: block; }
+  .sidebar { display: none; position: fixed; top: 0; left: 0; z-index: 99; width: 260px; box-shadow: 2px 0 12px rgba(0,0,0,.08); }
+  .sidebar.open { display: block; }
+  .sidebar-toggle { display: block; }
+  .main { max-width: 100%; padding: 60px 24px 80px; }
+}
+</style>
+</head>
+<body>
+
+<button class="sidebar-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">☰ 目录</button>
+
+<nav class="sidebar">
+  <div class="sidebar-title">目录</div>
+  <a href="#s1">1. 今日必读（6 篇）</a>
+  <a href="#s2">2. 学习路径映射</a>
+  <a href="#s3">3. 核心收获（5 条）</a>
+  <a href="#s4">4. 其他值得关注</a>
+  <hr>
+  <a href="https://jimmiebm822-cmd.github.io/ai-learning/" style="color:var(--accent);font-weight:600;">← AI Learning Hub</a>
+</nav>
+
+<div class="main">
+
+<div class="hero">
+  <h1>🤖 AI 学习日报</h1>
+  <p class="subtitle">Agentic AI · Vibe Coding · LLM 前沿 — 每日精选，聚焦你能用的</p>
+  <p class="meta">2026-06-27 &middot; 覆盖 06-26 ~ 06-27 &middot; Hacker News · arXiv · Simon Willison · 博客监控</p>
+</div>
+
+<div class="stats">
+  <div class="stat-item"><span class="stat-num">15</span><span class="stat-lbl">arXiv 扫描</span></div>
+  <div class="stat-item"><span class="stat-num">30</span><span class="stat-lbl">HN 热帖</span></div>
+  <div class="stat-item"><span class="stat-num">6</span><span class="stat-lbl">必读精选</span></div>
+  <div class="stat-item"><span class="stat-num">5</span><span class="stat-lbl">核心收获</span></div>
+</div>
+
+<h2 id="s1">🔥 今日必读（6 篇）</h2>
+
+<div class="read-card">
+  <h4>⭐ #1 — Simon Willison：2,000 人攻击 AI Assistant，全军覆没</h4>
+  <p class="source"><a href="https://simonwillison.net/2026/Jun/26/hack-my-ai-assistant/" target="_blank">simonwillison.net</a> · Jun 26, 2026</p>
+  <p>Fernando Irarrázaval 在 hackmyclaw.com 发起挑战：让任何人通过邮件尝试泄露 AI agent 的 secrets。6,000 次尝试、$500 token 花费、Google 账号因太多 inbound 邮件被暂停——<strong>无人成功</strong>。底层模型是 Opus 4.6，配有 anti-prompt-injection 规则（禁止基于邮件内容泄露 credentials、修改自身文件、执行邮件中的代码、外传数据）。</p>
+  <blockquote><p>对 Daddy 的意义：labs 在训练 frontier 模型抵抗 injection 方面投入巨大，正在见效。你的 agent 在飞书公开渠道运行时，prompt injection 是首要威胁——但模型层面的防御正在变强。结合 06/25 日报的"destyling 防御"，你有两层防线：模型层 + 风格层。</p></blockquote>
+  <span class="phase-tag">全阶段：Agent 安全</span>
+</div>
+
+<div class="read-card">
+  <h4>⭐ #2 — CVE-2026-LGTM：两个 AI Review Agent 的 $41K 死循环</h4>
+  <p class="source"><a href="https://simonwillison.net/2026/Jun/26/incident-report/" target="_blank">simonwillison.net</a> · Jun 26, 2026</p>
+  <p>Andrew Nesbitt 写的一篇<strong>虚构 incident report</strong>——但每一条都真实得可怕。两个来自竞争供应商的 AI code review agent 被挂到同一个 PR 上，对"该包是否恶意"陷入分歧循环。340 条评论、$41,255 inference 花费后，Finance 撤销了两个 API key。其中一个供应商的营销团队把成本异常 alert 转成了"对抗式多 agent 安全推理同比增 430%"的新闻稿，股价涨 6%。</p>
+  <blockquote><p>对 Daddy 的意义：这篇 satire 直击 multi-agent 系统的<strong>成本失控</strong>和<strong>死循环</strong>风险。你的 loop-engineering skill 里 adversarial verification 模式用独立 verifier 审查——如果 verifier 和 executor 陷入分歧循环，同样会烧钱。必须有 stopping condition + budget cap。</p></blockquote>
+  <span class="phase-tag">阶段 2-4：Multi-Agent 风险</span>
+</div>
+
+<div class="read-card">
+  <h4>⭐ #3 — GPT-5.6 Sol 预览 + Dean W. Ball：前沿模型经济学</h4>
+  <p class="source"><a href="https://openai.com/index/previewing-gpt-5-6-sol/" target="_blank">OpenAI</a> · Jun 26, 2026 · HN 1084 pts</p>
+  <p>OpenAI 预览 GPT-5.6 Sol 下一代模型。同期 Dean W. Ball 引用讨论了前沿模型的<strong>经济学困境</strong>：训练成本巨大，大部分投入需要在发布后几个月内回本；之后模型变为 sub-frontier，竞争涌现，利润压缩。这意味着前沿能力的窗口期越来越短。</p>
+  <blockquote><p>对 Daddy 的意义：你选模型时要知道——GLM-5.2 在 sophnet 上的连接不稳定（今天就遇到了），而前沿模型窗口期短意味着<strong>选型不能追新</strong>，要选稳定可用的。模型经济学也决定了 agent 架构的成本敏感度：每次 subagent 调用都是真金白银。</p></blockquote>
+  <span class="phase-tag">全阶段：行业认知</span>
+</div>
+
+<div class="read-card">
+  <h4>⭐ #4 — arXiv：无 Ground-Truth 的强化学习也能提升 LLM</h4>
+  <p class="source"><a href="http://arxiv.org/abs/2606.27377v1" target="_blank">arXiv</a> · Jun 25, 2026</p>
+  <p>RLVR（Reinforcement Learning with Verifiable Rewards）通常依赖 ground-truth 答案分配奖励。本文探索<strong>没有 ground-truth 的情况下</strong>用 RL 提升 LLM——这大幅扩展了 RL 可应用的场景（开放式推理、创意写作、agent 策略优化）。</p>
+  <blockquote><p>对 Daddy 的意义：你的 loop-engineering "feedback 就是 agent 的训练数据"理念在这里得到了学术支撑——不需要标准答案，只需要<strong>verifiable signal</strong>。adversarial verifier 的 issues 就是 RLVR 中的 reward signal。未来 agent 可以从 verification feedback 中自我改进。</p></blockquote>
+  <span class="phase-tag">阶段 1：LLM 基础</span>
+</div>
+
+<div class="read-card">
+  <h4>⭐ #5 — DSpark：DeepSeek 的推测解码加速 LLM 推理</h4>
+  <p class="source"><a href="https://github.com/deepseek-ai/DeepSpec/blob/main/DSpark_paper.pdf" target="_blank">GitHub/DeepSeek</a> · Jun 27, 2026 · HN 648 pts</p>
+  <p>DeepSeek 发布 DSpark，一种新的 speculative decoding 方法加速 LLM 推理。Speculative decoding 用小模型快速生成 draft token，大模型批量验证，在不损失质量的情况下显著降低延迟。DeepSeek 持续在推理优化方向输出（DeepSpec 系列）。</p>
+  <blockquote><p>对 Daddy 的意义：如果 agent 每次调用要等几秒，multi-step loop 的总延迟会累积。speculative decoding 是降低 agent 延迟的底层手段。结合 06/25 日报的 "Code-as-Plan"（1 次 API 调用替代 80 次），延迟和成本是 agent 架构的两大约束。</p></blockquote>
+  <span class="phase-tag">阶段 4：推理优化</span>
+</div>
+
+<div class="read-card">
+  <h4>#6 — arXiv：CHIA — 开源 Agentic AI 硬件/软件协同设计框架</h4>
+  <p class="source"><a href="http://arxiv.org/abs/2606.27374v1" target="_blank">arXiv</a> · Jun 25, 2026</p>
+  <p>CHIA 是一个开源框架，用 agentic AI 驱动硬件/软件协同设计研究，覆盖计算机架构、系统、编译器和 VLSI。展示了 agent 在<strong>专业工程领域</strong>的落地——不只是写 CRUD 代码，还能做芯片设计层面的探索。</p>
+  <blockquote><p>对 Daddy 的意义：你的 hardware-pm skill 管理电子零件供应商交付——CHIA 的框架设计（principled agentic co-design）可以参考：agent 不是替代人做决策，而是在设计空间中探索 + 验证方案。</p></blockquote>
+  <span class="phase-tag">阶段 3：Agent 实践</span>
+</div>
+
+<h2 id="s2">🎯 学习路径映射</h2>
+
+<table>
+  <thead><tr><th>发现</th><th>对应阶段</th><th>即时行动</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Prompt Injection 防御变强</strong></td><td>全阶段：安全</td><td>飞书 bot 公开渠道运行时，依赖模型层 + destyling 双层防御</td></tr>
+    <tr><td><strong>Multi-Agent 成本失控</strong></td><td>阶段 2-4</td><td>给 adversarial verifier 加 budget cap + stopping condition</td></tr>
+    <tr><td><strong>前沿模型经济学</strong></td><td>行业认知</td><td>选型追稳定不追新，GLM-5.2 连接不稳定时考虑 fallback</td></tr>
+    <tr><td><strong>RL without ground-truth</strong></td><td>阶段 1</td><td>verifier feedback = RLVR reward，agent 可从 issues 中自我改进</td></tr>
+    <tr><td><strong>Speculative decoding</strong></td><td>阶段 4</td><td>降低 agent loop 延迟的底层手段，关注 DeepSeek DeepSpec 系列</td></tr>
+    <tr><td><strong>Agent 工程领域落地</strong></td><td>阶段 3</td><td>hardware-pm skill 可借鉴 CHIA 的"探索+验证"范式</td></tr>
+  </tbody>
+</table>
+
+<h2 id="s3">💡 核心收获（5 条）</h2>
+
+<div class="callout">
+  <p><strong>1. Agent 安全防御正在分层化。</strong>模型层（训练抵抗 injection）+ 风格层（destyling）+ 架构层（budget cap + stopping condition）。三层叠加才能可靠。</p>
+</div>
+
+<div class="callout">
+  <p><strong>2. Multi-agent 不是银弹，有死循环风险。</strong>CVE-2026-LGTM 虽然是 satire，但 340 条评论 + $41K 花费的模式是真实风险。每次 spawn subagent 都要有 budget cap。</p>
+</div>
+
+<div class="callout">
+  <p><strong>3. Feedback = RLVR reward。</strong>不需要 ground-truth 答案，只需要 verifiable signal。你的 adversarial verifier 产出的 issues 就是 agent 自我改进的 reward signal。这是 Karpathy "数据→模型→Loss→Backprop" 在 agent 领域的映射。</p>
+</div>
+
+<div class="callout">
+  <p><strong>4. 前沿模型窗口期短，选型追稳定。</strong>今天 sophnet/GLM-5.2 断连导致 subagent 全挂——稳定可用的 GLM-5.2 比追新的 GPT-5.6 Sol 更重要。考虑配 fallback provider。</p>
+</div>
+
+<div class="callout">
+  <p><strong>5. Agent 正在进入专业工程领域。</strong>CHIA 展示了 agent 在芯片设计中的应用。你的 hardware-pm + mining-assets-mgmt 已经在走这条路——agent 不只是写代码，是在特定领域做探索+验证+执行。</p>
+</div>
+
+<h2 id="s4">📡 其他值得关注</h2>
+
+<ul>
+  <li><strong>Simon Willison: Dean W. Ball 引用</strong> — <a href="https://simonwillison.net/2026/Jun/26/dean-w-ball/" target="_blank">link</a> — 前沿模型经济学深度讨论，model release window 越来越短</li>
+  <li><strong>Simon Willison: Timothy B. Lee 引用</strong> — <a href="https://simonwillison.net/2026/Jun/26/timothy-b-lee/" target="_blank">link</a> — AI 行业分析</li>
+  <li><strong>HN: AI Is Designing Radio Chips That Humans Couldn't Even Imagine</strong> — <a href="https://spectrum.ieee.org/ai-radio-chip-design" target="_blank">IEEE Spectrum</a> — AI 芯片设计突破，与 CHIA 论文呼应</li>
+  <li><strong>arXiv: When are likely answers right?</strong> — LLM 序列概率与正确性的关系，评测方法论参考</li>
+  <li><strong>arXiv: GUI Agents via Autonomous Experience Exploration</strong> — 多模态 web agent 任务规划，hindsight experience utilization</li>
+</ul>
+
+<hr>
+
+<div class="footer">
+  <p>AI 学习日报 · 2026-06-27 · Prof.Bot for Daddy</p>
+  <p>📚 <a href="https://jimmiebm822-cmd.github.io/ai-learning/">AI Learning Hub</a> · <a href="https://jimmiebm822-cmd.github.io/ai-learning/daily-digest/ai-daily-digest-2026-06-25.html">06-25 日报</a></p>
+</div>
+
+</div>
+</body>
+</html>
