@@ -2,6 +2,13 @@
 
 Daddy's personal AI learning repository — distilled knowledge, patterns, and skills from frontier AI research and practice.
 
+## AI 学习路径
+
+[ai-learning-path.md](ai-learning-path.md) 是整体学习路径，分 5 个阶段，明确每个阶段的目标、材料、输出形式和当前状态。每日学习内容应优先映射到当前主攻阶段。
+
+- 当前主线：**阶段 2（Agent 架构）→ 阶段 3（Vibe Coding 工程化）**
+- 最大缺口：阶段 3 尚未系统化
+
 ## Contents
 
 ### Loop Engineering (June 2026)
