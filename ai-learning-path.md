@@ -10,7 +10,7 @@
 |---|---|---|---|---|
 | **1. 基础机制** | LLM/Agent 内核 | 理解 agent 为什么会失败，feedback 如何驱动 agent | ✅ Karpathy minimalism (microgpt)；⚠️ RL/RLVR 待补 | 概念卡 + skill |
 | **2. Agent 架构** | 多 agent 协作与验证 | 掌握 loop、subagent、adversarial verification、convergence | ✅ loop-engineering core/adversarial/patterns | skill 组 |
-| **3. Vibe Coding 工程化** | 自然语言 → 可运行代码/skill | 建立稳定、可复现的 vibe coding 工作流 | ❌ Obsidian 笔记为空，待建 | workflow + skill |
+| **3. Vibe Coding 工程化** | 自然语言 → 可运行 code/skill | 建立稳定、可复现的 vibe coding 工作流 | 🔄 已起草 vibe-coding-workflow skill，待案例验证 | workflow + skill |
 | **4. 生产级能力** | 安全 / 成本 / 延迟 / fallback | 让 agent 能稳定跑在个人业务上 | ⚠️ 只有零散经验，待系统化 | skill 组 + rubric |
 | **5. 领域 Agent (Personal AI OS)** | 矿场 / 日报 / 飞书等 | 把个人工作流封装成自治 agent | 🔄 持续迭代 | domain skills |
 

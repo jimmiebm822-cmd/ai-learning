@@ -17,15 +17,26 @@ Daddy's personal AI learning repository — distilled knowledge, patterns, and s
 - **Distillation doc**: [loop-engineering/loop-engineering-distill-draft.md](loop-engineering/loop-engineering-distill-draft.md)
 - **Key takeaway**: Never let a single agent verify its own output. Use adversarial verification — spawn an independent verifier subagent.
 
+### Vibe Coding (June 2026)
+- **Source**: Own practice + loop-engineering integration
+- **Learning file**: [vibe-coding/vibe-coding-workflow.md](vibe-coding/vibe-coding-workflow.md)
+- **Key takeaway**: Vibe coding needs a workflow — Vibe Check → Clarify → Decide Mode → Plan → Build → Test → Iterate → Package.
+
 ## Structure
 
 ```
 ai-learning/
 ├── README.md
+├── ai-learning-path.md
 ├── loop-engineering/
 │   ├── loop-engineering-learning.html
 │   ├── loop-engineering-learning.md
 │   └── loop-engineering-distill-draft.md
+├── karpathy-minimalism/
+│   ├── karpathy-minimalism-agent.html
+│   └── karpathy-minimalism-agent.md
+├── vibe-coding/
+│   └── vibe-coding-workflow.md
 └── (more topics coming...)
 ```
 
