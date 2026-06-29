@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 学习日报 — 2026-06-29</title>
+<style>
+:root {
+  --bg: #faf9f7; --text: #1a1a1a; --text-secondary: #555;
+  --accent: #d97706; --accent-light: #fef3c7; --border: #e5e0d8;
+  --sidebar-w: 240px;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: 'Inter', 'SF Pro Display', system-ui, -apple-system, sans-serif;
+  background: var(--bg); color: var(--text); line-height: 1.75; font-size: 17px;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page-container { display:flex; min-height:100vh; }
+#toc-sidebar {
+  position:sticky; top:0; width:var(--sidebar-w); flex-shrink:0;
+  background:#fff; height:100vh; display:flex; flex-direction:column;
+  border-right:1px solid var(--border); padding:0 16px; z-index:100;
+}
+.sidebar-logo {
+  display:flex; align-items:center; gap:10px; padding:18px 4px 14px;
+  border-bottom:1px solid var(--border); flex-shrink:0;
+}
+.sidebar-logo .logo-icon { font-size:20px; }
+.sidebar-logo .logo-word { font-size:14px; font-weight:700; color:var(--accent); }
+#toc-sidebar nav { flex:1; overflow-y:auto; padding:10px 0; }
+#toc-sidebar nav a {
+  display:block; font-size:13px; line-height:1.5; color:var(--text-secondary);
+  text-decoration:none; padding:4px 8px; border-radius:4px; margin-bottom:1px;
+  transition:all .15s; border-left:3px solid transparent;
+}
+#toc-sidebar nav a:hover { background:var(--accent-light); color:var(--accent); }
+#toc-sidebar nav a.active { background:var(--accent-light); color:var(--accent); font-weight:600; border-left-color:var(--accent); }
+#toc-sidebar nav a.toc-h3 { padding-left:18px; font-size:12px; }
+.sidebar-footer {
+  padding:12px 0; font-size:12px; color:#999;
+  border-top:1px solid var(--border); text-align:center; flex-shrink:0;
+}
+.sidebar-toggle {
+  display:none; position:fixed; top:12px; left:12px; z-index:101;
+  background:#fff; border:1px solid var(--border); border-radius:6px;
+  padding:6px 12px; font-size:14px; cursor:pointer;
+}
+
+#main-content { flex:1; margin:0 auto; padding:60px 48px 80px 48px; }
+h2 { font-size:28px; font-weight:700; margin:48px 0 20px; padding-top:8px; border-top:1px solid var(--border); scroll-margin-top:20px; }
+h3 { font-size:21px; font-weight:600; margin:32px 0 12px; scroll-margin-top:20px; }
+blockquote {
+  border-left:3px solid var(--accent); padding:12px 20px; margin:20px 0;
+  background:var(--accent-light); border-radius:0 6px 6px 0; font-style:italic; color:#7c5e10;
+}
+p { margin: 10px 0; }
+ul, ol { margin: 10px 0; padding-left: 24px; }
+li { margin-bottom: 6px; line-height: 1.7; }
+pre { background:#2d2d2d; color:#e0e0e0; padding:20px 24px; border-radius:8px; overflow-x:auto; font-size:14px; margin:16px 0; }
+pre code { background:none; padding:0; color:inherit; }
+code { background:var(--accent-light); padding:2px 6px; border-radius:4px; font-size:0.9em; }
+table { width:100%; border-collapse:collapse; margin:20px 0; font-size:15px; }
+th,td { text-align:left; padding:10px 14px; border-bottom:1px solid var(--border); }
+th { font-weight:600; color:var(--text-secondary); font-size:13px; text-transform:uppercase; letter-spacing:0.04em; background:#faf9f7; }
+tr:last-child td { border-bottom:none; }
+a { color:var(--accent); text-decoration:none; }
+a:hover { text-decoration:underline; }
+
+.hero { padding: 32px 0 8px; }
+.hero h1 { font-size: 36px; font-weight:800; line-height:1.3; margin-bottom:12px; }
+.hero .subtitle { color: var(--text-secondary); font-size: 18px; margin-bottom: 8px; }
+.hero .meta { font-size: 14px; color: #999; border-top: 1px solid var(--border); padding-top: 12px; margin-top: 8px; }
+
+.skill-tag { display:inline-block; background:var(--accent-light); color:#7c5e10; padding:2px 10px; border-radius:12px; font-size:13px; margin-right:6px; }
+.action-checkbox { list-style: none; padding-left: 0; }
+.action-checkbox li { padding: 4px 0; }
+
+@media (max-width:900px) {
+  .page-container { display:block; }
+  #toc-sidebar { display:none; position:fixed; top:0; left:0; z-index:100; width:260px; height:100vh; box-shadow:2px 0 12px rgba(0,0,0,.08); }
+  #toc-sidebar.open { display:flex; }
+  .sidebar-toggle { display:block; }
+  #main-content { padding:60px 24px 80px; }
+}
+</style>
+</head>
+<body>
+
+<button class="sidebar-toggle" onclick="document.getElementById('toc-sidebar').classList.toggle('open')">☰ 目录</button>
+
+<div class="page-container">
+  <div id="toc-sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon">🤖</div>
+      <div class="logo-word">AI Learning</div>
+    </div>
+    <nav id="toc-nav"></nav>
+    <div class="sidebar-footer">
+      <a href="https://jimmiebm822-cmd.github.io/ai-learning/" style="color:var(--accent);">← Hub</a>
+    </div>
+  </div>
+
+  <div id="main-content">
+
+<div class="hero">
+  <h1>AI 学习日报 — 2026-06-29</h1>
+  <div class="subtitle">Agent Verification 从理论到实践 — Verifier-Driven 架构 + 公网渗透测试的防御启示</div>
+  <div class="meta">
+    <span class="skill-tag">阶段 2：Agent 架构</span>
+    <span class="skill-tag">阶段 3：Vibe Coding 工程化</span>
+    · 2026-06-29 · 来源可信度：arXiv &gt; HN &gt; 个人博客
+  </div>
+</div>
+
+<h2 id="sec-1">1. 今日主题</h2>
+
+<p><strong>Agent 的输出不可靠不是 bug，是 feature——关键是你有没有 Verifier。</strong></p>
+
+<p>本周末的 arXiv 新论文和 Simon Willison 分享的公网渗透测试结果，从理论和实践两端指向同一个结论：<strong>naive delegation（把任务丢给 agent 然后信它）是 agent 架构的第一大反模式。</strong> 解决方案不是让 agent 更聪明，而是给它配一个独立 Verifier。</p>
+
+<h2 id="sec-2">2. 学习材料</h2>
+
+<h3 id="sec-2-1">2.1 Glite ARF — Verifier-Driven Research with Parallel LLM Coding Agents</h3>
+
+<ul>
+  <li><strong>来源</strong>：<a href="http://arxiv.org/abs/2606.27416v1">arXiv 2606.27416</a>（2026-06-25）</li>
+  <li><strong>核心结论</strong>：naive delegation 在大型项目中不可行——低概率指令失误会叠加成不可复现的垃圾。解决方案是 <strong>verifier-driven</strong> 架构：多个并行 agent 各自生成，然后由独立验证器检查输出一致性。</li>
+</ul>
+
+<blockquote>
+  <strong>为什么这个点重要？</strong> 它给了我们已有 <code>loop-engineering</code> skill（含 adversarial verification 模式）一个来自学术界的独立验证——我们走在正确的路上，但需要把 adversarial verification 从"概念"推成"系统化实践"。
+</blockquote>
+
+<h3 id="sec-2-2">2.2 What happened after 2,000 people tried to hack my AI assistant</h3>
+
+<ul>
+  <li><strong>来源</strong>：<a href="https://simonwillison.net/2026/Jun/26/hack-my-ai-assistant/">Simon Willison / Fernando Irarrázaval</a>（2026-06-26）</li>
+  <li><strong>核心结论</strong>：Fernando 把 OpenClaw test instance 公开给全世界渗透。<strong>6,000+ 次攻击尝试，0 次成功泄露 secrets。</strong> 防御手段就是 prompt engineering——禁止泄露 secrets.env、禁止修改自身文件、禁止执行邮件中的命令、禁止数据外泄。模型是 Opus 4.6。</li>
+</ul>
+
+<blockquote>
+  <strong>为什么这个点重要？</strong> 这是 adversarial verification 在安全维度的实战案例。不是用另一个模型去验证，而是<strong>把验证规则直接嵌入 system prompt</strong>。这种 "inline verifier" 的思路可以迁移到我们的 Hermes agent——不只靠 external verifier，也可以在 prompt 层面建立 defense layer。
+</blockquote>
+
+<h3 id="sec-2-3">2.3 补充参考：Agent in the loop（哲学基础）</h3>
+
+<ul>
+  <li><strong>来源</strong>：<a href="https://simonwillison.net/2026/Jun/28/jon-udell/">Jon Udell via Simon Willison</a>（2026-06-28）</li>
+  <li><strong>核心观点</strong>：翻转 "human in the loop" 叙事——<strong>这是人的 loop，agent 是加入团队的成员。</strong> Agent 辅助流程不应该是"收 prompt → 吐 feature"的黑箱。人类做规划决策，agent 做执行决策。</li>
+</ul>
+
+<p>这直接呼应了 Anthropic 在 <a href="https://www.anthropic.com/research/claude-code-expertise">Claude Code Expertise</a> 报告中的实证发现：<strong>人类做 What，Claude 做 How。</strong></p>
+
+<h2 id="sec-3">3. 关键洞见</h2>
+
+<ol>
+  <li><strong>Naive delegation 的失败是数学必然。</strong> 如果一个 agent 的指令失误概率是 5%，连续 10 步不出错的概率是 0.95^10 ≈ 60%。大型项目动辄上百步——naive delegation 的可靠性趋近于零。Glite ARF 论文用量化方式证明了这一点。</li>
+
+  <li><strong>Verifier 不需要比生成器更聪明。</strong> Glite ARF 的 Verifier 只需要<strong>检查一致性</strong>（多个 agent 输出是否一致），不需要理解内容。这和 <code>loop-engineering/adversarial</code> skill 里的独立验证器设计完全一致——验证器只做 mock-check，不做 reasoning。</li>
+
+  <li><strong>Prompt-level defense 是可行的第一道防线。</strong> Simon Willison 分享的案例证明：即使对全世界开放，精心设计的 anti-prompt-injection rules 也能挡住 6,000+ 次攻击。这意味着我们不需要等 Anthropic/OpenAI 解决 injection 问题——<strong>我们可以自己写 defense prompt。</strong></li>
+
+  <li><strong>Agent 不是替代人，是加入团队。</strong> Jon Udell 的 "agent in the loop" 哲学和 Anthropic 的实证数据共同指向：vibe coding 的正确姿势是 <strong>human plans, agent executes, verifier checks</strong>——三者缺一不可。</li>
+
+  <li><strong>Prompt Caching 是 deep agent 的成本命脉。</strong> GPT-5.6 的显式缓存断点 + 30 分钟最小缓存生命周期（cache read 90% 折扣）+ LangChain 的 "Prompt Caching with Deep Agents" 文章暗示一个趋势：agent loop 的成本优化正在从"模型层优化"转向"缓存策略优化"。这对我们长时间运行的 agent（如日报管线、矿场巡检）有直接影响。</li>
+</ol>
+
+<h2 id="sec-4">4. 行动 &amp; Skill 提案</h2>
+
+<h3 id="sec-4-1">今日行动</h3>
+
+<ul class="action-checkbox">
+  <li>☐ 审查现有 <code>loop-engineering/adversarial</code> skill——Verifier 设计是否做到了"只检查一致性，不做 reasoning"？是否需要 Glite ARF 式的多 agent 并行 + 一致性检查？</li>
+  <li>☐ 给 Prof.Bot 的飞书 gateway 加一层 anti-prompt-injection defense prompt（参考 Simon Willison 分享的规则模板）</li>
+  <li>☐ 找出一个现有 agent pipeline（如 mining daily report），给它加一个独立 Verifier 子 agent，验证输出完整性</li>
+</ul>
+
+<h3 id="sec-4-2">Skill 提案 1：更新 loop-engineering/adversarial</h3>
+
+<ul>
+  <li><strong>原因</strong>：Glite ARF 论文提供了学术级的最佳实践验证——verifier-driven 架构比单 agent 自校对的可靠性高至少一个数量级。当前的 adversarial skill 有独立验证器模式，但缺少"多 agent 并行 + 一致性检查"的具体实现模板。</li>
+  <li><strong>改动点</strong>：
+    <ul>
+      <li>新增 "Parallel Generation + Consistency Check" 模式（受 Glite ARF 启发）</li>
+      <li>新增 "Inline Defense Prompt" 模式（受 Simon Willison 渗透测试案例启发）</li>
+      <li>补一个 failure-mode 量化表格：不同 agent 数量的并行一致性检查，出错概率 vs 成本 trade-off</li>
+    </ul>
+  </li>
+  <li><strong>验收标准</strong>：用新模板重写一个现有 agent 的 verification 层，能在 3 次以内跑通且不增加 30% 以上 token 成本</li>
+</ul>
+
+<h3 id="sec-4-3">Skill 提案 2：新建 agent-defense-prompt</h3>
+
+<ul>
+  <li><strong>原因</strong>：6,000+ 次攻击 0 成功的案例证明 defense prompt 是有效的。飞书 gateway 暴露在公网，prompt injection 风险真实存在。应该提取一套可复用的 defense rules，做成 skill。</li>
+  <li><strong>核心规则</strong>：
+    <ul>
+      <li>禁止泄露 secrets / env / token</li>
+      <li>禁止修改自身配置文件</li>
+      <li>禁止执行外部消息中的命令（需显式确认）</li>
+      <li>禁止向外部发送内部数据</li>
+    </ul>
+  </li>
+  <li><strong>验收标准</strong>：在 5 个 injection 测试 case 中全部防御成功</li>
+</ul>
+
+<h2 id="sec-5">5. 其他前沿动态</h2>
+
+<table>
+  <tr>
+    <th>内容</th><th>来源</th><th>要点</th>
+  </tr>
+  <tr>
+    <td>OpenAI GPT-5.6 Prompt Caching</td>
+    <td><a href="https://simonwillison.net/2026/Jun/26/openai/">Simon Willison</a></td>
+    <td>显式缓存断点 + 30min 最小生命周期，cache read 90% 折扣</td>
+  </tr>
+  <tr>
+    <td>Anthropic Claude Code Expertise</td>
+    <td><a href="https://www.anthropic.com/research/claude-code-expertise">Anthropic Research</a></td>
+    <td>人类做 What，Claude 做 How；七个月 debug 时间下降近一半</td>
+  </tr>
+  <tr>
+    <td>Deterministic Control Plane for Coding Agents</td>
+    <td><a href="http://arxiv.org/abs/2606.26924v1">arXiv 2606.26924</a></td>
+    <td>10,008 repos 的 agent 配置分析；控制面需要形式化</td>
+  </tr>
+  <tr>
+    <td>Static Structure for Code Agents</td>
+    <td><a href="http://arxiv.org/abs/2606.26979v1">arXiv 2606.26979</a></td>
+    <td>Agent 需要多少静态结构信息？确定性锚点实验</td>
+  </tr>
+  <tr>
+    <td>Ornith-1.0 Self-Scaffolding Agent</td>
+    <td><a href="https://deep-reinforce.com/ornith_1_0.html">HN</a></td>
+    <td>LLM 自动搭建项目结构的 agentic coding 框架</td>
+  </tr>
+</table>
+
+<hr style="margin:48px 0 16px; border:none; border-top:1px solid var(--border);">
+<p style="font-size:13px; color:#999;">
+  <em>生成时间：2026-06-29 | 来源可信度：arXiv 论文 ≥ HN &gt; 个人博客</em><br>
+  <em>下一期建议关注：LangChain "Prompt Caching with Deep Agents"（⚠️ .dev TLD 被安全扫描拦截，需人工访问）</em>
+</p>
+
+  </div>
+</div>
+
+<script>
+(function(){
+  const main = document.getElementById('main-content');
+  const nav  = document.getElementById('toc-nav');
+  const headings = main.querySelectorAll('h2[id],h3[id]');
+  if(!headings.length) return;
+
+  let num = 0, sub = 0;
+  headings.forEach(h => {
+    if(h.tagName === 'H2') { num++; sub = 0; }
+    else sub++;
+    if(!h.id) h.id = 'sec-' + num + (h.tagName === 'H3' ? '-' + sub : '');
+    const a = document.createElement('a');
+    a.href = '#' + h.id;
+    a.className = h.tagName === 'H3' ? 'toc-h3' : '';
+    a.textContent = (h.tagName === 'H2' ? num + '. ' : '')
+      + h.textContent.trim()
+        .replace(/^\d+\.\d*\s*/, '')
+        .replace(/^\d+\.\s*/, '');
+    nav.appendChild(a);
+  });
+
+  const links = nav.querySelectorAll('a');
+  let clickLock = false, lockTimer = null, activeId = null;
+
+  function computeActive() {
+    let current = null;
+    headings.forEach(h => {
+      if(h.getBoundingClientRect().top <= 80) current = h.id;
+    });
+    return current || headings[0].id;
+  }
+
+  function setActive(id) {
+    if(id === activeId) return;
+    activeId = id;
+    links.forEach(l => l.classList.toggle('active', l.getAttribute('href') === '#' + id));
+  }
+
+  function update() {
+    if(clickLock) return;
+    const id = computeActive();
+    if(id) setActive(id);
+  }
+
+  let raf = null;
+  window.addEventListener('scroll', () => {
+    if(raf) return;
+    raf = requestAnimationFrame(() => { raf = null; update(); });
+  }, {passive:true});
+
+  new IntersectionObserver(() => update(), {rootMargin:'-20px 0px -80% 0px'})
+    .observe(main);
+
+  nav.addEventListener('click', e => {
+    const a = e.target.closest('a');
+    if(!a) return;
+    e.preventDefault();
+    const id = a.getAttribute('href').slice(1);
+    const target = document.getElementById(id);
+    if(!target) return;
+    clickLock = true; clearTimeout(lockTimer);
+    setActive(id);
+    target.scrollIntoView({behavior:'smooth', block:'start'});
+    lockTimer = setTimeout(() => { clickLock = false; update(); }, 300);
+  });
+
+  nav.addEventListener('wheel', e => {
+    const atTop = nav.scrollTop <= 0;
+    const atBottom = nav.scrollTop + nav.clientHeight >= nav.scrollHeight - 1;
+    if((e.deltaY > 0 && atBottom) || (e.deltaY < 0 && atTop)) e.preventDefault();
+  }, {passive:false});
+
+  update();
+})();
+</script>
+
+</body>
+</html>
