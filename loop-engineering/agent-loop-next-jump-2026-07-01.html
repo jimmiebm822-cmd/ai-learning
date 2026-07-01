@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2026-07-01 — Agent Loop 的下一跳：从自动验证到自主进化 | AI Learning</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral', securityLevel: 'loose' });</script>
+<style>
+:root {
+  --bg: #faf9f7; --text: #1a1a1a; --text-secondary: #555;
+  --accent: #d97706; --accent-light: #fef3c7; --border: #e5e0d8;
+  --danger: #dc2626; --danger-light: #fef2f2;
+  --success: #059669; --success-light: #e6f4ea;
+  --info: #4f6ef7; --info-light: #e0e7ff;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: 'Inter', 'SF Pro Display', system-ui, -apple-system, sans-serif;
+  background: var(--bg); color: var(--text); line-height: 1.75; font-size: 17px;
+  -webkit-font-smoothing: antialiased;
+}
+
+#main-content { max-width:720px; margin:0 auto; padding:60px 24px 80px; }
+
+.hero { padding-bottom:40px; border-bottom:1px solid var(--border); margin-bottom:48px; }
+.hero h1 { font-size:38px; font-weight:700; letter-spacing:-0.03em; line-height:1.25; margin-bottom:12px; }
+.hero .subtitle { font-size:20px; color:var(--text-secondary); margin-bottom:16px; }
+.hero .meta { font-size:14px; color:#999; display:flex; gap:16px; flex-wrap:wrap; }
+.hero .meta .stage-tag {
+  display:inline-block; background:var(--accent-light); color:var(--accent);
+  padding:2px 10px; border-radius:12px; font-size:13px; font-weight:600;
+}
+
+.toc {
+  background:#fff; border:1px solid var(--border); border-radius:8px;
+  padding:24px 28px; margin:32px 0;
+}
+.toc h2 { font-size:18px; font-weight:700; margin:0 0 16px; border:none; }
+.toc ol { padding-left:20px; margin:0; }
+.toc li { margin:6px 0; font-size:15px; }
+.toc a { color:var(--accent); text-decoration:none; }
+.toc a:hover { text-decoration:underline; }
+
+h2 { font-size:28px; font-weight:700; margin:48px 0 20px; padding-top:8px; border-top:1px solid var(--border); scroll-margin-top:20px; }
+h2:first-of-type { border-top:none; margin-top:0; }
+h3 { font-size:21px; font-weight:600; margin:32px 0 12px; scroll-margin-top:20px; }
+h4 { font-size:17px; font-weight:600; margin:24px 0 8px; }
+
+p { margin:12px 0; }
+blockquote {
+  border-left:3px solid var(--accent); padding:12px 20px; margin:20px 0;
+  background:var(--accent-light); border-radius:0 6px 6px 0; font-style:italic; color:#7c5e10;
+}
+code { background:#f5f5f5; padding:2px 6px; border-radius:4px; font-size:0.9em; font-family:'SF Mono',monospace; color:#d04b2d; }
+pre { background:#2d2d2d; color:#e0e0e0; padding:20px 24px; border-radius:8px; overflow-x:auto; font-size:14px; line-height:1.6; margin:16px 0; }
+pre code { background:none; padding:0; color:inherit; }
+
+table { width:100%; border-collapse:collapse; margin:20px 0; font-size:15px; }
+th,td { text-align:left; padding:10px 14px; border-bottom:1px solid var(--border); }
+th { font-weight:600; color:var(--text-secondary); font-size:13px; text-transform:uppercase; letter-spacing:0.04em; background:#faf9f7; }
+
+a { color:var(--accent); text-decoration:none; }
+a:hover { text-decoration:underline; }
+
+.callout {
+  padding:16px 20px; margin:20px 0; border-radius:8px; border-left:4px solid;
+  font-size:15px; line-height:1.65;
+}
+.callout.info { background:var(--info-light); border-color:var(--info); }
+.callout.warning { background:var(--accent-light); border-color:var(--accent); }
+.callout.danger { background:var(--danger-light); border-color:var(--danger); }
+.callout.success { background:var(--success-light); border-color:var(--success); }
+.callout strong { display:block; margin-bottom:4px; }
+
+.summary-card {
+  background:linear-gradient(135deg,var(--accent-light) 0%,#fff7ed 100%);
+  border:1px solid var(--accent); border-radius:8px; padding:20px 24px; margin:32px 0;
+}
+ul,ol { padding-left:24px; margin:12px 0; }
+li { margin:6px 0; }
+
+/* mermaid container */
+.mermaid {
+  background:#fff; border:1px solid var(--border); border-radius:8px;
+  padding:20px; margin:24px 0; overflow-x:auto; text-align:center;
+}
+
+/* Gap analysis bars */
+.gap-section { margin:32px 0; }
+.gap-item { margin:16px 0; }
+.gap-label { display:flex; justify-content:space-between; font-size:14px; margin-bottom:4px; }
+.gap-label .gap-score { font-weight:600; }
+.gap-bar-track { height:10px; background:#e5e0d8; border-radius:5px; overflow:hidden; }
+.gap-bar-fill { height:100%; border-radius:5px; transition:width 0.3s; }
+.gap-bar-fill.big { background:var(--danger); }
+.gap-bar-fill.mid { background:var(--accent); }
+.gap-bar-fill.small { background:var(--success); }
+.gap-bar-fill.done { background:var(--info); }
+
+/* Phase timeline */
+.phase-timeline { margin:24px 0; }
+.phase-card {
+  background:#fff; border:1px solid var(--border); border-radius:8px;
+  padding:16px 20px; margin:12px 0; display:flex; align-items:flex-start; gap:16px;
+}
+.phase-num {
+  background:var(--accent); color:#fff; width:32px; height:32px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center; font-weight:700; font-size:14px; flex-shrink:0;
+}
+.phase-num.future { background:#ccc; }
+.phase-body { flex:1; }
+.phase-body h4 { margin:0 0 4px; font-size:16px; }
+.phase-body p { margin:4px 0; font-size:14px; color:var(--text-secondary); }
+
+@media (max-width:768px) {
+  #main-content { padding:40px 16px 60px; }
+  .hero h1 { font-size:28px; }
+  .hero .subtitle { font-size:17px; }
+}
+</style>
+</head>
+<body>
+
+<div id="main-content">
+  <div class="hero">
+    <h1>Agent Loop 的下一跳：从自动验证到自主进化</h1>
+    <div class="subtitle">Meta-Verifier · Adaptive Rubric · Insight Feed — loop skill v0.4 的进化路线图</div>
+    <div class="meta">
+      <span>📅 2026-07-01</span>
+      <span class="stage-tag">阶段 3</span>
+      <span>Vibe Coding 工程化</span>
+      <span>前序：loop-engineering v0.3.0</span>
+    </div>
+  </div>
+
+  <div class="toc">
+    <h2>📑 目录</h2>
+    <ol>
+      <li><a href="#sec1">引言：loop 不是 endgame</a></li>
+      <li><a href="#sec2">现状诊断：当前 loop 的三层能力边界</a></li>
+      <li><a href="#sec3">外部参考：谁已经在做"自进化 loop"</a></li>
+      <li><a href="#sec4">三个进化方向</a></li>
+      <li><a href="#sec5">架构设计：Meta-Verifier 作为起点</a></li>
+      <li><a href="#sec6">落地路线图</a></li>
+      <li><a href="#sec7">差距分析：能做 vs 还不能做</a></li>
+      <li><a href="#sec8">附录：关键论文与项目索引</a></li>
+    </ol>
+  </div>
+
+  <h2 id="sec1">1. 引言：loop 不是 endgame</h2>
+  <p>当前 loop-engineering skill v0.3.0 已经建立了一个三层架构：</p>
+  <pre><code>loop-engineering (core)
+  ├── loop-engineering-adversarial  →  独立 verifier 审查
+  └── loop-engineering-patterns     →  Loop Until Done + Tournament</code></pre>
+  <p>这六个模式解决了一个核心问题：<strong>不要让产出 agent 自己审自己。</strong></p>
+  <p>但它的本质是 <strong>reactive</strong>：产出了 → 验证了 → 通过/不通过。它不做三件事：</p>
+  <ol>
+    <li><strong>跨 run 学习</strong> — verifier 每次都能发现同一个数据源的问题，但从不说"这个问题已经出现 5 次了"</li>
+    <li><strong>策略自进化</strong> — rubric 是写死的，不会根据历史数据自动增减</li>
+    <li><strong>主动启发人</strong> — verifier 跑完就沉默了</li>
+  </ol>
+  <p>本文提出从 <strong>verify</strong> 到 <strong>observe → learn → coach</strong> 的进化路径。</p>
+
+  <h2 id="sec2">2. 现状诊断：当前 loop 的三层能力边界</h2>
+
+  <h3>2.1 能力矩阵</h3>
+  <table>
+    <tr><th>能力维度</th><th>当前状态</th><th>边界</th></tr>
+    <tr><td><strong>单次验证</strong></td><td style="color:var(--success)">✅ 成熟</td><td>—</td></tr>
+    <tr><td><strong>并行竞争</strong></td><td style="color:var(--success)">✅ 成熟</td><td>Token 成本 3-5x</td></tr>
+    <tr><td><strong>迭代终止</strong></td><td style="color:var(--success)">✅ 成熟</td><td>固定上限，非自适应</td></tr>
+    <tr><td><strong>跨 run 模式识别</strong></td><td style="color:var(--danger)">❌ 不存在</td><td>—</td></tr>
+    <tr><td><strong>rubric 自进化</strong></td><td style="color:var(--danger)">❌ 不存在</td><td>—</td></tr>
+    <tr><td><strong>主动启发</strong></td><td style="color:var(--danger)">❌ 不存在</td><td>—</td></tr>
+    <tr><td><strong>验证 agent 信任管理</strong></td><td style="color:var(--danger)">❌ 不存在</td><td>—</td></tr>
+    <tr><td><strong>失败分类→精准恢复</strong></td><td style="color:var(--danger)">❌ 不存在</td><td>只重试，不区分失败类型</td></tr>
+  </table>
+
+  <h3>2.2 架构图：当前 loop 流程</h3>
+  <div class="mermaid">
+flowchart TD
+    A[任务输入] --> B[产出 Agent]
+    B --> C[Adversarial Verifier]
+    C --> D{通过?}
+    D -->|✅ pass| E[交付]
+    D -->|❌ fail| F[修正后重验]
+    F --> C
+    D -->|⚠️ 3轮上限| G[人介入]
+    
+    style C fill:#fef3c7,stroke:#d97706
+    style E fill:#e6f4ea,stroke:#059669
+    style G fill:#fef2f2,stroke:#dc2626
+  </div>
+
+  <div class="callout warning">
+    <strong>核心问题：</strong>
+    每次都从零开始。verifier 不知道"上次这个 check 就没过"，产出 agent 也不知道"这个数据源已经连续错 5 次了"。
+  </div>
+
+  <h2 id="sec3">3. 外部参考：谁已经在做"自进化 loop"</h2>
+
+  <h3 id="sec3-1">3.1 Skill Forge v2 — 实验驱动的 skill 自优化</h3>
+  <div class="summary-card">
+    <strong>来源：</strong><a href="https://github.com/GodModeAI2025/skill-forge" target="_blank">GitHub — GodModeAI2025/skill-forge</a>（⭐14, MIT）
+  </div>
+
+  <p>三层 agent 循环：</p>
+  <pre><code>Hypothesis Agent → Mutator Agent → Scorer Agent → Keep/Revert
+     ↑                                              │
+     └──────────── 反馈回路 ─────────────────────────┘</code></pre>
+
+  <table>
+    <tr><th>Agent</th><th>角色</th><th>输入</th><th>输出</th></tr>
+    <tr><td><strong>Hypothesis</strong></td><td>"科学家" — 分析失败，检查覆盖率矩阵</td><td>评分结果、skill 原文、历史记录</td><td>可测试的假设 + 修改建议</td></tr>
+    <tr><td><strong>Mutator</strong></td><td>"外科医生" — 执行一个聚焦修改</td><td>假设、目标文件</td><td>修改后的文件 + 文档</td></tr>
+    <tr><td><strong>Scorer</strong></td><td>"法官" — 评估输出质量</td><td>eval 断言、输出</td><td>归一化质量分（0-1）</td></tr>
+  </table>
+
+  <h4>Coverage Matrix（覆盖率矩阵）</h4>
+  <table>
+    <tr><th>Category</th><th>Experiments</th><th>KEEP</th><th>REVERT</th><th>Best Delta</th><th>Saturated</th></tr>
+    <tr><td>workflow</td><td>3</td><td>2</td><td>1</td><td>+0.16</td><td>no</td></tr>
+    <tr><td>edge_cases</td><td>1</td><td>0</td><td>0</td><td>±0.00</td><td>no</td></tr>
+    <tr><td>formatting</td><td>0</td><td>-</td><td>-</td><td>-</td><td>untouched</td></tr>
+  </table>
+
+  <h4>Exploration-Exploitation Balance</h4>
+  <table>
+    <tr><th>Phase</th><th>Rounds</th><th>Strategy</th></tr>
+    <tr><td>Early</td><td>1-3</td><td>Explore: 优先探索未触及的类别</td></tr>
+    <tr><td>Mid</td><td>4-7</td><td>Mixed: 平衡覆盖度与高回报区域</td></tr>
+    <tr><td>Late</td><td>8+</td><td>Exploit: 聚焦最佳 delta 的类别</td></tr>
+  </table>
+
+  <h3 id="sec3-2">3.2 Toryo — 质量棘轮 + 信任累积</h3>
+  <div class="summary-card">
+    <strong>来源：</strong><a href="https://github.com/JesseRWeigel/toryo" target="_blank">GitHub — JesseRWeigel/toryo</a>（⭐10, MIT）
+  </div>
+
+  <pre style="font-size:14px">Plan → Research → Execute → Review
+                              │
+                    Score ≥ threshold → git commit (keep)
+                    Score < threshold → git revert → Ralph Loop retry</pre>
+
+  <table>
+    <tr><th>概念</th><th>做法</th><th>对 loop 的启发</th></tr>
+    <tr>
+      <td><strong>Quality Ratcheting</strong></td>
+      <td>只允许质量单向上升——坏结果自动回滚</td>
+      <td>verifier 不只看单次 pass/fail，看趋势</td>
+    </tr>
+    <tr>
+      <td><strong>Trust-Based Delegation</strong></td>
+      <td>agent 通过持续高分积累信任</td>
+      <td>高信任度的跳过某些 check，低信任度的加强审查</td>
+    </tr>
+    <tr>
+      <td><strong>Ralph Loop</strong></td>
+      <td>失败后把 QA 反馈路由回 agent 重试</td>
+      <td>verifier 不只是说"你错了"，而是说"错在数据源，换备用源"</td>
+    </tr>
+  </table>
+
+  <h3 id="sec3-3">3.3 ForgeGod — 五层记忆 + 策略自进化</h3>
+  <div class="summary-card">
+    <strong>来源：</strong><a href="https://github.com/waitdeadai/forgegod" target="_blank">GitHub — waitdeadai/forgegod</a>（⭐8, Apache 2.0）
+  </div>
+
+  <table>
+    <tr><th>能力</th><th>机制</th></tr>
+    <tr><td>五层记忆</td><td>跨 session 持久化，从每次运行学习</td></tr>
+    <tr><td>SICA（Self-Improving Cognitive Architecture）</td><td>从每次结果中调整策略</td></tr>
+    <tr><td>Recon</td><td>执行前先做 web research 了解领域背景</td></tr>
+    <tr><td>Adversarial Plan Debate</td><td>多个 plan 互相辩论选最优</td></tr>
+  </table>
+
+  <div class="callout info">
+    <strong>对我们 loop 的启发：</strong>
+    跨任务的"记忆"——"上次做日报验证时这个矿工的 API 总是超时，这次先换备用数据源"。
+  </div>
+
+  <h3 id="sec3-4">3.4 Self-Healing Orchestrators — 失败分类→精准恢复</h3>
+  <div class="summary-card">
+    <strong>来源：</strong><a href="https://arxiv.org/abs/2606.01416" target="_blank">arXiv:2606.01416</a> (May 2026)
+  </div>
+
+  <table>
+    <tr><th>指标</th><th>数值</th></tr>
+    <tr><td>精准恢复成功率</td><td style="color:var(--success);font-weight:700">98.8%</td></tr>
+    <tr><td>retry-only 基线</td><td>94.5%</td></tr>
+    <tr><td>full replanning 基线</td><td>93.8%</td></tr>
+    <tr><td>静默失败（verifier 加入后）</td><td style="color:var(--success);font-weight:700">0.0%</td></tr>
+    <tr><td>单次恢复 vs 盲目重试</td><td>94.0% vs 85.3%</td></tr>
+  </table>
+
+  <div class="callout warning">
+    <strong>核心教训：</strong>
+    知道"为什么失败"比盲目重试有效得多。当前 verifier 只说"没过"，不说"为什么没过"。
+  </div>
+
+  <h2 id="sec4">4. 三个进化方向</h2>
+
+  <h3>4.1 方向 A：Meta-Verifier（元验证层）</h3>
+  <p><strong>目标：跨 pipeline 的 pattern discovery</strong></p>
+  <p>一个独立的 Meta-Verifier 定期跑，不验证单次产出，而是<strong>读过去 N 次 verifier 报告，找模式</strong>。</p>
+
+  <div class="callout info">
+    <strong>输出示例：</strong>
+    "过去 7 天日报验证中，'计算准确性' 维度 fail 了 5/7 次，但每次都是矿工 f0xxxx 的 API 返回异常。建议：给这个矿工加 fallback 数据源。"
+  </div>
+
+  <h3>4.2 方向 B：Adaptive Rubric（自进化检查表）</h3>
+  <p><strong>目标：rubric 不再写死，根据历史数据自动调整</strong></p>
+
+  <pre><code>rubric_item.assess():
+    if consecutive_pass >= 10:
+        → status = "skip" (跳过此检查，省 token)
+    elif pass_rate_7d < 0.5:
+        → status = "focus" (加严检查，多抽 3 个样本)
+    elif is_new_failure_pattern:
+        → 自动创建新 rubric_item
+    else:
+        → status = "normal"</code></pre>
+
+  <h3>4.3 方向 C：Insight Feed（启发推送）</h3>
+  <p><strong>目标：verifier 主动告诉你"你可能想知道"</strong></p>
+
+  <div class="callout danger">
+    <strong>⚠️ 日报 anomaly [2026-07-01]</strong>
+    矿工 f0xxxx 的 power 从 3.2PiB 骤降到 1.8PiB<br>
+    与 7 天均值偏离 >2σ<br>
+    上次类似事件：2026-06-15（硬件故障，12h 恢复）<br>
+    → 建议：检查硬件状态
+  </div>
+
+  <p>推送渠道：飞书 DM | Obsidian daily note | 日报 HTML 侧栏角标</p>
+
+  <h3>4.4 三个方向的协同关系</h3>
+  <div class="mermaid">
+flowchart TD
+    subgraph "Layer 3: Coach"
+        C[Insight Feed] --> U[用户]
+    end
+    
+    subgraph "Layer 2: Learn"
+        B1[Adaptive Rubric] --> B2[自动增减 check 项]
+        B2 --> B1
+    end
+    
+    subgraph "Layer 1: Observe"
+        A1[Meta-Verifier] --> A2[跨 run 模式发现]
+        A2 --> A1
+    end
+    
+    A2 -->|发现新失败模式| B1
+    B2 -->|显著 pattern| C
+    
+    style A1 fill:#e6f4ea,stroke:#059669
+    style B1 fill:#fef3c7,stroke:#d97706
+    style C fill:#e0e7ff,stroke:#4f6ef7
+  </div>
+
+  <div class="callout warning">
+    <strong>A → B → C 是递进关系。</strong>先有 Meta-Verifier 发现模式，模式稳定后升级为 Adaptive Rubric，显著异常推送给用户。不要三个同时搞。
+  </div>
+
+  <h2 id="sec5">5. 架构设计：Meta-Verifier 作为起点</h2>
+
+  <h3>5.1 为什么选 Meta-Verifier 先做</h3>
+  <table>
+    <tr><th>理由</th><th>说明</th></tr>
+    <tr><td><strong>不改现有 pipeline</strong></td><td>现有日报/良率 verifier 完全不动</td></tr>
+    <tr><td><strong>数据已有</strong></td><td>verification_report.json 每次验证都写了，只是没人读</td></tr>
+    <tr><td><strong>即时价值</strong></td><td>第一天跑就能告诉你"过去 7 天哪个 check 项最拖后腿"</td></tr>
+    <tr><td><strong>自然延伸</strong></td><td>模式发现后自然引导到 B 和 C</td></tr>
+  </table>
+
+  <h3>5.2 Meta-Verifier 架构图</h3>
+  <div class="mermaid">
+flowchart TD
+    subgraph "Input: 过去 N 天验证报告"
+        R1[verification_report_日报_0701.json]
+        R2[verification_report_日报_0630.json]
+        R3[verification_report_良率_0701.json]
+        R4[...]
+    end
+    
+    subgraph "Meta-Verifier Agent (cron: 每日 23:00)"
+        P1[失败模式聚合]
+        P2[趋势分析]
+        P3[跨 pipeline 关联]
+        P4[信任分更新]
+    end
+    
+    R1 --> P1
+    R2 --> P1
+    R3 --> P1
+    R4 --> P1
+    P1 --> P2
+    P2 --> P3
+    P3 --> P4
+    
+    P4 --> O[meta_insight_report.json]
+    O --> F1[top anomalies]
+    O --> F2[recurring patterns]
+    O --> F3[suggested actions]
+    O --> F4[trust scores]
+  </div>
+
+  <h3>5.3 文件结构</h3>
+  <pre><code>workspace/meta-verifier/
+├── meta_insight_report_YYYY-MM-DD.json   # 每日 insight 报告
+├── failure_patterns.json                  # 积累的失败模式库
+├── trust_scores.json                      # verifier agent 信任分
+└── meta-verifier-skill.md                # 新 skill</code></pre>
+
+  <h2 id="sec6">6. 落地路线图</h2>
+
+  <div class="phase-timeline">
+    <div class="phase-card">
+      <div class="phase-num">0</div>
+      <div class="phase-body">
+        <h4>Phase 0 — 统一报告格式</h4>
+        <p>确认日报/良率 pipeline 的 verification_report.json 格式统一</p>
+        <p style="color:var(--text-secondary)">⏱ 0.5h</p>
+      </div>
+    </div>
+    <div class="phase-card">
+      <div class="phase-num">1</div>
+      <div class="phase-body">
+        <h4>Phase 1 — 第一个 cron job</h4>
+        <p>创建 Meta-Verifier cron job，每天跑一次 meta-analysis，输出 insight JSON</p>
+        <p style="color:var(--text-secondary)">⏱ 2h | 依赖 Phase 0</p>
+      </div>
+    </div>
+    <div class="phase-card">
+      <div class="phase-num">2</div>
+      <div class="phase-body">
+        <h4>Phase 2 — 验证 insight 质量</h4>
+        <p>跑 7 天，观察模式识别是否合理、误报率如何</p>
+        <p style="color:var(--text-secondary)">⏱ 自动运行 + 1h review | 依赖 Phase 1</p>
+      </div>
+    </div>
+    <div class="phase-card">
+      <div class="phase-num future">3</div>
+      <div class="phase-body">
+        <h4>Phase 3 — 决策下一方向</h4>
+        <p>基于 insight 结果，决定优先实现 B（rubric 自进化）还是 C（飞书推送）</p>
+        <p style="color:var(--text-secondary)">⏱ 1h 决策 | 依赖 Phase 2</p>
+      </div>
+    </div>
+    <div class="phase-card">
+      <div class="phase-num future">4</div>
+      <div class="phase-body">
+        <h4>Phase 4 — 实现选定的下一方向</h4>
+        <p>实现 Adaptive Rubric 或 Insight Feed</p>
+        <p style="color:var(--text-secondary)">⏱ 3-5h | 依赖 Phase 3</p>
+      </div>
+    </div>
+  </div>
+
+  <h2 id="sec7">7. 差距分析：能做 vs 还不能做</h2>
+
+  <div class="gap-section">
+    <div class="gap-item">
+      <div class="gap-label"><span>失败模式聚合</span><span class="gap-score">✅ 能做</span></div>
+      <div class="gap-bar-track"><div class="gap-bar-fill done" style="width:90%"></div></div>
+      <p style="font-size:13px;color:var(--text-secondary);margin-top:2px">delegate_task + JSON 解析，需要统一 report 格式</p>
+    </div>
+
+    <div class="gap-item">
+      <div class="gap-label"><span>趋势分析</span><span class="gap-score">✅ 能做</span></div>
+      <div class="gap-bar-track"><div class="gap-bar-fill done" style="width:85%"></div></div>
+      <p style="font-size:13px;color:var(--text-secondary);margin-top:2px">7 天滑动窗口，阈值需调优</p>
+    </div>
+
+    <div class="gap-item">
+      <div class="gap-label"><span>失败分类（区分类型）</span><span class="gap-score">⚠️ 部分</span></div>
+      <div class="gap-bar-track"><div class="gap-bar-fill mid" style="width:55%"></div></div>
+      <p style="font-size:13px;color:var(--text-secondary);margin-top:2px">需要给 verifier 加失败分类字段（ref: Self-Healing Orchestrators）</p>
+    </div>
+
+    <div class="gap-item">
+      <div class="gap-label"><span>探索-利用平衡</span><span class="gap-score">⚠️ 部分</span></div>
+      <div class="gap-bar-track"><div class="gap-bar-fill mid" style="width:50%"></div></div>
+      <p style="font-size:13px;color:var(--text-secondary);margin-top:2px">可以手动实现 coverage matrix，需积累数据（ref: Skill Forge）</p>
+    </div>
+
+    <div class="gap-item">
+      <div class="gap-label"><span>自动创建新 check 项</span><span class="gap-score">❌ 不能</span></div>
+      <div class="gap-bar-track"><div class="gap-bar-fill big" style="width:15%"></div></div>
+      <p style="font-size:13px;color:var(--text-secondary);margin-top:2px">自动改 rubric 风险太高，需要人工确认</p>
+    </div>
+
+    <div class="gap-item">
+      <div class="gap-label"><span>信任分管理</span><span class="gap-score">✅ 能做</span></div>
+      <div class="gap-bar-track"><div class="gap-bar-fill done" style="width:80%"></div></div>
+      <p style="font-size:13px;color:var(--text-secondary);margin-top:2px">pass/fail 计数 + 趋势，需定义计算公式（ref: Toryo）</p>
+    </div>
+
+    <div class="gap-item">
+      <div class="gap-label"><span>跨 pipeline 关联</span><span class="gap-score">⚠️ 部分</span></div>
+      <div class="gap-bar-track"><div class="gap-bar-fill mid" style="width:45%"></div></div>
+      <p style="font-size:13px;color:var(--text-secondary);margin-top:2px">日报和良率的数据源映射还没做</p>
+    </div>
+
+    <div class="gap-item">
+      <div class="gap-label"><span>飞书推送 insight</span><span class="gap-score">✅ 能做</span></div>
+      <div class="gap-bar-track"><div class="gap-bar-fill done" style="width:90%"></div></div>
+      <p style="font-size:13px;color:var(--text-secondary);margin-top:2px">feishu gateway 已有，Obsidian skill 已有</p>
+    </div>
+  </div>
+
+  <h2 id="sec8">8. 附录：关键论文与项目索引</h2>
+
+  <table>
+    <tr><th>来源</th><th>类型</th><th>核心概念</th></tr>
+    <tr>
+      <td><a href="https://github.com/GodModeAI2025/skill-forge" target="_blank">Skill Forge v2</a></td>
+      <td>GitHub</td>
+      <td>Hypothesis→Mutate→Score→Keep/Revert; Coverage Matrix; Exploration-Exploitation</td>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/JesseRWeigel/toryo" target="_blank">Toryo</a></td>
+      <td>GitHub</td>
+      <td>Quality ratcheting; Trust-based delegation; Ralph Loop</td>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/waitdeadai/forgegod" target="_blank">ForgeGod</a></td>
+      <td>GitHub</td>
+      <td>五层认知记忆; SICA; Recon; Adversarial plan debate</td>
+    </tr>
+    <tr>
+      <td><a href="https://arxiv.org/abs/2606.01416" target="_blank">Self-Healing Orchestrators</a></td>
+      <td>arXiv</td>
+      <td>失败分类→精准恢复; 98.8% 成功率; 静默失败→0%</td>
+    </tr>
+    <tr>
+      <td><a href="https://arxiv.org/abs/2606.18051" target="_blank">SkillWeaver</a></td>
+      <td>arXiv</td>
+      <td>组合式 skill routing; 99% context 压缩</td>
+    </tr>
+    <tr>
+      <td><a href="https://arxiv.org/abs/2512.16301" target="_blank">Adaptation of Agentic AI</a></td>
+      <td>arXiv</td>
+      <td>T1(agent-agnostic) vs T2(agent-supervised) 四范式</td>
+    </tr>
+    <tr>
+      <td><a href="https://arxiv.org/abs/2606.32032" target="_blank">RL + Metacognitive Feedback</a></td>
+      <td>arXiv</td>
+      <td>RL with metacognition 提升 LLM 可信度</td>
+    </tr>
+    <tr>
+      <td>loop-engineering v0.3.0</td>
+      <td>本 repo</td>
+      <td>三层架构 + 六个模式 + 五步骤 Orange Book</td>
+    </tr>
+  </table>
+
+  <hr style="border:none;border-top:1px solid var(--border);margin:48px 0 24px">
+
+  <div class="callout success">
+    <strong>✅ 下一步行动：</strong>
+    确认 verification_report.json 的统一格式 → 启动 Phase 1 cron job。<br>
+    <span style="font-size:14px">目标：7 天内让 Meta-Verifier 产出第一条有价值的 insight。</span>
+  </div>
+</div>
+
+</body>
+</html>
