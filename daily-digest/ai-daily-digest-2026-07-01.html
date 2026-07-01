@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 学习日报 — 2026-07-01 | Prof.Bot</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🤖</text></svg>" type="image/svg+xml">
+<style>
+:root {
+  --bg: #faf9f7; --text: #1a1a1a; --text-secondary: #555;
+  --accent: #d97706; --accent-light: #fef3c7; --border: #e5e0d8;
+  --sidebar-w: 240px;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: 'Inter', 'SF Pro Display', system-ui, -apple-system, sans-serif;
+  background: var(--bg); color: var(--text); line-height: 1.75; font-size: 17px;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page-container { display:flex; min-height:100vh; }
+#toc-sidebar {
+  position:sticky; top:0; width:var(--sidebar-w); flex-shrink:0;
+  background:#fff; height:100vh; display:flex; flex-direction:column;
+  border-right:1px solid var(--border); padding:0 16px; z-index:100;
+}
+.sidebar-logo {
+  display:flex; align-items:center; gap:10px; padding:18px 4px 14px;
+  border-bottom:1px solid var(--border); flex-shrink:0;
+}
+.sidebar-logo .logo-icon { font-size:20px; }
+.sidebar-logo .logo-word { font-size:14px; font-weight:700; color:var(--accent); }
+#toc-sidebar nav { flex:1; overflow-y:auto; padding:10px 0; }
+#toc-sidebar nav a {
+  display:block; font-size:13px; line-height:1.5; color:var(--text-secondary);
+  text-decoration:none; padding:4px 8px; border-radius:4px; margin-bottom:1px;
+  transition:all .15s; border-left:3px solid transparent;
+}
+#toc-sidebar nav a:hover { background:var(--accent-light); color:var(--accent); }
+#toc-sidebar nav a.active { background:var(--accent-light); color:var(--accent); font-weight:600; border-left-color:var(--accent); }
+#toc-sidebar nav a.toc-h3 { padding-left:18px; font-size:12px; }
+.sidebar-footer {
+  padding:12px 0; font-size:12px; color:#999;
+  border-top:1px solid var(--border); text-align:center; flex-shrink:0;
+}
+.sidebar-toggle {
+  display:none; position:fixed; top:12px; left:12px; z-index:101;
+  background:#fff; border:1px solid var(--border); border-radius:6px;
+  padding:6px 12px; font-size:14px; cursor:pointer;
+}
+
+#main-content { flex:1; margin:0 auto; padding:60px 48px 80px 48px; }
+.hero { padding-bottom:40px; border-bottom:1px solid var(--border); margin-bottom:48px; }
+.hero h1 { font-size:42px; font-weight:700; letter-spacing:-0.03em; line-height:1.2; margin-bottom:12px; }
+.hero .subtitle { font-size:20px; color:var(--text-secondary); }
+.hero .meta { font-size:14px; color:#999; margin-top:8px; display:flex; gap:16px; }
+.hero .meta .stage-tag {
+  display:inline-block; background:var(--accent-light); color:var(--accent);
+  padding:2px 10px; border-radius:12px; font-size:13px; font-weight:600;
+}
+h2 { font-size:28px; font-weight:700; margin:48px 0 20px; padding-top:8px; border-top:1px solid var(--border); scroll-margin-top:20px; }
+h2:first-of-type { border-top:none; margin-top:0; }
+h3 { font-size:21px; font-weight:600; margin:32px 0 12px; scroll-margin-top:20px; }
+blockquote { border-left:3px solid var(--accent); padding:12px 20px; margin:20px 0; background:var(--accent-light); border-radius:0 6px 6px 0; font-style:italic; color:#7c5e10; }
+code { background:#f5f5f5; padding:2px 6px; border-radius:4px; font-size:0.9em; font-family:'SF Mono',monospace; color:#d04b2d; }
+pre { background:#2d2d2d; color:#e0e0e0; padding:20px 24px; border-radius:8px; overflow-x:auto; font-size:14px; line-height:1.6; margin:16px 0; }
+pre code { background:none; padding:0; color:inherit; }
+table { width:100%; border-collapse:collapse; margin:20px 0; font-size:15px; }
+th,td { text-align:left; padding:10px 14px; border-bottom:1px solid var(--border); }
+th { font-weight:600; color:var(--text-secondary); font-size:13px; text-transform:uppercase; letter-spacing:0.04em; background:#faf9f7; }
+a { color:var(--accent); text-decoration:none; }
+.summary-card { background:linear-gradient(135deg,var(--accent-light) 0%,#fff7ed 100%); border:1px solid var(--accent); border-radius:8px; padding:20px 24px; margin:32px 0; }
+ul,ol { padding-left:24px; margin:12px 0; }
+li { margin:6px 0; }
+
+/* Data stat boxes */
+.stat-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:16px; margin:24px 0; }
+.stat-box { background:#fff; border:1px solid var(--border); border-radius:8px; padding:18px 20px; }
+.stat-box .stat-num { font-size:32px; font-weight:700; color:var(--accent); line-height:1.2; }
+.stat-box .stat-label { font-size:13px; color:var(--text-secondary); margin-top:4px; }
+
+@media (max-width:900px) {
+  .page-container { display:block; }
+  #toc-sidebar { display:none; position:fixed; top:0; left:0; z-index:100; width:260px; height:100vh; box-shadow:2px 0 12px rgba(0,0,0,.08); }
+  #toc-sidebar.open { display:flex; }
+  .sidebar-toggle { display:block; }
+  #main-content { max-width:100%; padding:60px 24px 80px; }
+}
+</style>
+</head>
+<body>
+
+<button class="sidebar-toggle" onclick="document.getElementById('toc-sidebar').classList.toggle('open')">☰ 目录</button>
+
+<div class="page-container">
+  <div id="toc-sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon">🤖</div>
+      <div>
+        <div class="logo-word">Prof.Bot</div>
+        <div style="font-size:11px;color:#999">AI 学习日报</div>
+      </div>
+    </div>
+    <nav id="toc-nav"></nav>
+    <div class="sidebar-footer">&copy; 2026 Daddy's AI Learning</div>
+  </div>
+
+  <div id="main-content">
+    <div class="hero">
+      <h1>Agentic Coding 的实证数据</h1>
+      <div class="subtitle">领域知识，而非编程技能，决定 agent 协作成败</div>
+      <div class="meta">
+        <span>📅 2026-07-01</span>
+        <span class="stage-tag">阶段 2 → 3</span>
+        <span>Agent 架构 → Vibe Coding 工程化</span>
+      </div>
+    </div>
+
+    <h2>今日主题</h2>
+    <p><strong>你需要的是"懂问题的人"，不是"会写代码的人"</strong></p>
+    <p>Anthropic 发布了 Claude Code 使用行为的大规模实证研究——基于 2025.10–2026.04 间 <strong>~40 万次交互会话</strong>、<strong>~23.5 万用户</strong>的数据。结论颠覆直觉：决定 agentic coding 成功率的不是编程水平，而是<strong>领域专业度</strong>（domain expertise）。</p>
+    <p>这对 Daddy 目前从阶段 2（Agent 架构）走向阶段 3（Vibe Coding 工程化）尤为关键——我们的核心任务不是写更好的代码，而是<strong>写更好的 prompt/plan/spec</strong>，让 agent 去执行。</p>
+
+    <h2>学习材料</h2>
+
+    <h3>必读：Agentic Coding and Persistent Returns to Expertise</h3>
+    <table>
+      <tr><td style="width:100px;font-weight:600">来源</td><td><a href="https://www.anthropic.com/research/claude-code-expertise" target="_blank">Anthropic Research</a></td></tr>
+      <tr><td style="font-weight:600">作者/机构</td><td>Anthropic Economic Research Team</td></tr>
+      <tr><td style="font-weight:600">日期</td><td>2026-06-16</td></tr>
+    </table>
+
+    <div class="summary-card">
+      <strong>核心结论</strong>
+      <ol style="margin-top:8px">
+        <li><strong>分工模式已稳定</strong>：人类做 70% 的 planning 决策（做什么/什么算完成），agent 做 80% 的 execution 决策（怎么改代码/用什么语言/跑什么命令）。</li>
+        <li><strong>专业度决定产出量</strong>：expert 用户每次 prompt 触发 ~12 个 action + 3,200 字输出，novice 仅 ~5 action + 600 字——差距 2–5 倍。</li>
+        <li><strong>成功率梯度</strong>：novice verified success 15%，intermediate 28%，expert 33%——最大提升在 novice→intermediate。</li>
+        <li><strong>容错能力差异更大</strong>：trouble session 中的 verified success：novice 4% vs expert 15%。</li>
+        <li><strong>debug 占比从 33% 降到 19%</strong>（7 个月内），operating/writing/analysis 翻倍——agent 越来越能做"端到端"任务。</li>
+      </ol>
+    </div>
+
+    <div class="stat-grid">
+      <div class="stat-box">
+        <div class="stat-num">70% / 80%</div>
+        <div class="stat-label">人类做 planning / agent 做 execution</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num">2–5×</div>
+        <div class="stat-label">Expert vs Novice 的 agent 产出差距</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num">15% → 33%</div>
+        <div class="stat-label">Novice → Expert 的 verified success 提升</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num">33% → 19%</div>
+        <div class="stat-label">7 个月内 debug 占比下降幅度</div>
+      </div>
+    </div>
+
+    <h3>可选：Scaling Laws, Carefully</h3>
+    <table>
+      <tr><td style="width:100px;font-weight:600">来源</td><td><a href="https://lilianweng.github.io/posts/2026-06-24-scaling-laws/" target="_blank">Lil'Log</a></td></tr>
+      <tr><td style="font-weight:600">作者</td><td>Lilian Weng (OpenAI)</td></tr>
+      <tr><td style="font-weight:600">日期</td><td>2026-06-24</td></tr>
+    </table>
+    <p>深入梳理了从 Amari (1992) 到 Chinchilla (2022) 的 scaling laws 演进。关键 insight：<strong>预测 loss 可以用小模型外推大模型</strong>，数据量需要按 N^(α/β) 的比例跟随模型规模增长。对 agent 设计的启发：验证性实验（小规模 loop）的结果能外推到大系统的行为。</p>
+
+    <h2>关键洞见</h2>
+    <ol>
+      <li><strong>"spec 质量 > 代码能力"被实证化。</strong>Anthropic 数据直接量化了这一点。Expert 用户不是更会写代码，而是更清楚"我想要什么结果"、"什么算成功"、"边界条件是什么"。这正是 vibe coding workflow 需要工程化的核心——spec-first, not code-first。</li>
+      <li><strong>Novice→Intermediate 是最大杠杆。</strong>大部分成功率的提升来自从"新手"到"中级"的跳跃。这意味着我们不需要成为领域顶级专家才能用好 agent——有基本的领域概念 + 清晰的验收标准就够了。</li>
+      <li><strong>容错是 agent 的天花板。</strong>Trouble session 中 novice 只有 4% 能恢复成功，expert 有 15%。expert 不是不犯错，而是能<strong>识别错误 + 给 agent 正确的纠偏指令</strong>。这对应我们的 loop-engineering skill——adversarial verifier 的价值就在此。</li>
+      <li><strong>Agent 正在从"写代码工具"变成"端到端工作引擎"。</strong>debug 占比降了近一半，operating/writing/analysis 翻倍。与 Daddy 用 Hermes 的轨迹一致——从最初写代码，到管理多 pipeline（日报/看板/矿场）。</li>
+      <li><strong>Scaling Laws 的元教训：小规模实验可外推。</strong>我们在 Hermes 里做的 loop-engineering 验证、daily digest 闭环、subagent 协作——这些"小实验"的结果可以用来预测更大系统的行为模式。</li>
+    </ol>
+
+    <h2>行动 & Skill 提案</h2>
+
+    <h3>今日行动</h3>
+    <ul>
+      <li>审视现有 <code>vibe-coding-workflow</code> skill 初稿，加入"领域知识前置检查"步骤（参考 Anthropic 的 expertise classifier 三信号：指令精确度/验证请求/纠错方向）</li>
+      <li>在 daily 使用 Hermes 时，刻意练习"spec-first"——先写清楚验收标准再让 agent 动手</li>
+    </ul>
+
+    <h3>Skill 提案</h3>
+    <div class="summary-card">
+      <strong>更新：</strong><code>vibe-coding-workflow</code><br><br>
+      <strong>原因：</strong>Anthropic 数据提供了可操作的 spec 质量标准——expertise 的三个信号（指令精确度、验证需求、纠错方向）可直接内化为 skill 步骤。<br><br>
+      <strong>改动点：</strong>
+      <ul style="margin-top:8px">
+        <li>在"需求澄清"阶段加入三个 check：①你是否能说出验收标准？②你是否知道什么算失败？③你能识别 agent 的哪个输出是错的吗？</li>
+        <li>加入"expertise ladder"概念：首次接触新领域时预期 novice，第二次 intermediate，第三次后才能达到 expert 级输出</li>
+      </ul>
+      <strong>验收标准：</strong>用该 skill 完成一个跨领域任务（如矿场日报+HTML 生成），对比未用 skill 时的成功率差异。
+    </div>
+
+    <h2>其他前沿动态</h2>
+    <ul>
+      <li><strong>Anthropic "Economic Index: Cadences"</strong> (Jun 26) — 首次按小时采样分析 Claude 使用节奏 <a href="https://www.anthropic.com/research/economic-index-june-2026-report" target="_blank">链接</a></li>
+      <li><strong>Anthropic "Project Fetch: Phase two"</strong> (Jun 18) — Frontier Red Team 安全评估第二阶段 <a href="https://www.anthropic.com/research/project-fetch-phase-two" target="_blank">链接</a></li>
+      <li><strong>Anthropic "Teaching Claude why"</strong> (May 8) — 减少 agentic misalignment 的新方法（将"为什么"作为训练信号） <a href="https://www.anthropic.com/research/teaching-claude-why" target="_blank">链接</a></li>
+    </ul>
+  </div>
+</div>
+
+<script>
+(function(){
+  const main = document.getElementById('main-content');
+  const nav  = document.getElementById('toc-nav');
+  const headings = main.querySelectorAll('h2, h3');
+  if(!headings.length) return;
+
+  let num = 0, sub = 0;
+  headings.forEach(h => {
+    if(h.tagName === 'H2') { num++; sub = 0; }
+    else sub++;
+    if(!h.id) h.id = 'sec-' + num + (h.tagName === 'H3' ? '-' + sub : '');
+    const a = document.createElement('a');
+    a.href = '#' + h.id;
+    a.className = h.tagName === 'H3' ? 'toc-h3' : '';
+    a.textContent = (h.tagName === 'H2' ? num + '. ' : '') + h.textContent.trim().replace(/^\d+\.\d*\s*/, '').replace(/^\d+\.\s*/, '');
+    nav.appendChild(a);
+  });
+
+  const links = nav.querySelectorAll('a');
+  let clickLock = false, lockTimer = null, activeId = null;
+
+  function computeActive() {
+    let current = null;
+    headings.forEach(h => {
+      if(h.getBoundingClientRect().top <= 80) current = h.id;
+    });
+    return current || headings[0].id;
+  }
+  function setActive(id) {
+    if(id === activeId) return;
+    activeId = id;
+    links.forEach(l => l.classList.toggle('active', l.getAttribute('href') === '#' + id));
+  }
+  function update() {
+    if(clickLock) return;
+    const id = computeActive();
+    if(id) setActive(id);
+  }
+
+  let raf = null;
+  window.addEventListener('scroll', () => {
+    if(raf) return;
+    raf = requestAnimationFrame(() => { raf = null; update(); });
+  }, {passive:true});
+
+  new IntersectionObserver(() => update(), {rootMargin:'-20px 0px -80% 0px'}).observe(main);
+
+  nav.addEventListener('click', e => {
+    const a = e.target.closest('a');
+    if(!a) return;
+    e.preventDefault();
+    const id = a.getAttribute('href').slice(1);
+    const target = document.getElementById(id);
+    if(!target) return;
+    clickLock = true; clearTimeout(lockTimer);
+    setActive(id);
+    target.scrollIntoView({behavior:'smooth', block:'start'});
+    lockTimer = setTimeout(() => { clickLock = false; update(); }, 300);
+  });
+
+  nav.addEventListener('wheel', e => {
+    const atTop = nav.scrollTop <= 0;
+    const atBottom = nav.scrollTop + nav.clientHeight >= nav.scrollHeight - 1;
+    if((e.deltaY > 0 && atBottom) || (e.deltaY < 0 && atTop)) e.preventDefault();
+  }, {passive:false});
+
+  update();
+})();
+</script>
+
+</body>
+</html>
