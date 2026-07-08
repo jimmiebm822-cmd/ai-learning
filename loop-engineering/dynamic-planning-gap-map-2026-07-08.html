@@ -3,963 +3,701 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dynamic Planning × Loop Engineering — Gap Map 学习材料</title>
+<title>2026-07-08 — Dynamic Planning × Loop Engineering — Gap Map | AI Learning</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral', securityLevel: 'loose' });</script>
 <style>
-  :root {
-    --bg: #1a1a2e;
-    --bg-soft: #22223a;
-    --bg-card: #25253e;
-    --bg-code: #15151f;
-    --text: #e0e0e0;
-    --text-dim: #a0a0b8;
-    --text-muted: #7a7a92;
-    --blue: #5dade2;
-    --blue-soft: #2c3e50;
-    --orange: #f39c12;
-    --orange-soft: #4a3a1c;
-    --green: #2ecc71;
-    --green-soft: #1e3a2a;
-    --red: #e74c3c;
-    --purple: #bb86fc;
-    --border: #3a3a52;
-  }
+:root {
+  --bg: #faf9f7; --text: #1a1a1a; --text-secondary: #555;
+  --accent: #d97706; --accent-light: #fef3c7; --border: #e5e0d8;
+  --danger: #dc2626; --danger-light: #fef2f2;
+  --success: #059669; --success-light: #e6f4ea;
+  --info: #4f6ef7; --info-light: #e0e7ff;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: 'Inter', 'SF Pro Display', system-ui, -apple-system, sans-serif;
+  background: var(--bg); color: var(--text); line-height: 1.75; font-size: 17px;
+  -webkit-font-smoothing: antialiased;
+}
 
-  * { box-sizing: border-box; }
+#main-content { max-width:720px; margin:0 auto; padding:60px 24px 80px; }
 
-  html, body {
-    margin: 0;
-    padding: 0;
-    background: var(--bg);
-    color: var(--text);
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
-                 "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
-    font-size: 15px;
-    line-height: 1.6;
-    -webkit-font-smoothing: antialiased;
-  }
+.hero { padding-bottom:40px; border-bottom:1px solid var(--border); margin-bottom:48px; }
+.hero h1 { font-size:38px; font-weight:700; letter-spacing:-0.03em; line-height:1.25; margin-bottom:12px; }
+.hero .subtitle { font-size:20px; color:var(--text-secondary); margin-bottom:16px; }
+.hero .meta { font-size:14px; color:#999; display:flex; gap:16px; flex-wrap:wrap; }
+.hero .meta .stage-tag {
+  display:inline-block; background:var(--accent-light); color:var(--accent);
+  padding:2px 10px; border-radius:12px; font-size:13px; font-weight:600;
+}
 
-  .container {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 0 24px 80px 24px;
-  }
+.toc {
+  background:#fff; border:1px solid var(--border); border-radius:8px;
+  padding:24px 28px; margin:32px 0;
+}
+.toc h2 { font-size:18px; font-weight:700; margin:0 0 16px; border:none; }
+.toc ol { padding-left:20px; margin:0; }
+.toc li { margin:6px 0; font-size:15px; }
+.toc a { color:var(--accent); text-decoration:none; }
+.toc a:hover { text-decoration:underline; }
 
-  /* ---------- Header ---------- */
-  header {
-    padding: 64px 0 40px 0;
-    border-bottom: 1px solid var(--border);
-    margin-bottom: 40px;
-  }
-  header h1 {
-    font-size: 30px;
-    margin: 0 0 12px 0;
-    color: #fff;
-    letter-spacing: 0.5px;
-  }
-  header .meta {
-    color: var(--text-dim);
-    font-size: 14px;
-    margin-bottom: 18px;
-  }
-  header .meta .tag {
-    display: inline-block;
-    background: var(--blue-soft);
-    color: var(--blue);
-    padding: 2px 10px;
-    border-radius: 4px;
-    font-size: 12px;
-    margin-right: 8px;
-    font-weight: 600;
-  }
-  header .scope {
-    color: var(--text-dim);
-    font-size: 15px;
-    background: var(--bg-card);
-    padding: 14px 18px;
-    border-left: 3px solid var(--blue);
-    border-radius: 0 6px 6px 0;
-  }
+h2 { font-size:28px; font-weight:700; margin:48px 0 20px; padding-top:8px; border-top:1px solid var(--border); scroll-margin-top:20px; }
+h2:first-of-type { border-top:none; margin-top:0; }
+h3 { font-size:21px; font-weight:600; margin:32px 0 12px; scroll-margin-top:20px; }
+h4 { font-size:17px; font-weight:600; margin:24px 0 8px; }
 
-  /* ---------- Section ---------- */
-  section {
-    margin-bottom: 56px;
-  }
-  h2 {
-    color: #fff;
-    font-size: 22px;
-    margin: 0 0 20px 0;
-    padding-bottom: 10px;
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  h2 .num {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 28px;
-    height: 28px;
-    background: var(--blue);
-    color: var(--bg);
-    border-radius: 50%;
-    font-size: 14px;
-    font-weight: 700;
-  }
-  h3 {
-    color: var(--orange);
-    font-size: 17px;
-    margin: 28px 0 12px 0;
-  }
-  h4 {
-    color: var(--green);
-    font-size: 15px;
-    margin: 20px 0 10px 0;
-    font-weight: 600;
-  }
-  p { margin: 0 0 14px 0; }
+p { margin:12px 0; }
+blockquote {
+  border-left:3px solid var(--accent); padding:12px 20px; margin:20px 0;
+  background:var(--accent-light); border-radius:0 6px 6px 0; font-style:italic; color:#7c5e10;
+}
+code { background:#f5f5f5; padding:2px 6px; border-radius:4px; font-size:0.9em; font-family:'SF Mono',monospace; color:#d04b2d; }
+pre { background:#2d2d2d; color:#e0e0e0; padding:20px 24px; border-radius:8px; overflow-x:auto; font-size:14px; line-height:1.6; margin:16px 0; }
+pre code { background:none; padding:0; color:inherit; }
 
-  ul, ol { margin: 0 0 14px 0; padding-left: 24px; }
-  li { margin-bottom: 6px; }
+table { width:100%; border-collapse:collapse; margin:20px 0; font-size:15px; }
+th,td { text-align:left; padding:10px 14px; border-bottom:1px solid var(--border); }
+th { font-weight:600; color:var(--text-secondary); font-size:13px; text-transform:uppercase; letter-spacing:0.04em; background:#faf9f7; }
 
-  code {
-    font-family: "JetBrains Mono", "SF Mono", Consolas, Monaco, monospace;
-    background: var(--bg-code);
-    color: var(--green);
-    padding: 1px 6px;
-    border-radius: 3px;
-    font-size: 13px;
-  }
+a { color:var(--accent); text-decoration:none; }
+a:hover { text-decoration:underline; }
 
-  /* ---------- Callout ---------- */
-  .callout {
-    background: var(--bg-card);
-    border-left: 3px solid var(--orange);
-    padding: 14px 18px;
-    margin: 16px 0;
-    border-radius: 0 6px 6px 0;
-  }
-  .callout.blue { border-left-color: var(--blue); }
-  .callout.green { border-left-color: var(--green); }
-  .callout.red { border-left-color: var(--red); }
-  .callout .label {
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: var(--text-muted);
-    margin-bottom: 6px;
-    font-weight: 700;
-  }
-  .callout strong { color: #fff; }
+.callout {
+  padding:16px 20px; margin:20px 0; border-radius:8px; border-left:4px solid;
+  font-size:15px; line-height:1.65;
+}
+.callout.info { background:var(--info-light); border-color:var(--info); }
+.callout.warning { background:var(--accent-light); border-color:var(--accent); }
+.callout.danger { background:var(--danger-light); border-color:var(--danger); }
+.callout.success { background:var(--success-light); border-color:var(--success); }
+.callout strong { display:block; margin-bottom:4px; }
 
-  /* ---------- Table ---------- */
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 18px 0;
-    font-size: 14px;
-    background: var(--bg-soft);
-    border-radius: 6px;
-    overflow: hidden;
-  }
-  thead {
-    background: #2d2d4a;
-  }
-  th {
-    text-align: left;
-    padding: 11px 14px;
-    color: #fff;
-    font-weight: 600;
-    border-bottom: 2px solid var(--border);
-    white-space: nowrap;
-  }
-  td {
-    padding: 10px 14px;
-    border-bottom: 1px solid var(--border);
-    vertical-align: top;
-  }
-  tbody tr:nth-child(odd) { background: rgba(255,255,255,0.02); }
-  tbody tr:nth-child(even) { background: rgba(255,255,255,0.04); }
-  tbody tr:hover { background: rgba(93,173,226,0.08); }
+.summary-card {
+  background:linear-gradient(135deg,var(--accent-light) 0%,#fff7ed 100%);
+  border:1px solid var(--accent); border-radius:8px; padding:20px 24px; margin:32px 0;
+}
+ul,ol { padding-left:24px; margin:12px 0; }
+li { margin:6px 0; }
 
-  .pill {
-    display: inline-block;
-    padding: 2px 9px;
-    border-radius: 10px;
-    font-size: 12px;
-    font-weight: 600;
-    white-space: nowrap;
-  }
-  .pill.p0 { background: #4a1c1c; color: #ff8a8a; }
-  .pill.p1 { background: #4a3a1c; color: var(--orange); }
-  .pill.p2 { background: var(--blue-soft); color: var(--blue); }
-  .pill.high { background: var(--green-soft); color: var(--green); }
-  .pill.med { background: var(--orange-soft); color: var(--orange); }
-  .pill.low { background: var(--bg-card); color: var(--text-dim); }
-  .pill.gap1 { background: #3a1c4a; color: var(--purple); }
-  .pill.gap2 { background: #1c3a4a; color: var(--blue); }
-  .pill.gap3 { background: var(--green-soft); color: var(--green); }
+/* mermaid container */
+.mermaid {
+  background:#fff; border:1px solid var(--border); border-radius:8px;
+  padding:20px; margin:24px 0; overflow-x:auto; text-align:center;
+}
 
-  .check { color: var(--green); font-weight: 700; }
-  .cross { color: var(--red); font-weight: 700; }
-  .warn { color: var(--orange); font-weight: 700; }
+/* Phase timeline */
+.phase-timeline { margin:24px 0; }
+.phase-card {
+  background:#fff; border:1px solid var(--border); border-radius:8px;
+  padding:16px 20px; margin:12px 0; display:flex; align-items:flex-start; gap:16px;
+}
+.phase-num {
+  background:var(--accent); color:#fff; width:32px; height:32px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center; font-weight:700; font-size:14px; flex-shrink:0;
+}
+.phase-num.future { background:#ccc; }
+.phase-body { flex:1; }
+.phase-body h4 { margin:0 0 4px; font-size:16px; }
+.phase-body p { margin:4px 0; font-size:14px; color:var(--text-secondary); }
 
-  /* ---------- Code Block ---------- */
-  pre {
-    background: var(--bg-code);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 16px 18px;
-    overflow-x: auto;
-    margin: 16px 0;
-    font-size: 13px;
-    line-height: 1.5;
-  }
-  pre code {
-    background: none;
-    color: var(--text);
-    padding: 0;
-  }
-  pre .kw { color: var(--blue); }
-  pre .cmt { color: var(--text-muted); font-style: italic; }
-  pre .acc { color: var(--green); }
-  pre .dim { color: var(--text-dim); }
+/* Source badge */
+.src-badge {
+  display:inline-block; font-size:12px; font-weight:600; padding:1px 8px;
+  border-radius:10px; margin-left:6px; vertical-align:middle;
+}
+.src-badge.green { background:var(--success-light); color:var(--success); }
+.src-badge.yellow { background:var(--accent-light); color:var(--accent); }
+.src-badge.red { background:var(--danger-light); color:var(--danger); }
 
-  /* ---------- Framework Diagram ---------- */
-  .framework {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 22px;
-    margin: 20px 0;
-  }
-  .framework .row {
-    display: flex;
-    align-items: stretch;
-    gap: 12px;
-    margin-bottom: 14px;
-  }
-  .framework .row:last-child { margin-bottom: 0; }
-  .framework .stage {
-    flex: 1;
-    background: var(--bg-soft);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 14px;
-    position: relative;
-  }
-  .framework .stage.g1 { border-top: 3px solid var(--purple); }
-  .framework .stage.g2 { border-top: 3px solid var(--blue); }
-  .framework .stage.g3 { border-top: 3px solid var(--green); }
-  .framework .stage .stage-title {
-    font-weight: 700;
-    color: #fff;
-    font-size: 14px;
-    margin-bottom: 6px;
-  }
-  .framework .stage .stage-sub {
-    font-size: 12px;
-    color: var(--text-muted);
-    margin-bottom: 8px;
-  }
-  .framework .stage ul {
-    margin: 0;
-    padding-left: 18px;
-    font-size: 12.5px;
-  }
-  .framework .stage li { margin-bottom: 3px; }
-  .framework .arrow {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--orange);
-    font-size: 20px;
-    font-weight: 700;
-    min-width: 24px;
-  }
-  .framework .loop-note {
-    text-align: center;
-    color: var(--orange);
-    font-size: 12px;
-    margin-top: 12px;
-    font-style: italic;
-  }
-
-  /* ---------- Architecture Layers ---------- */
-  .layer-card {
-    background: var(--bg-card);
-    border-radius: 6px;
-    padding: 16px 18px;
-    margin-bottom: 12px;
-    border-left: 3px solid var(--border);
-  }
-  .layer-card.skill { border-left-color: var(--green); }
-  .layer-card.runtime { border-left-color: var(--orange); }
-  .layer-card.arch { border-left-color: var(--red); }
-  .layer-card .layer-head {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 8px;
-  }
-  .layer-card .layer-name {
-    font-weight: 700;
-    color: #fff;
-    font-size: 15px;
-  }
-  .layer-card .layer-effort {
-    font-size: 12px;
-    color: var(--text-muted);
-  }
-
-  /* ---------- Roadmap ---------- */
-  .roadmap-phase {
-    background: var(--bg-card);
-    border-radius: 6px;
-    padding: 18px 20px;
-    margin-bottom: 14px;
-    border-top: 3px solid var(--border);
-  }
-  .roadmap-phase.p1 { border-top-color: var(--green); }
-  .roadmap-phase.p2 { border-top-color: var(--orange); }
-  .roadmap-phase.p3 { border-top-color: var(--red); }
-  .roadmap-phase .phase-head {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    margin-bottom: 10px;
-  }
-  .roadmap-phase .phase-title {
-    font-weight: 700;
-    color: #fff;
-    font-size: 16px;
-  }
-  .roadmap-phase .phase-time {
-    font-size: 12px;
-    color: var(--text-muted);
-  }
-
-  /* ---------- TOC ---------- */
-  .toc {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 18px 22px;
-    margin-bottom: 40px;
-  }
-  .toc h3 { margin-top: 0; color: var(--blue); }
-  .toc ol { margin: 0; padding-left: 22px; }
-  .toc li { margin-bottom: 4px; }
-  .toc a {
-    color: var(--text-dim);
-    text-decoration: none;
-    font-size: 14px;
-  }
-  .toc a:hover { color: var(--blue); }
-
-  /* ---------- Source Index ---------- */
-  .source-list { font-size: 13.5px; }
-  .source-list li { margin-bottom: 8px; }
-  .source-list .src-file {
-    color: var(--green);
-    font-family: monospace;
-    font-size: 12.5px;
-  }
-
-  /* ---------- Summary cards ---------- */
-  .gap-summary-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 14px;
-    margin: 18px 0;
-  }
-  .gap-card {
-    background: var(--bg-card);
-    border-radius: 6px;
-    padding: 16px 18px;
-    border-left: 3px solid var(--border);
-  }
-  .gap-card.g1 { border-left-color: var(--purple); }
-  .gap-card.g2 { border-left-color: var(--blue); }
-  .gap-card.g3 { border-left-color: var(--green); }
-  .gap-card .gap-title {
-    font-weight: 700;
-    color: #fff;
-    margin-bottom: 6px;
-    font-size: 15px;
-  }
-  .gap-card .gap-desc {
-    font-size: 13.5px;
-    color: var(--text-dim);
-  }
-
-  footer {
-    text-align: center;
-    color: var(--text-muted);
-    font-size: 12px;
-    padding: 30px 0;
-    border-top: 1px solid var(--border);
-    margin-top: 40px;
-  }
+@media (max-width:768px) {
+  #main-content { padding:40px 16px 60px; }
+  .hero h1 { font-size:28px; }
+  .hero .subtitle { font-size:17px; }
+}
 </style>
 </head>
 <body>
-<div class="container">
 
-<!-- ============== HEADER ============== -->
-<header>
-  <h1>Dynamic Planning × Loop Engineering — Gap Map</h1>
-  <div class="meta">
-    <span class="tag">Phase 2 整合</span>
-    <span class="tag">2026-07-08</span>
-    基于 loop-engineering v0.3.1 实现验证 + Phase 1 三维度调研（49 方案/论文/框架）
+<div id="main-content">
+  <div class="hero">
+    <h1>Dynamic Planning × Loop Engineering — Gap Map</h1>
+    <div class="subtitle">三缺口 × Claude Code Harness 四支柱 × 三 P0 落地 × P1 Runtime 设计 — loop-engineering 从"任务内验证循环"外推到"dynamic planning 闭环"</div>
+    <div class="meta">
+      <span>📅 2026-07-08</span>
+      <span class="stage-tag">Phase 2 完整整合</span>
+      <span>loop-engineering v0.4.0</span>
+      <span>49 方案 / 论文 / 框架</span>
+    </div>
   </div>
-  <div class="scope">
-    研究范围：将 <code>loop-engineering</code> 的五步骤（Discovery→Handoff→Verification→Persistence→Scheduling）+ 六大模式从<strong>任务内验证循环</strong>外推到 <strong>dynamic planning 闭环</strong>——覆盖规划层、拆解层、执行层三个缺口，并评估 Hermes 当前架构的落地边界。
-  </div>
-</header>
 
-<!-- ============== TOC ============== -->
-<div class="toc">
-  <h3>目录</h3>
+  <div class="toc">
+    <h2>📑 目录</h2>
+    <ol>
+      <li><a href="#sec1">执行摘要：三缺口 + 核心论断</a></li>
+      <li><a href="#sec2">缺口 1：Discovery 从静态 → 动态重规划</a></li>
+      <li><a href="#sec3">缺口 2：Fan-out 从扁平 → 层次化</a></li>
+      <li><a href="#sec4">缺口 3：同步 delegate → 长时自治 runtime</a></li>
+      <li><a href="#sec5">Claude Code Harness 四支柱</a></li>
+      <li><a href="#sec6">跨缺口整合 + 统一框架</a></li>
+      <li><a href="#sec7">三 P0 落地（已进入 skill v0.4.0）</a></li>
+      <li><a href="#sec8">P1 Runtime 设计概要</a></li>
+      <li><a href="#sec9">Gap 优先级排序</a></li>
+      <li><a href="#sec10">Hermes 架构评估</a></li>
+      <li><a href="#sec11">落地路线图</a></li>
+      <li><a href="#sec12">来源索引</a></li>
+    </ol>
+  </div>
+
+  <!-- ==================== 1. 执行摘要 ==================== -->
+  <h2 id="sec1">1. 执行摘要：三缺口 + 核心论断</h2>
+
+  <p>loop-engineering v0.3.1 的五步骤（Discovery → Handoff → Verification → Persistence → Scheduling）+ 六大模式在<strong>验证层</strong>已成熟（Adversarial Verification 是核心），但三个缺口制约其从"任务内验证循环"外推到"dynamic planning + 长时自治"：</p>
+
+  <table>
+    <tr><th>#</th><th>缺口</th><th>现状</th><th>目标</th></tr>
+    <tr><td><strong>1</strong></td><td>Discovery 静态</td><td>Classify-and-act 一次性路由，执行中不 re-plan</td><td>动态重规划（外部反馈触发）</td></tr>
+    <tr><td><strong>2</strong></td><td>Handoff 扁平</td><td>Fan-out-and-synthesize 拆 N 份并行，无层次/依赖/动态调整</td><td>层次化（递归拆解 + 依赖图）</td></tr>
+    <tr><td><strong>3</strong></td><td>Scheduling 同步</td><td>Loop-until-done 受单 session 上下文限制，无 checkpoint/resume</td><td>长时自治 runtime</td></tr>
+  </table>
+
+  <p>已有 v0.4 方向（Meta-Verifier / Adaptive Rubric / Insight Feed）聚焦<strong>验证层进化</strong>，与三缺口<strong>正交</strong>——本研究扩展到规划层 / 拆解层 / 执行层。</p>
+
+  <div class="callout danger">
+    <strong>核心论断</strong>
+    纯 LLM 自评的自纠正几乎不奏效（Kamoi et al., TACL 2024）。真正有效的重规划都依赖<strong>外部反馈</strong>（环境 / 工具 / 验证器）作为触发信号。三个缺口的共同主题是把 loop 从"单次任务内验证循环"外推到"跨任务 / 跨会话 / 长时的 dynamic planning 闭环"——而 Hermes 已有的 Adversarial Verification 步骤正是天然的<strong>外部 critic 信号源</strong>。
+  </div>
+
+  <!-- ==================== 2. 缺口 1 ==================== -->
+  <h2 id="sec2">2. 缺口 1：Discovery 从静态 → 动态重规划</h2>
+
+  <h3>2.1 现状</h3>
+  <p>Discovery = Classify-and-act（分类 → 路由，kanban 分类卡片 + profile 分派）。<strong>一次性路由</strong>，执行中即使发现走错路也不重新分类。已验证于 SKILL.md L73。</p>
+
+  <h3>2.2 Meta-Finding ⭐</h3>
+  <blockquote>
+    纯 LLM 自评的自纠正几乎不奏效（Kamoi et al., TACL 2024）。真正有效的重规划都依赖外部反馈（环境 / 工具 / 验证器）作为触发信号。
+  </blockquote>
+  <p>→ Hermes 已有 Verification（Adversarial Verification）步骤 = 天然外部 critic 信号源。</p>
+
+  <h3>2.3 方案速查（18 方案，高可迁移性 Top-5）</h3>
+  <table>
+    <tr><th>方案</th><th>触发</th><th>信号</th><th>可迁移</th></tr>
+    <tr><td><strong>LangGraph Plan-Execute-Replan</strong></td><td>每子任务后</td><td>执行结果</td><td style="color:var(--success);font-weight:700">高</td></tr>
+    <tr><td><strong>CRITIC</strong></td><td>工具验证后</td><td>外部工具</td><td style="color:var(--success);font-weight:700">高</td></tr>
+    <tr><td><strong>ADaPT</strong></td><td>子任务失败</td><td>执行失败</td><td style="color:var(--success);font-weight:700">高</td></tr>
+    <tr><td>ReAct</td><td>每步观察</td><td>外部观察</td><td style="color:var(--accent);font-weight:600">高</td></tr>
+    <tr><td>Reflexion</td><td>trial 结束</td><td>语言反馈</td><td style="color:var(--accent);font-weight:600">高</td></tr>
+  </table>
+
+  <h3>2.4 三条核心设计启示</h3>
   <ol>
-    <li><a href="#summary">执行摘要：三缺口 + 核心论断</a></li>
-    <li><a href="#gap1">缺口1：Discovery 从静态 → 动态重规划</a></li>
-    <li><a href="#gap2">缺口2：Fan-out 从扁平 → 层次化</a></li>
-    <li><a href="#gap3">缺口3：同步 delegate → 长时自治 runtime</a></li>
-    <li><a href="#cross">跨缺口整合：交汇方案 + 统一框架</a></li>
-    <li><a href="#priority">Gap 优先级排序（P0/P1/P2）</a></li>
-    <li><a href="#hermes">Hermes 架构可行性评估</a></li>
-    <li><a href="#roadmap">路线图建议（三阶段）</a></li>
-    <li><a href="#sources">来源索引</a></li>
-  </ol>
-</div>
-
-<!-- ============== 1. EXECUTIVE SUMMARY ============== -->
-<section id="summary">
-  <h2><span class="num">1</span>执行摘要</h2>
-
-  <p>
-    <code>loop-engineering v0.3.1</code> 的五步骤 + 六大模式在<strong>验证层</strong>已成熟（Adversarial Verification 是核心），
-    但三个缺口制约其从"任务内验证循环"外推到"dynamic planning + 长时自治"：
-  </p>
-
-  <div class="gap-summary-grid">
-    <div class="gap-card g1">
-      <div class="gap-title">缺口1 · Discovery 静态</div>
-      <div class="gap-desc">Classify-and-act 一次性路由——agent 一开始分类任务就定了路线，执行中即使发现走错路也不重新分类。</div>
-    </div>
-    <div class="gap-card g2">
-      <div class="gap-title">缺口2 · Handoff 扁平</div>
-      <div class="gap-desc">Fan-out-and-synthesize 拆 N 份并行，无层次结构、无依赖建模、无动态调整。</div>
-    </div>
-    <div class="gap-card g3">
-      <div class="gap-title">缺口3 · Scheduling 同步</div>
-      <div class="gap-desc">Loop-until-done 受单 session 上下文限制，无 checkpoint/resume，不能真正独立运行数小时。</div>
-    </div>
-  </div>
-
-  <div class="callout blue">
-    <div class="label">已有 v0.4 方向 vs 本研究</div>
-    已有 v0.4 候选（Meta-Verifier / Adaptive Rubric / Insight Feed）聚焦<strong>验证层进化</strong>，
-    与三缺口<strong>正交</strong>。本研究扩展到<strong>规划层 / 拆解层 / 执行层</strong>。
-  </div>
-
-  <div class="callout">
-    <div class="label">核心论断</div>
-    三个缺口的<strong>共同主题</strong>是把 loop 从"单次任务内验证循环"外推到"跨任务 / 跨会话 / 长时的 dynamic planning 闭环"。
-    统一架构见<a href="#cross">第 5 节</a>。
-  </div>
-</section>
-
-<!-- ============== 2. GAP 1 ============== -->
-<section id="gap1">
-  <h2><span class="num">2</span>缺口1：Discovery 从静态 → 动态重规划</h2>
-
-  <h3>现状（已验证 SKILL.md L73）</h3>
-  <p>
-    Discovery = <code>Classify-and-act</code>（分类→路由，kanban 分类卡片 + profile 分派）。
-    一次性路由，<strong>执行中即使发现走错路也不重新分类</strong>。
-  </p>
-
-  <div class="callout">
-    <div class="label">Meta-Finding ⭐</div>
-    <strong>纯 LLM 自评的自纠正几乎不奏效</strong>（Kamoi et al., TACL 2024）。
-    真正有效的重规划都依赖<strong>外部反馈</strong>（环境 / 工具 / 验证器）作为触发信号。<br><br>
-    → Hermes 已有 Verification（Adversarial Verification）步骤 = <strong>天然外部 critic 信号源</strong>。
-  </div>
-
-  <h4>三条核心设计启示</h4>
-  <ol>
-    <li><strong>重规划触发信号必须来自外部</strong> → Discovery→执行→Verification 评分→若低于阈值则重 Discovery。<span class="pill high">零新基础设施 · 最高 ROI</span></li>
-    <li><strong>失败应触发"重新分解"而非"简单重试"</strong>（ADaPT，+27~33% 成功率）→ Loop-until-done 升级为"失败→递归分解→重新 Discovery"</li>
-    <li><strong>重规划需有安全边界</strong> → 不可信环境固化为程序；按 ToolMaze 四分类 + SERF 错误码分级处理</li>
+    <li><strong>重规划触发信号必须来自外部</strong> → Discovery → 执行 → Verification 评分 → 若低于阈值则重 Discovery。零新基础设施，最高 ROI。</li>
+    <li><strong>失败应触发"重新分解"而非"简单重试"</strong>（ADaPT，+27~33% 成功率）→ Loop-until-done 升级为"失败 → 递归分解 → 重新 Discovery"。</li>
+    <li><strong>重规划需有安全边界</strong> → 不可信环境固化为程序；按 ToolMaze 四分类 + SERF 错误码分级处理。</li>
   </ol>
 
-  <h4>未被覆盖的空白</h4>
+  <div class="callout info">
+    <strong>未被覆盖的空白</strong>
+    重规划的成本 / 延迟预算控制（何时停止避免无限循环）→ Scheduling 步骤承载。重规划与任务类别分类层的耦合（文献无直接对应，Hermes 独特位置）。
+  </div>
+
+  <!-- ==================== 3. 缺口 2 ==================== -->
+  <h2 id="sec3">3. 缺口 2：Fan-out 从扁平 → 层次化</h2>
+
+  <h3>3.1 现状</h3>
+  <p>Handoff = Fan-out / Tournament（拆 N 份 → 并行 → 合成，<code>delegate_task</code> batch 原生支持）。<strong>扁平一次性拆解</strong>，无层次 / 依赖 / 动态调整。已验证于 SKILL.md L74。</p>
+
+  <h3>3.2 Meta-Finding ⭐</h3>
+  <blockquote>
+    LLM 单独规划成功率仅约 3%（LLM Planning Benchmark）→ Fan-out 不能纯靠 LLM 一次性拆解。大多数方案是两层（planner → executor），真正递归拆解的极少。
+  </blockquote>
+
+  <h3>3.3 推荐迁移路径</h3>
+  <table>
+    <tr><th>优先级</th><th>改动</th><th>来源</th></tr>
+    <tr><td><strong>P0</strong></td><td>持久化层次任务树</td><td>Conductor / Deep Agents</td></tr>
+    <tr><td><strong>P0</strong></td><td>依赖图 + 拓扑调度</td><td>HuggingGPT <code>dep</code> 字段 + LangGraph 边</td></tr>
+    <tr><td>P1</td><td>分级失败恢复</td><td>H-RePlan local vs global</td></tr>
+    <tr><td>P1</td><td>递归拆解</td><td>EvoAgent 递归委托 + LangGraph 子图嵌套</td></tr>
+    <tr><td>P2</td><td>拆解模板库</td><td>HCL-GP 组件库 + MetaGPT SOP</td></tr>
+    <tr><td>P2</td><td>ToT 式回溯</td><td>子任务失败回溯到父节点</td></tr>
+  </table>
+
+  <div class="callout warning">
+    <strong>关键洞察</strong>
+    两层不够，需要递归。外部化是前提（任务树持久化到外部非 context，与 Persistence 步骤契合）。分级恢复是关键创新（H-RePlan 2026 前沿）。学习并复用拆解（HCL-GP 组件库）。
+  </div>
+
+  <!-- ==================== 4. 缺口 3 ==================== -->
+  <h2 id="sec4">4. 缺口 3：同步 delegate → 长时自治 runtime</h2>
+
+  <h3>4.1 现状</h3>
+  <p>Scheduling = Loop Until Done。<code>delegate_task</code> 同步阻塞，受单 session 上下文限制，无 checkpoint / resume。已验证于 SKILL.md L77。</p>
+
+  <h3>4.2 五大子缺口 + 对应方案</h3>
+  <table>
+    <tr><th>#</th><th>子缺口</th><th>现状</th><th>业界方案</th><th>迁移路径</th></tr>
+    <tr><td>1</td><td>状态持久化</td><td>delegate 临时调用，崩溃全丢</td><td>LangGraph Checkpointer, MAF, Temporal</td><td><code>BaseCheckpointSaver</code> 抽象，每 step 序列化到 SQLite/文件</td></tr>
+    <tr><td>2</td><td>Context 不爆</td><td>单 session context window 限制</td><td>MemGPT, Claude Code auto-compaction</td><td>三层 memory（working/recall/archival）+ auto-compact</td></tr>
+    <tr><td>3</td><td>断点恢复</td><td>不能从中间恢复</td><td>Claude Code checkpoint+rewind, LangGraph time-travel</td><td>每 step checkpoint，支持 resume + rewind</td></tr>
+    <tr><td>4</td><td>无人值守</td><td>主 agent 阻塞等待</td><td>Claude Code auto mode, OpenHands Agent Server</td><td>Async delegate（非阻塞 + callback/event）</td></tr>
+    <tr><td>5</td><td>执行可控性</td><td>无限制 / 错误恢复</td><td>Strands hooks, Anthropic stopping conditions</td><td>Hooks + limits + steering + adversarial review</td></tr>
+  </table>
+
+  <h3>4.3 关键实战案例 ⭐</h3>
+  <div class="summary-card">
+    <strong>long-running-coding-loop</strong> — 全自治 implement-test-fix 循环，<strong>12 小时连续运行，11/11 功能完成，$181 成本，0 人工干预</strong>。四阶段：PLAN → IMPLEMENT → COMPILE → TEST → FAIL 则 FIX。多角色分离（planner / implementer / tester 各在独立 context）。
+    <br><br>
+    → 这是 Hermes Loop-until-done 的直接实战验证。
+  </div>
+
+  <h3>4.4 推荐的 Hermes Async Delegate 架构</h3>
+  <pre><code>delegate_task(task_spec) → AsyncDelegate
+  ├─ CheckpointManager（SQLite/文件，每 step 序列化）
+  ├─ ContextManager（working/recall/archival 三层 + auto-compact）
+  ├─ ExecutionGuard（hooks/limits/steering/auto-mode classifier）
+  └─ VerificationLoop（planner→implementer→tester，loop until pass）
+       └─ callback → 主 Agent（非阻塞通知）</code></pre>
+
+  <div class="callout info">
+    <strong>关键设计决策</strong>
+    (1) 不引入完整 Temporal server（太重）→ Hermes 内部轻量 checkpoint + retry。(2) 借鉴 Claude Code harness 模式（auto-compaction + checkpoint + subagent isolation + auto mode）。(3) MemGPT 三层 memory 作为 context 管理框架。(4) long-running-coding-loop 多角色分离作为 verification loop 模板。(5) Strands hooks + steering 作为执行可控性基础设施。
+  </div>
+
+  <!-- ==================== 5. Claude Code Harness 四支柱 ==================== -->
+  <h2 id="sec5">5. Claude Code Harness 四支柱</h2>
+
+  <p>Anthropic 的 agent 方法论本质是 <strong>"简单可组合模式 + 受控 autonomy"</strong>：把 agent 定义为"LLM 在环境反馈循环里使用工具"，Claude Code 把这套理念工程化为一个 <strong>harness</strong>——由四大支柱组成的运行时外壳。<span class="src-badge green">🟢 官方</span></p>
+
+  <h3>5.1 四支柱速查</h3>
+  <table>
+    <tr><th>支柱</th><th>机制</th><th>核心工程价值</th></tr>
+    <tr>
+      <td><strong>A. Auto-Compaction</strong></td>
+      <td>context 接近 limit 时自动 summarize 成结构化摘要；<code>CLAUDE_AUTOCOMPACT_PCT_OVERRIDE</code> 控制触发百分比；摘要继承 extended thinking 配置</td>
+      <td><strong>保留表</strong>：磁盘可重注入（rules/memory/skills）vs message-only 会丢（path-scoped rules / 子目录 rules）的二元分类</td>
+    </tr>
+    <tr>
+      <td><strong>B. Checkpoint / Rewind</strong></td>
+      <td>每个 user prompt 创建一个 checkpoint；自动捕获每次 edit 前的代码状态；跨 session 持久（30 天清理）</td>
+      <td><strong>四档 rewind</strong>：回代码+对话 / 回对话 / 回代码 / 定向摘要；bash 副作用（rm/mv/cp/git reset）<strong>不可逆</strong></td>
+    </tr>
+    <tr>
+      <td><strong>C. Subagent Isolation</strong></td>
+      <td>每个子 agent 跑在独立 context window；主对话只收最终摘要；depth ≤ 5（固定不可配）；<code>maxTurns</code> frontmatter</td>
+      <td><strong>三档隔离</strong>：fresh（从零）/ Explore·Plan（轻量探查跳过 memory）/ fork（继承对话复用 prompt cache）；worktree 物理隔离</td>
+    </tr>
+    <tr>
+      <td><strong>D. Auto Mode</strong></td>
+      <td>独立分类器 model 在动作执行前审查；决策顺序：allow/deny rule → 只读+工作目录放行 → 其余分类器；<code>protected paths</code> 白名单</td>
+      <td><strong>不可配 fallback</strong>：连续 block 3 次 / 累计 20 次 → 暂停恢复人工；对话内 soft boundary 是 block 信号（但 compaction 后会丢）</td>
+    </tr>
+  </table>
+
+  <h3>5.2 多层级停止条件</h3>
+  <table>
+    <tr><th>层</th><th>机制</th><th>来源</th></tr>
+    <tr><td>子 agent turn 级</td><td><code>maxTurns</code> frontmatter</td><td>sub-agents doc</td></tr>
+    <tr><td>子 agent 结构级</td><td>depth limit = 5（固定不可配）</td><td>sub-agents doc</td></tr>
+    <tr><td>auto mode 行为级</td><td>连续 block 3 次 / 累计 20 次 → 暂停恢复人工</td><td>permission-modes doc</td></tr>
+    <tr><td>非交互 <code>-p</code></td><td>重复 block → abort session</td><td>permission-modes doc</td></tr>
+    <tr><td>workflow 目标级</td><td>loop until done（stop condition 驱动）+ <code>/goal</code> 硬完成要求</td><td>harness blog</td></tr>
+    <tr><td>workflow 资源级</td><td>显式 token budget（"use 10k tokens"）</td><td>harness blog</td></tr>
+    <tr><td>compaction 资源级</td><td>auto-compaction 接近 limit 自动触发</td><td>context-window doc</td></tr>
+  </table>
+
+  <div class="callout danger">
+    <strong>关键洞察</strong>
+    Hermes loop 必须有<strong>多层级停止</strong>：turn 级（maxTurns）、结构级（depth limit）、行为级（block 计数 fallback）、目标级（/goal 硬条件 + loop-until-done stop condition）、资源级（token budget + auto-compaction）。<strong>单一 max-iteration 不够。</strong>
+  </div>
+
+  <div class="callout warning">
+    <strong>必须显式对抗的三大失败模式</strong>
+    (1) <strong>Agentic laziness</strong>（agent 中途停下宣称完成）→ subagent isolation + 完成度 verifier。(2) <strong>Self-preferential bias</strong>（偏好自己的结果）→ adversarial verification 用独立 agent。(3) <strong>Goal drift after compaction</strong>（compaction 后丢失原始 goal）→ /goal 硬停止 + 把 soft constraint 在 compaction 前固化为硬规则 + 保留表层级 memory。
+  </div>
+
+  <!-- ==================== 6. 跨缺口整合 + 统一框架 ==================== -->
+  <h2 id="sec6">6. 跨缺口整合 + 统一框架</h2>
+
+  <h3>6.1 三缺口交汇方案</h3>
+  <table>
+    <tr><th>交汇</th><th>方案</th><th>覆盖</th></tr>
+    <tr><td>缺口 1×2</td><td><strong>ADaPT</strong></td><td>失败 → 递归分解 → 重新路由 = 动态重规划 + 层次化拆解</td></tr>
+    <tr><td>缺口 2×3</td><td><strong>Conductor</strong></td><td>持久化层次任务树 = 层次化 + 长时 runtime</td></tr>
+    <tr><td>缺口 1×3</td><td><strong>Reflexion</strong></td><td>跨 trial episodic memory = 动态重规划 + 长时持久化</td></tr>
+    <tr><td><strong>三缺口</strong></td><td><strong>long-running-coding-loop</strong></td><td>PLAN→IMPLEMENT→TEST→FIX = 动态重规划 + 多角色拆解 + 长时 runtime</td></tr>
+  </table>
+
+  <h3>6.2 统一框架：Dynamic Planning Loop</h3>
+  <p>loop-engineering v0.4+ 外推——五步骤全部升级：</p>
+
+  <div class="mermaid">
+flowchart TD
+    A["Discovery（动态化）<br/>每轮执行后基于 Verification 外部反馈重新评估任务类别"]
+    B["Handoff（层次化）<br/>递归拆解到原子任务 + 依赖图拓扑调度<br/>失败时分级恢复（局部重拆 vs 全局重规划）"]
+    C["Verification（已有 → 升级为 critic 信号源）<br/>Adversarial Verification 评分 → 喂回 Discovery 触发重路由<br/>多角色验证（planner/implementer/tester 分离）"]
+    D["Persistence（外部化）<br/>任务树 + 状态 + episodic memory 持久化到外部（非 context）<br/>Checkpoint 每 step 序列化到 SQLite/文件，支持 resume + rewind"]
+    E["Scheduling（长时自治）<br/>Async delegate（非阻塞 + callback）<br/>Context 管理（working/recall/archival 三层 + auto-compact）<br/>Execution guard（hooks/limits/steering）"]
+    F{"评分 ≥ 阈值？"}
+    G["ADaPT 失败分解<br/>拆成更细子任务<br/>递归深度 ≤ 3"]
+
+    A --> B
+    B --> C
+    C --> F
+    F -->|YES| D
+    F -->|NO| G
+    G --> A
+    D --> E
+    E -->|完成| H["交付 ✅"]
+    E -->|未完成 stop condition| A
+
+    style A fill:#fef3c7,stroke:#d97706
+    style B fill:#e0e7ff,stroke:#4f6ef7
+    style C fill:#e6f4ea,stroke:#059669
+    style D fill:#fef3c7,stroke:#d97706
+    style E fill:#e0e7ff,stroke:#4f6ef7
+    style F fill:#fef2f2,stroke:#dc2626
+    style G fill:#fef2f2,stroke:#dc2626
+    style H fill:#e6f4ea,stroke:#059669
+  </div>
+
+  <div class="callout info">
+    <strong>统一流程要点</strong>
+    Discovery（分类路由）→ Handoff（层次化 Fan-out：dep 字段 + 拓扑调度）→ Verification（对抗验证 → 评分）→ 评分 ≥ 阈值？YES → Persistence → Scheduling → 完成。NO → ADaPT 失败分解（拆成更细子任务）→ 重 Discovery（重新分类路由子任务）→ 回到 Handoff。递归深度 ≤ 3，重 Discovery ≤ 3。
+  </div>
+
+  <!-- ==================== 7. 三 P0 落地 ==================== -->
+  <h2 id="sec7">7. 三 P0 落地（已进入 skill v0.4.0）</h2>
+
+  <p>三个 P0 扩展全部是<strong>纯流程 / prompt 改动，不改 Hermes runtime</strong>。已落地到 <code>loop-engineering</code> skill v0.4.0 的 <code>references/dynamic-planning-patterns.md</code>。</p>
+
+  <h3>7.1 P0-1：动态重 Discovery（Discovery→Verification→重 Discovery 闭环）</h3>
+  <div class="summary-card">
+    <strong>目标</strong>：把 Discovery 从"一次性 Classify-and-act 路由"升级为"每轮执行后基于 Verification 外部反馈重新评估任务类别"。
+    <br><br>
+    <strong>触发条件</strong>：
+    <ul>
+      <li>Verification 评分 &lt; 阈值（默认 0.7，主信号——验证器评分低于阈值触发重路由）</li>
+      <li>子任务失败（执行结果，非超时）</li>
+      <li>进度停滞（连续 N 轮无进展，同一路线重试 N 次仍 fail）</li>
+    </ul>
+    <strong>安全边界</strong>：不可信环境（web 抓取 / 受污染内容）→ 固化为程序，<strong>不触发</strong> re-Discovery。重规划预算 max re-Discovery = 3 次，超过则人介入。按失败类型分级（ToolMaze 四分类 + SERF 错误码）：显式瞬时扰动 → 重试；隐式永久扰动 → 重 Discovery；显式永久扰动 → 重 Discovery + 换工具。
+    <br><br>
+    <strong>来源</strong>：CRITIC (arXiv:2305.11738) / LATS (arXiv:2310.04406) / LangGraph Plan-Execute-Replan / Kamoi et al. (TACL 2024)
+  </div>
+
+  <h3>7.2 P0-2：层次化 Fan-out（dep 字段 + 拓扑调度 + 递归拆解）</h3>
+  <div class="summary-card">
+    <strong>目标</strong>：把 Fan-out 从"扁平 N 份并行"升级为"递归拆解到原子任务 + 依赖图拓扑调度"。
+    <br><br>
+    <strong>dep 字段设计</strong>：
+    <pre style="margin:8px 0;font-size:13px"><code>delegate_task:
+  tasks:
+    - id: "extract-data"
+      goal: "从 xlsx 提取数据"
+      dep: []                    # 无依赖，可立即并行
+    - id: "validate-data"
+      goal: "验证提取的数据"
+      dep: ["extract-data"]      # 等 extract-data 完成后再执行
+    - id: "generate-report"
+      goal: "生成报告"
+      dep: ["validate-data"]     # 等 validate-data 完成后再执行
+    - id: "format-chart"
+      goal: "格式化图表"
+      dep: ["extract-data"]      # 与 validate-data 并行</code></pre>
+    <strong>拓扑调度</strong>：构建 DAG → 拓扑排序（入度=0 的 tasks 并行执行）→ 完成后减少依赖者入度 → 循环直到全部完成。<strong>递归拆解</strong>：子任务可进一步 fan-out，拆解到"原子粒度"（一个原子任务 = 一个可独立验证的产出），拆解层数建议 ≤ 3 层。
+    <br><br>
+    <strong>不改 delegate_task 实现</strong>——主 agent 在调用时声明 dep + 按拓扑序调度。任务树写入文件（非 context），支持跨 session 恢复。
+    <br><br>
+    <strong>来源</strong>：HuggingGPT (NeurIPS 2023) / LangGraph / Conductor / H-RePlan (2026)
+  </div>
+
+  <h3>7.3 P0-3：ADaPT 式失败→递归分解</h3>
+  <div class="summary-card">
+    <strong>目标</strong>：把 Loop-until-done 从"失败 → 重试同一路线"升级为"失败 → 递归分解为更细子任务 → 重 Discovery"。<strong>+27~33% 成功率（ADaPT 实证）</strong>。
+    <br><br>
+    <strong>流程</strong>：子任务失败 → 分析失败原因 → 递归分解（把失败任务拆成 2-3 个更细子任务，例："生成月报"失败 → 拆成"提取数据"+"计算指标"+"格式化"）→ 重 Discovery（对每个子任务重新分类路由）→ 执行子任务。全部成功 → 合成结果；又失败 → 再分解（递归，但受深度限制）。
+    <br><br>
+    <strong>终止条件</strong>：递归深度上限 max = 3 层。层 3 子子任务失败 → <strong>人介入</strong>（不再分解）。与 P0-1 联动：每次分解后重 Discovery，重 Discovery 次数也受 max=3 限制。
+    <br><br>
+    <strong>三 P0 闭环</strong>：Discovery → Handoff → Verification → (fail) → ADaPT 分解 → re-Discovery → Handoff。ADaPT = P0-1（重 Discovery）× P0-2（层次化拆解）的交汇。
+    <br><br>
+    <strong>来源</strong>：ADaPT (arXiv:2305.04091) / H-RePlan (2026) / Reflexion (NeurIPS 2023)
+  </div>
+
+  <div class="callout warning">
+    <strong>不适用场景</strong>
+    ❌ 简单一步任务（分解 / 重路由开销 &gt; 收益）。❌ 不可信环境（web 抓取 / 受污染内容 → 固化为程序，不触发 re-Discovery）。❌ 无可验证 rubric 的开放式创意（无外部反馈信号）。✅ 有可验证交付物 + 多步骤 + 可能失败的长任务。
+  </div>
+
+  <!-- ==================== 8. P1 Runtime 设计概要 ==================== -->
+  <h2 id="sec8">8. P1 Runtime 设计概要</h2>
+
+  <p>P1 在 runtime 层（Hermes 核心，不改 messaging 同步 turn 模型）落地三个互相耦合的子系统。状态：<strong>只设计，不实施</strong>。<span class="src-badge green">🟢 设计基于官方来源</span></p>
+
+  <h3>8.1 Checkpoint 抽象（BaseCheckpointSaver）</h3>
+  <p><strong>覆盖</strong>：缺口 3 子 1 状态持久化 / 子 3 断点恢复。<strong>基础来源</strong>：Claude Code 支柱 B + LangGraph Checkpointer。</p>
   <ul>
-    <li>重规划的成本 / 延迟预算控制（何时停止避免无限循环）→ 由 Scheduling 步骤承载</li>
-    <li>重规划与任务类别分类层的耦合（文献无直接对应，Hermes 独特位置）</li>
+    <li><strong>接口</strong>：<code>save()</code> 每 user turn 序列化 conversation + file state → <code>load()</code> resume → <code>list()</code> rewind 菜单 → <code>rewind()</code> 四档动作 → <code>queryReversibility()</code> 诚实标注</li>
+    <li><strong>四档 rewind</strong>：<code>restore_all</code>（回代码+对话）/ <code>restore_conversation</code>（只回对话）/ <code>restore_code</code>（只回代码）/ <code>summarize_from</code> · <code>summarize_up</code>（定向摘要）</li>
+    <li><strong>链式结构</strong>：每个 checkpoint 有 <code>parent_checkpoint_id</code>，形成链表（LangGraph time-travel 语义）</li>
+    <li><strong>诚实标注</strong>：bash 副作用（rm/mv/cp/git reset 等）<strong>不可逆</strong>，rewind 前 <code>queryReversibility()</code> 检查并 warning</li>
+    <li><strong>集成点</strong>：在 <code>delegate_task(background=true)</code> 子 agent 启动时注入 CheckpointSaver；<code>patch</code>/<code>write_file</code> 工具执行前捕获"编辑前快照"</li>
   </ul>
 
-  <h4>方案速查（18 方案 · 高可迁移性 Top-5）</h4>
-  <table>
-    <thead>
-      <tr><th>方案</th><th>触发</th><th>信号</th><th>可迁移</th></tr>
-    </thead>
-    <tbody>
-      <tr><td><strong>LangGraph Plan-Execute-Replan</strong></td><td>每子任务后</td><td>执行结果</td><td><span class="pill high">高</span></td></tr>
-      <tr><td><strong>CRITIC</strong></td><td>工具验证后</td><td>外部工具</td><td><span class="pill high">高</span></td></tr>
-      <tr><td><strong>ADaPT</strong></td><td>子任务失败</td><td>执行失败</td><td><span class="pill high">高</span></td></tr>
-      <tr><td>ReAct</td><td>每步观察</td><td>外部观察</td><td><span class="pill high">高</span></td></tr>
-      <tr><td>Reflexion</td><td>trial 结束</td><td>语言反馈</td><td><span class="pill high">高</span></td></tr>
-    </tbody>
-  </table>
-
-  <div class="callout green">
-    <div class="label">设计启示一句话</div>
-    把 Verification 的 Adversarial 评分变成 Discovery 的<strong>重路由触发信号</strong>，闭环就自然形成了——零新基础设施。
-  </div>
-</section>
-
-<!-- ============== 3. GAP 2 ============== -->
-<section id="gap2">
-  <h2><span class="num">3</span>缺口2：Fan-out 从扁平 → 层次化</h2>
-
-  <h3>现状（已验证 SKILL.md L74）</h3>
-  <p>
-    Handoff = <code>Fan-out / Tournament</code>（拆 N 份→并行→合成，<code>delegate_task</code> batch，原生支持）。
-    扁平一次性拆解，<strong>无层次 / 无依赖 / 无动态调整</strong>。
-  </p>
-
-  <div class="callout">
-    <div class="label">Meta-Finding ⭐</div>
-    <strong>LLM 单独规划成功率仅约 3%</strong>（LLM Planning Benchmark）→ Fan-out 不能纯靠 LLM 一次性拆解。
-    大多数方案是两层（planner→executor），真正<strong>递归拆解</strong>的极少。
-  </div>
-
-  <h4>推荐迁移路径（优先级排序）</h4>
-  <table>
-    <thead>
-      <tr><th>优先级</th><th>改动</th><th>来源方案</th><th>关键点</th></tr>
-    </thead>
-    <tbody>
-      <tr><td><span class="pill p0">P0</span></td><td>持久化层次任务树</td><td>Conductor / Deep Agents</td><td>Fan-out 结果存为持久化树（非 context）</td></tr>
-      <tr><td><span class="pill p0">P0</span></td><td>依赖图 + 拓扑调度</td><td>HuggingGPT <code>dep</code> + LangGraph 边</td><td>子任务声明依赖，按拓扑序执行</td></tr>
-      <tr><td><span class="pill p1">P1</span></td><td>分级失败恢复</td><td>H-RePlan（2026 前沿）</td><td>local 重拆 vs global 重规划</td></tr>
-      <tr><td><span class="pill p1">P1</span></td><td>递归拆解</td><td>EvoAgent + LangGraph 子图嵌套</td><td>递归委托到原子任务</td></tr>
-      <tr><td><span class="pill p2">P2</span></td><td>拆解模板库</td><td>HCL-GP 组件库 + MetaGPT SOP</td><td>从历史成功拆解学习并复用</td></tr>
-      <tr><td><span class="pill p2">P2</span></td><td>ToT 式回溯</td><td>Tree of Thoughts</td><td>子任务失败回溯到父节点</td></tr>
-    </tbody>
-  </table>
-
-  <h4>关键洞察</h4>
+  <h3>8.2 Context Auto-Compact（ContextManager）</h3>
+  <p><strong>覆盖</strong>：缺口 3 子 2 Context 不爆。<strong>基础来源</strong>：Claude Code 支柱 A + MemGPT 三层 memory。</p>
   <ul>
-    <li><strong>两层不够，需要递归</strong>——大多数方案停在 planner→executor，真正递归拆解的是前沿</li>
-    <li><strong>外部化是前提</strong>——任务树持久化到外部非 context，与 Persistence 步骤契合</li>
-    <li><strong>分级恢复是关键创新</strong>——H-RePlan 2026 前沿，局部重拆 vs 全局重规划</li>
-    <li><strong>学习并复用拆解</strong>——HCL-GP 组件库思路</li>
-  </ul>
-</section>
-
-<!-- ============== 4. GAP 3 ============== -->
-<section id="gap3">
-  <h2><span class="num">4</span>缺口3：同步 delegate → 长时自治 runtime</h2>
-
-  <h3>现状（已验证 SKILL.md L77）</h3>
-  <p>
-    Scheduling = <code>Loop Until Done</code>。<code>delegate_task</code> 同步阻塞，
-    受单 session 上下文限制，<strong>无 checkpoint / resume</strong>。
-  </p>
-
-  <h4>5 大子缺口 + 对应方案</h4>
-  <table>
-    <thead>
-      <tr><th>#</th><th>子缺口</th><th>现状</th><th>业界方案</th><th>迁移路径</th></tr>
-    </thead>
-    <tbody>
-      <tr><td>1</td><td>状态持久化</td><td>delegate 临时调用，崩溃全丢</td><td>LangGraph Checkpointer, MAF, Temporal</td><td><code>BaseCheckpointSaver</code> 抽象，每 step 序列化到 SQLite/文件</td></tr>
-      <tr><td>2</td><td>Context 不爆</td><td>单 session context window 限制</td><td>MemGPT, Claude Code auto-compaction</td><td>三层 memory（working/recall/archival）+ auto-compact</td></tr>
-      <tr><td>3</td><td>断点恢复</td><td>不能从中间恢复</td><td>Claude Code checkpoint+rewind, LangGraph time-travel</td><td>每 step checkpoint，支持 resume + rewind</td></tr>
-      <tr><td>4</td><td>无人值守</td><td>主 agent 阻塞等待</td><td>Claude Code auto mode, OpenHands Agent Server</td><td>Async delegate（非阻塞 + callback/event）</td></tr>
-      <tr><td>5</td><td>执行可控性</td><td>无限制 / 错误恢复</td><td>Strands hooks, Anthropic stopping conditions</td><td>Hooks + limits + steering + adversarial review</td></tr>
-    </tbody>
-  </table>
-
-  <div class="callout">
-    <div class="label">关键实战案例 ⭐</div>
-    <strong>long-running-coding-loop</strong> — 全自治 implement-test-fix 循环，
-    <strong>12 小时连续运行，11/11 功能完成，$181 成本，0 人工干预</strong>。<br>
-    四阶段：PLAN→IMPLEMENT→COMPILE→TEST→FAIL则FIX。多角色分离（planner / implementer / tester 各在独立 context）。<br><br>
-    → 这是 Hermes <code>Loop-until-done</code> 的<strong>直接实战验证</strong>。
-  </div>
-
-  <h4>推荐的 Hermes Async Delegate 架构</h4>
-<pre><code><span class="dim">delegate_task(task_spec) → AsyncDelegate</span>
-  ├─ <span class="kw">CheckpointManager</span>   <span class="cmt"># SQLite/文件，每 step 序列化</span>
-  ├─ <span class="kw">ContextManager</span>      <span class="cmt"># working/recall/archival 三层 + auto-compact</span>
-  ├─ <span class="kw">ExecutionGuard</span>      <span class="cmt"># hooks/limits/steering/auto-mode classifier</span>
-  └─ <span class="acc">VerificationLoop</span>    <span class="cmt"># planner→implementer→tester，loop until pass</span>
-       └─ <span class="acc">callback → 主 Agent</span>  <span class="cmt"># 非阻塞通知</span></code></pre>
-
-  <h4>关键设计决策</h4>
-  <ol>
-    <li><strong>不引入完整 Temporal server</strong>（太重）→ Hermes 内部轻量 checkpoint + retry</li>
-    <li>借鉴 <strong>Claude Code harness 模式</strong>（auto-compaction + checkpoint + subagent isolation + auto mode）</li>
-    <li><strong>MemGPT 三层 memory</strong>作为 context 管理框架</li>
-    <li><strong>long-running-coding-loop</strong> 多角色分离作为 verification loop 模板</li>
-    <li><strong>Strands hooks + steering</strong>作为执行可控性基础设施</li>
-  </ol>
-</section>
-
-<!-- ============== 4.5. CLAUDE CODE HARNESS ============== -->
-<section id="harness">
-  <h2><span class="num">4.5</span>Claude Code Harness 四支柱工程实现</h2>
-
-  <p>Phase 3 深挖 Anthropic 官方文档 + blog。<strong>Harness = 包裹 loop 的全部控制逻辑</strong>——context 管理、checkpoint、subagent 编排、权限、停止条件。Dynamic workflows = Claude 运行时自己写出 harness（JS 脚本），把 harness 变成 agent 可自编排的产物。</p>
-
-  <h3>四支柱速查</h3>
-  <table>
-    <thead>
-      <tr><th>支柱</th><th>核心机制</th><th>关键工程细节</th><th>Hermes 迁移启示</th></tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><strong>A. Auto-Compaction</strong></td>
-        <td>接近 context limit 自动 summarize</td>
-        <td>阈值可控（env var）；<strong>保留表</strong>区分"磁盘可重注入"vs"message-only 会丢"；子 agent compaction 独立于主</td>
-        <td>区分两类状态；规则/记忆存磁盘能重载；<strong>带条件的规则会随 compaction 丢失</strong></td>
-      </tr>
-      <tr>
-        <td><strong>B. Checkpoint/Rewind</strong></td>
-        <td>每 user prompt = 一个 checkpoint</td>
-        <td><strong>四档 rewind</strong>：回代码+对话 / 回对话 / 回代码 / 定向摘要；bash 副作用不可逆；fork 分支保留原路径</td>
-        <td>每 user turn 一快照；四档动作而非单一 undo；明确标注 bash 不可逆边界</td>
-      </tr>
-      <tr>
-        <td><strong>C. Subagent Isolation</strong></td>
-        <td>独立 context window + 自定义 prompt</td>
-        <td><strong>三档隔离</strong>：fresh / Explore+Plan 轻量 / fork 复用 cache；worktree 物理隔离；depth≤5；<strong>transcript 独立于主 compaction</strong></td>
-        <td>对话历史隔离+配置共享；三档隔离强度；transcript 独立防"压缩丢子 agent 工作"</td>
-      </tr>
-      <tr>
-        <td><strong>D. Auto Mode</strong></td>
-        <td>独立分类器 model 审动作</td>
-        <td>决策顺序：allow/deny→只读放行→分类器；<strong>对话内 soft boundary</strong>（compaction 会丢→需固化）；三层子 agent 检查；fallback 3连续/20累计</td>
-        <td>独立分类器；soft constraint 在 compaction 前固化为硬规则；不可配 fallback 阈值</td>
-      </tr>
-    </tbody>
-  </table>
-
-  <h3>多层级停止条件（防无限循环）</h3>
-  <table>
-    <thead>
-      <tr><th>层级</th><th>机制</th></tr>
-    </thead>
-    <tbody>
-      <tr><td>Turn 级</td><td>maxTurns frontmatter（子 agent）</td></tr>
-      <tr><td>结构级</td><td>depth limit = 5（固定不可配）</td></tr>
-      <tr><td>行为级</td><td>block 连续 3 次 / 累计 20 次 → 暂停恢复人工</td></tr>
-      <tr><td>目标级</td><td>/goal 硬完成要求 + loop-until-done stop condition</td></tr>
-      <tr><td>资源级</td><td>token budget + auto-compaction</td></tr>
-    </tbody>
-  </table>
-
-  <div class="insight">
-    <strong>⭐ 关键洞察</strong>：对话内 soft boundary（如"don't push"）会因 compaction 丢失 → Hermes 若做"对话内 soft constraint"，必须在 compaction 前固化为硬规则或纳入 system prompt 重注入层，否则 goal drift。
-  </div>
-
-  <p><em>详细报告：phase3-claude-code-harness.md（448 行，全部 🟢 Anthropic 官方来源）</em></p>
-</section>
-
-<!-- ============== 5. CROSS-GAP ============== -->
-<section id="cross">
-  <h2><span class="num">5</span>跨缺口整合：交汇方案 + 统一框架</h2>
-
-  <h3>三缺口交汇方案</h3>
-  <table>
-    <thead>
-      <tr><th>交汇</th><th>方案</th><th>覆盖说明</th></tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="pill gap1">缺口1</span>×<span class="pill gap2">缺口2</span></td>
-        <td><strong>ADaPT</strong></td>
-        <td>失败→递归分解→重新路由 = 动态重规划 + 层次化拆解</td>
-      </tr>
-      <tr>
-        <td><span class="pill gap2">缺口2</span>×<span class="pill gap3">缺口3</span></td>
-        <td><strong>Conductor</strong></td>
-        <td>持久化层次任务树 = 层次化 + 长时 runtime</td>
-      </tr>
-      <tr>
-        <td><span class="pill gap1">缺口1</span>×<span class="pill gap3">缺口3</span></td>
-        <td><strong>Reflexion</strong></td>
-        <td>跨 trial episodic memory = 动态重规划 + 长时持久化</td>
-      </tr>
-      <tr>
-        <td><span class="pill gap1">缺口1</span>×<span class="pill gap2">缺口2</span>×<span class="pill gap3">缺口3</span></td>
-        <td><strong>long-running-coding-loop</strong></td>
-        <td>PLAN→IMPLEMENT→TEST→FIX = 动态重规划 + 多角色拆解 + 长时 runtime</td>
-      </tr>
-    </tbody>
-  </table>
-
-  <h3>统一框架：Dynamic Planning Loop（loop-engineering v0.4+ 外推）</h3>
-
-  <div class="framework">
-    <div class="row">
-      <div class="stage g1">
-        <div class="stage-title">① Discovery（动态化）</div>
-        <div class="stage-sub">缺口1 · 紫色</div>
-        <ul>
-          <li><span class="dim">旧：</span>Classify-and-act 一次性路由</li>
-          <li><span class="acc">新：</span>每轮执行后基于 Verification 外部反馈重新评估任务类别</li>
-          <li>触发：评分&lt;阈值 / 子任务失败 / 进度停滞</li>
-          <li>安全边界：不可信环境固化为程序</li>
-        </ul>
-      </div>
-      <div class="arrow">→</div>
-      <div class="stage g2">
-        <div class="stage-title">② Handoff（层次化）</div>
-        <div class="stage-sub">缺口2 · 蓝色</div>
-        <ul>
-          <li><span class="dim">旧：</span>Fan-out N 份并行</li>
-          <li><span class="acc">新：</span>递归拆解到原子任务（任务树）+ 依赖图拓扑调度</li>
-          <li>失败时分级恢复（局部重拆 vs 全局重规划）</li>
-          <li>拆解模板库（从历史成功拆解学习）</li>
-        </ul>
-      </div>
-    </div>
-    <div class="row">
-      <div class="stage g3">
-        <div class="stage-title">③ Verification（升级为 critic 信号源）</div>
-        <div class="stage-sub">已有 → 升级</div>
-        <ul>
-          <li>Adversarial Verification 评分 → 喂回 Discovery 触发重路由</li>
-          <li>多角色验证（planner / implementer / tester 分离）</li>
-        </ul>
-      </div>
-      <div class="arrow">↻</div>
-      <div class="stage g3">
-        <div class="stage-title">④ Persistence（外部化）</div>
-        <div class="stage-sub">缺口3 · 绿色</div>
-        <ul>
-          <li>任务树 + 状态 + episodic memory 持久化到外部（非 context）</li>
-          <li>Checkpoint 每 step 序列化到 SQLite/文件</li>
-          <li>支持 resume + rewind</li>
-        </ul>
-      </div>
-      <div class="arrow">→</div>
-      <div class="stage g3">
-        <div class="stage-title">⑤ Scheduling（长时自治）</div>
-        <div class="stage-sub">缺口3 · 绿色</div>
-        <ul>
-          <li><span class="dim">旧：</span>Loop-until-done（同步）</li>
-          <li><span class="acc">新：</span>Async delegate（非阻塞 + callback）</li>
-          <li>Context 三层 + auto-compact</li>
-          <li>Execution guard（hooks/limits/steering）</li>
-          <li>PLAN→IMPLEMENT→TEST→FIX 循环</li>
-        </ul>
-      </div>
-    </div>
-    <div class="loop-note">↻ 闭环：Verification 评分 → 喂回 Discovery 触发重路由（缺口1 的核心机制）</div>
-  </div>
-</section>
-
-<!-- ============== 6. PRIORITY ============== -->
-<section id="priority">
-  <h2><span class="num">6</span>Gap 优先级排序（跨缺口）</h2>
-
-  <p>按改动复杂度 + ROI 综合排序，覆盖三个缺口及交汇区域：</p>
-
-  <table>
-    <thead>
-      <tr><th>优先级</th><th>改动</th><th>覆盖缺口</th><th>复杂度</th><th>ROI</th></tr>
-    </thead>
-    <tbody>
-      <tr><td><span class="pill p0">P0</span></td><td>Discovery→Verification→重 Discovery 闭环</td><td><span class="pill gap1">1</span></td><td><span class="pill low">低（纯流程）</span></td><td><span class="pill high">最高</span></td></tr>
-      <tr><td><span class="pill p0">P0</span></td><td>Fan-out 加 dep 字段 + 拓扑调度</td><td><span class="pill gap2">2</span></td><td><span class="pill low">低（数据结构）</span></td><td><span class="pill high">高</span></td></tr>
-      <tr><td><span class="pill p0">P0</span></td><td>Checkpoint 抽象（BaseCheckpointSaver → SQLite）</td><td><span class="pill gap3">3</span></td><td><span class="pill med">中</span></td><td><span class="pill high">高</span></td></tr>
-      <tr><td><span class="pill p1">P1</span></td><td>失败→递归分解（ADaPT 式）</td><td><span class="pill gap1">1</span>×<span class="pill gap2">2</span></td><td><span class="pill med">中</span></td><td><span class="pill high">高</span></td></tr>
-      <tr><td><span class="pill p1">P1</span></td><td>持久化层次任务树</td><td><span class="pill gap2">2</span>×<span class="pill gap3">3</span></td><td><span class="pill med">中</span></td><td><span class="pill high">高</span></td></tr>
-      <tr><td><span class="pill p1">P1</span></td><td>Async delegate + callback</td><td><span class="pill gap3">3</span></td><td><span class="pill med">中-高</span></td><td><span class="pill high">高</span></td></tr>
-      <tr><td><span class="pill p1">P1</span></td><td>Context auto-compact（working/recall/archival）</td><td><span class="pill gap3">3</span></td><td><span class="pill med">中</span></td><td><span class="pill high">高</span></td></tr>
-      <tr><td><span class="pill p2">P2</span></td><td>分级失败恢复（H-RePlan 式）</td><td><span class="pill gap2">2</span></td><td><span class="pill med">中</span></td><td><span class="pill med">中</span></td></tr>
-      <tr><td><span class="pill p2">P2</span></td><td>拆解模板库（HCL-GP / MetaGPT SOP）</td><td><span class="pill gap2">2</span></td><td><span class="pill med">中</span></td><td><span class="pill med">中</span></td></tr>
-      <tr><td><span class="pill p2">P2</span></td><td>ToT 式回溯</td><td><span class="pill gap1">1</span>×<span class="pill gap2">2</span></td><td><span class="pill med">中</span></td><td><span class="pill med">中</span></td></tr>
-      <tr><td><span class="pill p2">P2</span></td><td>多角色 verification loop</td><td><span class="pill gap3">3</span></td><td><span class="pill med">中-高</span></td><td><span class="pill med">中</span></td></tr>
-      <tr><td><span class="pill p2">P2</span></td><td>Execution guard（hooks/limits/steering）</td><td><span class="pill gap3">3</span></td><td><span class="pill high">高</span></td><td><span class="pill med">中</span></td></tr>
-    </tbody>
-  </table>
-
-  <div class="callout blue">
-    <div class="label">P0 解读</div>
-    三个 P0 改动<strong>分别覆盖三个缺口</strong>，且复杂度都偏低——这是<strong>立即可以动手</strong>的最优子集。
-  </div>
-</section>
-
-<!-- ============== 7. HERMES ARCHITECTURE ============== -->
-<section id="hermes">
-  <h2><span class="num">7</span>Hermes 架构可行性评估</h2>
-
-  <p>Phase 3 产出。评估 Hermes 当前架构能支撑 gap map 哪些建议，哪些需要 runtime 层改动。</p>
-
-  <h3>当前 delegate_task 机制</h3>
-  <table>
-    <thead><tr><th>机制</th><th>描述</th></tr></thead>
-    <tbody>
-      <tr><td>同步模式</td><td>不设 background → 阻塞等待子任务返回，在主 session turn 内执行</td></tr>
-      <tr><td><strong>background 模式</strong></td><td><code>background=true</code> → 立即返回 delegation_id，子任务异步执行，完成时 <code>notify_on_complete</code> 重新注入消息</td></tr>
-      <tr><td>batch 模式</td><td>tasks 数组，最多 3 个并发（<code>max_concurrent_children=3</code>）</td></tr>
-      <tr><td>嵌套限制</td><td><code>max_spawn_depth=1</code>（leaf 不能再 delegate；orchestrator 被强制为 leaf）</td></tr>
-      <tr><td>子 agent 隔离</td><td>独立 conversation + terminal session + toolset，无主 agent memory</td></tr>
-      <tr><td>通知</td><td>background subagent 完成时，full result 重新注入为 new message</td></tr>
-    </tbody>
-  </table>
-
-  <h3>能力对照矩阵</h3>
-  <table>
-    <thead><tr><th>gap map 需求</th><th>当前状态</th><th>差距</th><th>落地层</th></tr></thead>
-    <tbody>
-      <tr><td>异步执行</td><td><span class="check">✅</span> background=true 已是 async</td><td><span class="check">无差距</span></td><td>已有</td></tr>
-      <tr><td>完成通知</td><td><span class="check">✅</span> notify_on_complete</td><td><span class="check">无差距</span></td><td>已有</td></tr>
-      <tr><td>并行子任务</td><td><span class="check">✅</span> batch 最多 3 并发</td><td><span class="check">无差距</span></td><td>已有</td></tr>
-      <tr><td>subagent 隔离</td><td><span class="check">✅</span> 独立 conversation + terminal</td><td><span class="check">无差距</span></td><td>已有</td></tr>
-      <tr><td>Checkpoint</td><td><span class="cross">❌</span> 子任务崩溃全丢</td><td><span class="cross">有差距</span></td><td>runtime 层</td></tr>
-      <tr><td>断点恢复</td><td><span class="cross">❌</span> 不能从中间恢复</td><td><span class="cross">有差距</span></td><td>runtime 层</td></tr>
-      <tr><td>Context auto-compact</td><td><span class="cross">❌</span> 单 session context window</td><td><span class="cross">有差距</span></td><td>runtime 层</td></tr>
-      <tr><td>长时运行（数小时）</td><td><span class="warn">⚠️</span> 受 session 生命周期限制</td><td><span class="warn">有差距</span></td><td>runtime 层</td></tr>
-      <tr><td>Execution guard</td><td><span class="cross">❌</span> 无 hooks/limits/steering</td><td><span class="cross">有差距</span></td><td>runtime 层</td></tr>
-    </tbody>
-  </table>
-
-  <div class="callout green">
-    <div class="label">关键洞察 ⭐</div>
-    <strong>Hermes 的 background subagent 机制已经具备 async delegate 的雏形！</strong><br>
-    <code>background=true</code> + <code>notify_on_complete</code> = 非阻塞 + callback。
-    这正是缺口3 P0 "Async delegate + callback" 需要的核心。<br><br>
-    <strong>落地路径比 gap map 预想的更短</strong>——不需要从零建 async delegate runtime，只需要在现有 background subagent 机制上加：
-    Checkpoint · Context auto-compact · Execution guard。
-  </div>
-
-  <h3>分层结论</h3>
-
-  <div class="layer-card skill">
-    <div class="layer-head">
-      <span class="layer-name">Skill 层（loop-engineering）</span>
-      <span class="layer-effort">低工程量 · 可立即做</span>
-    </div>
-    <div><strong>能做：</strong>Discovery 闭环 / Fan-out dep 字段 / ADaPT 式失败分解</div>
-    <div><strong>需要：</strong>改 loop state machine + prompt + 流程设计</div>
-  </div>
-
-  <div class="layer-card runtime">
-    <div class="layer-head">
-      <span class="layer-name">Runtime 层（Hermes 核心）</span>
-      <span class="layer-effort">中等等工程量</span>
-    </div>
-    <div><strong>能做：</strong>Checkpoint / Context auto-compact / Execution guard / 跨 session resume</div>
-    <div><strong>需要：</strong>改 <code>delegate_task</code> 实现 + 加 checkpoint 后端</div>
-  </div>
-
-  <div class="layer-card arch">
-    <div class="layer-head">
-      <span class="layer-name">架构层（messaging model）</span>
-      <span class="layer-effort">大工程量 · 长期</span>
-    </div>
-    <div><strong>能做：</strong>真正 24/7 自治</div>
-    <div><strong>需要：</strong>突破同步 turn 模型（cronjob / daemon 模式？）</div>
-  </div>
-
-  <div class="callout">
-    <div class="label">结论</div>
-    gap map 的 <strong>skill 层 P0 可以立即在 loop-engineering 里落地，不需要等 runtime 改动</strong>。
-    runtime 层和架构层是更长期的工作。
-  </div>
-</section>
-
-<!-- ============== 8. ROADMAP ============== -->
-<section id="roadmap">
-  <h2><span class="num">8</span>路线图建议（三阶段）</h2>
-
-  <div class="roadmap-phase p1">
-    <div class="phase-head">
-      <span class="phase-title">阶段1：零新基础设施（P0）</span>
-      <span class="phase-time">1-2 周 · skill 层</span>
-    </div>
-    <ul>
-      <li><strong>Discovery 闭环</strong>：Verification 评分 → 重 Discovery（改 loop state machine，加 re-Discovery 边）</li>
-      <li><strong>Fan-out dep 字段</strong>：子任务声明依赖，按拓扑序调度</li>
-      <li><strong>轻量 Checkpoint</strong>：delegate step 后序列化 state 到 SQLite</li>
-    </ul>
-  </div>
-
-  <div class="roadmap-phase p2">
-    <div class="phase-head">
-      <span class="phase-title">阶段2：层次化 + 异步化（P1）</span>
-      <span class="phase-time">2-4 周 · skill + runtime 层</span>
-    </div>
-    <ul>
-      <li><strong>ADaPT 式失败→递归分解</strong></li>
-      <li><strong>持久化任务树</strong>（外部化）</li>
-      <li><strong>Async delegate + callback</strong>（基于已有 background 机制）</li>
-      <li><strong>Context auto-compact</strong>（三层 memory）</li>
-    </ul>
-  </div>
-
-  <div class="roadmap-phase p3">
-    <div class="phase-head">
-      <span class="phase-title">阶段3：自治 runtime（P2）</span>
-      <span class="phase-time">4-8 周 · runtime + 架构层</span>
-    </div>
-    <ul>
-      <li><strong>分级失败恢复</strong>（H-RePlan 式）</li>
-      <li><strong>拆解模板库</strong>（HCL-GP / MetaGPT SOP）</li>
-      <li><strong>多角色 verification loop</strong>（planner / implementer / tester）</li>
-      <li><strong>Execution guard</strong>（hooks / limits / steering）</li>
-    </ul>
-  </div>
-</section>
-
-<!-- ============== 9. SOURCES ============== -->
-<section id="sources">
-  <h2><span class="num">9</span>来源索引</h2>
-
-  <h4>Phase 1 原始报告</h4>
-  <ul class="source-list">
-    <li><span class="src-file">phase1-dynamic-replanning.md</span> — 514 行，18 方案（缺口1）</li>
-    <li><span class="src-file">phase1-task-decomposition.md</span> — 662 行，22 方案（缺口2，14 论文 + 8 工程框架）</li>
-    <li><span class="src-file">phase1-long-running-runtime.md</span> — 309 行，17 方案（缺口3）</li>
-    <li><span class="src-file">gap-analysis-framework.md</span> — 分析矩阵 + 三缺口定义</li>
+    <li><strong>三层 memory</strong>：Working（当前 context window，会爆）/ Recall（历史结构化摘要）/ Archival（外部 SQLite/文件/vector DB，不爆）</li>
+    <li><strong>触发</strong>：<code>getUsageRatio()</code> ≥ <code>autocompact_pct</code>（默认 0.85，env <code>HERMES_AUTOCOMPACT_PCT_OVERRIDE</code> 可覆盖）</li>
+    <li><strong>保留表</strong>：磁盘可重注入（rules/memory/skills）vs message-only 会丢（path-scoped rules）的二元分类</li>
+    <li><strong>Soft constraint 固化</strong>：compaction <strong>前</strong>把对话内 soft boundary 固化为硬规则（防 goal drift），固化后存磁盘，compaction 后从磁盘重新注入</li>
+    <li><strong>子 agent 独立</strong>：子 agent compaction 不影响主对话 context；transcript 独立持久</li>
   </ul>
 
-  <h4>loop-engineering 内部积累</h4>
-  <ul class="source-list">
-    <li><span class="src-file">references/self-evolving-loop-research.md</span> — v0.4 候选：Meta-Verifier / Adaptive Rubric / Insight Feed</li>
-    <li><span class="src-file">references/agent-skill-routing-research.md</span></li>
-    <li><span class="src-file">references/glite-arf-analysis.md</span></li>
+  <h3>8.3 Async Delegate（AsyncDelegate）</h3>
+  <p><strong>覆盖</strong>：缺口 3 子 4 无人值守 / 子 5 执行可控性。<strong>基础来源</strong>：Hermes background subagent + Claude Code 支柱 C/D。</p>
+
+  <div class="mermaid">
+flowchart TD
+    subgraph HB["主 Agent Session（同步 turn）"]
+        MAIN["delegate_task(background=true, spec)"]
+        MAIN --> AD
+    end
+
+    subgraph AD["AsyncDelegate Runtime"]
+        START["start(spec) → delegation_id<br/>主 agent 不阻塞"]
+        ISO{"isolation 级别"}
+        FRESH["fresh：从零<br/>独立 system prompt + tools"]
+        EXPLORE["explore：轻量探查<br/>只读、跳过 memory 求快"]
+        FORK["fork：继承对话<br/>复用父 prompt cache 求省"]
+
+        START --> ISO
+        ISO -->|fresh| FRESH
+        ISO -->|explore| EXPLORE
+        ISO -->|fork| FORK
+
+        FRESH --> INJECT
+        EXPLORE --> INJECT
+        FORK --> INJECT
+
+        INJECT["注入三大子系统"]
+        CM["CheckpointManager<br/>每 turn save()<br/>崩溃后 resume()"]
+        CTX["ContextManager<br/>is_subagent=true<br/>独立 compact()"]
+        GUARD["ExecutionGuard<br/>limits + hooks + auto_mode"]
+
+        INJECT --> CM
+        INJECT --> CTX
+        INJECT --> GUARD
+
+        CM --> LOOP
+        CTX --> LOOP
+        GUARD --> LOOP
+
+        LOOP["子 agent turn 循环（后台）"]
+        LOOP -->|"completed / failed / progress"| CB["callback → 主 Agent<br/>（notify_on_complete 已有）"]
+    end
+
+    CB --> MAIN
+
+    style MAIN fill:#e0e7ff,stroke:#4f6ef7
+    style CM fill:#fef3c7,stroke:#d97706
+    style CTX fill:#e6f4ea,stroke:#059669
+    style GUARD fill:#fef2f2,stroke:#dc2626
+    style LOOP fill:#fff,stroke:#999
+    style CB fill:#e0e7ff,stroke:#4f6ef7
+  </div>
+
+  <ul>
+    <li><strong>零改动基础</strong>：AsyncDelegate 包装现有 <code>delegate_task(background=true)</code> + <code>notify_on_complete</code>，加 checkpoint / compact / guard</li>
+    <li><strong>三档隔离</strong>（参考 Claude Code 支柱 C）：fresh（从零，独立 system prompt）/ explore（轻量只读，跳过 memory）/ fork（继承对话，复用 prompt cache）</li>
+    <li><strong>多层级停止</strong>：turn 级（max_turns）/ 结构级（max_depth=5）/ 行为级（连续 block 3 / 累计 20 → 暂停）/ 目标级（stop_condition: loop_until_done / goal_satisfied）/ 资源级（token_budget + timeout + auto-compaction）</li>
+    <li><strong>多事件 callback</strong>：completed / failed / progress / checkpoint_saved / compaction_triggered</li>
+    <li><strong>三设计耦合</strong>：Checkpoint × Compact（rewind 的 summarize 调用 compact）；Compact × Guard（soft constraint 固化注入 block_rules）；Checkpoint × Guard（错误 steering 的 replan 调用 rewind）</li>
   </ul>
 
-  <h4>关键外部来源</h4>
-  <ul class="source-list">
-    <li><strong>Kamoi et al., TACL 2024</strong> — "When Can LLMs Actually Correct Their Own Mistakes?" self-correction 综述</li>
-    <li><strong>Anthropic "Building Effective Agents"</strong> — 5 大 workflow 模式</li>
-    <li><strong>LangGraph Checkpointer</strong> — durable execution 抽象</li>
-    <li><strong>long-running-coding-loop</strong> — 12h 自治实战（11/11 功能，$181，0 人工干预）</li>
-    <li><strong>ADaPT</strong> — As-Needed Decomposition and Planning（+27~33% 成功率）</li>
-    <li><strong>H-RePlan</strong>（2026 前沿）— 分级失败恢复</li>
-    <li><strong>MemGPT / Letta</strong>（UC Berkeley）— 三层 memory 框架</li>
-    <li><strong>Conductor MCP</strong> — 持久化层次任务树</li>
-    <li><strong>Claude Code Harness</strong>（Anthropic）— auto-compaction + checkpoint + subagent isolation</li>
-    <li><strong>Strands Agents</strong>（AWS）— hooks + steering 基础设施</li>
-  </ul>
-</section>
+  <div class="callout danger">
+    <strong>根本性限制：messaging agent 同步 turn 模型</strong>
+    主 agent 每个 turn 同步，turn 间需要用户消息或 subagent notify 触发。AsyncDelegate 只让<strong>子 agent</strong>长时运行，主 agent 不能真正 24/7。跨 session resume / 真正 24/7 自治需要架构层 P2（cronjob / daemon 模式）突破。
+  </div>
 
-<footer>
-  Dynamic Planning × Loop Engineering Gap Map · 2026-07-08 · 基于 loop-engineering v0.3.1 + Phase 1 三维度调研（49 方案）<br>
-  本文件为 self-contained 学习材料，所有内容来自本地 research workspace 产出。
-</footer>
+  <!-- ==================== 9. Gap 优先级排序 ==================== -->
+  <h2 id="sec9">9. Gap 优先级排序</h2>
+
+  <table>
+    <tr><th>优先级</th><th>改动</th><th>覆盖缺口</th><th>复杂度</th><th>ROI</th></tr>
+    <tr><td style="color:var(--danger);font-weight:700">P0</td><td>Discovery→Verification→重 Discovery 闭环</td><td>1</td><td>低（纯流程）</td><td style="color:var(--success);font-weight:700">最高</td></tr>
+    <tr><td style="color:var(--danger);font-weight:700">P0</td><td>Fan-out 加 dep 字段 + 拓扑调度</td><td>2</td><td>低（数据结构）</td><td style="color:var(--success);font-weight:700">高</td></tr>
+    <tr><td style="color:var(--danger);font-weight:700">P0</td><td>Checkpoint 抽象（BaseCheckpointSaver → SQLite）</td><td>3</td><td>中</td><td style="color:var(--success);font-weight:700">高</td></tr>
+    <tr><td style="color:var(--accent);font-weight:700">P1</td><td>失败→递归分解（ADaPT 式）</td><td>1×2</td><td>中</td><td style="color:var(--accent);font-weight:600">高</td></tr>
+    <tr><td style="color:var(--accent);font-weight:700">P1</td><td>持久化层次任务树</td><td>2×3</td><td>中</td><td style="color:var(--accent);font-weight:600">高</td></tr>
+    <tr><td style="color:var(--accent);font-weight:700">P1</td><td>Async delegate + callback</td><td>3</td><td>中-高</td><td style="color:var(--accent);font-weight:600">高</td></tr>
+    <tr><td style="color:var(--accent);font-weight:700">P1</td><td>Context auto-compact（working/recall/archival）</td><td>3</td><td>中</td><td style="color:var(--accent);font-weight:600">高</td></tr>
+    <tr><td style="color:var(--text-secondary)">P2</td><td>分级失败恢复（H-RePlan 式）</td><td>2</td><td>中</td><td>中</td></tr>
+    <tr><td style="color:var(--text-secondary)">P2</td><td>拆解模板库（HCL-GP / MetaGPT SOP）</td><td>2</td><td>中</td><td>中</td></tr>
+    <tr><td style="color:var(--text-secondary)">P2</td><td>ToT 式回溯</td><td>1×2</td><td>中</td><td>中</td></tr>
+    <tr><td style="color:var(--text-secondary)">P2</td><td>多角色 verification loop</td><td>3</td><td>中-高</td><td>中</td></tr>
+    <tr><td style="color:var(--text-secondary)">P2</td><td>Execution guard（hooks/limits/steering）</td><td>3</td><td>高</td><td>中</td></tr>
+  </table>
+
+  <!-- ==================== 10. Hermes 架构评估 ==================== -->
+  <h2 id="sec10">10. Hermes 架构评估</h2>
+
+  <p>评估 Hermes 当前架构能支撑 gap map 哪些建议，哪些需要 runtime 层改动。</p>
+
+  <h3>10.1 能力对照矩阵</h3>
+  <table>
+    <tr><th>gap map 需求</th><th>当前状态</th><th>差距</th><th>落地层</th></tr>
+    <tr><td>异步执行</td><td style="color:var(--success);font-weight:600">✅ background=true 已是 async</td><td>无差距</td><td>已有</td></tr>
+    <tr><td>完成通知</td><td style="color:var(--success);font-weight:600">✅ notify_on_complete</td><td>无差距</td><td>已有</td></tr>
+    <tr><td>并行子任务</td><td style="color:var(--success);font-weight:600">✅ batch 最多 3 并发</td><td>无差距</td><td>已有</td></tr>
+    <tr><td>subagent 隔离</td><td style="color:var(--success);font-weight:600">✅ 独立 conversation + terminal</td><td>无差距</td><td>已有</td></tr>
+    <tr><td>Checkpoint</td><td style="color:var(--danger);font-weight:600">❌ 子任务崩溃全丢</td><td>有差距</td><td>runtime 层</td></tr>
+    <tr><td>断点恢复</td><td style="color:var(--danger);font-weight:600">❌ 不能从中间恢复</td><td>有差距</td><td>runtime 层</td></tr>
+    <tr><td>Context auto-compact</td><td style="color:var(--danger);font-weight:600">❌ 单 session context window</td><td>有差距</td><td>runtime 层</td></tr>
+    <tr><td>长时运行（数小时）</td><td style="color:var(--accent);font-weight:600">⚠️ 受 session 生命周期限制</td><td>有差距</td><td>runtime 层</td></tr>
+    <tr><td>Execution guard</td><td style="color:var(--danger);font-weight:600">❌ 无 hooks/limits/steering</td><td>有差距</td><td>runtime 层</td></tr>
+  </table>
+
+  <div class="callout success">
+    <strong>关键洞察 ⭐</strong>
+    Hermes 的 background subagent 机制<strong>已经具备 async delegate 的雏形</strong>！<code>background=true</code> + <code>notify_on_complete</code> = 非阻塞 + callback。落地路径比 gap map 预想的更短——不需要从零建 async delegate runtime，只需要在现有 background subagent 机制上加 Checkpoint + Context auto-compact + Execution guard。
+  </div>
+
+  <h3>10.2 分层结论</h3>
+  <table>
+    <tr><th>层级</th><th>能做什么</th><th>需要什么</th></tr>
+    <tr>
+      <td><strong>skill 层</strong>（loop-engineering）</td>
+      <td>Discovery 闭环 / Fan-out dep 字段 / ADaPT 式失败分解</td>
+      <td>改 loop state machine + prompt + 流程设计</td>
+    </tr>
+    <tr>
+      <td><strong>runtime 层</strong>（Hermes 核心）</td>
+      <td>Checkpoint / Context auto-compact / Execution guard / 跨 session resume</td>
+      <td>需要改 delegate_task 实现 + 加 checkpoint 后端</td>
+    </tr>
+    <tr>
+      <td><strong>架构层</strong>（messaging model）</td>
+      <td>真正 24/7 自治</td>
+      <td>需要突破同步 turn 模型（cronjob / daemon 模式？）</td>
+    </tr>
+  </table>
+
+  <div class="callout info">
+    <strong>结论</strong>
+    gap map 的 skill 层 P0 可以<strong>立即在 loop-engineering 里落地</strong>，不需要等 runtime 改动。runtime 层和架构层是更长期的工作。
+  </div>
+
+  <!-- ==================== 11. 路线图 ==================== -->
+  <h2 id="sec11">11. 落地路线图</h2>
+
+  <div class="phase-timeline">
+    <div class="phase-card">
+      <div class="phase-num">1</div>
+      <div class="phase-body">
+        <h4>阶段 1：零新基础设施（P0，1-2 周）</h4>
+        <p><strong>skill 层</strong>——不改 Hermes runtime，纯流程 / prompt / 数据结构改动。</p>
+        <ul>
+          <li>Discovery 闭环：Verification 评分 → 重 Discovery（改 loop state machine，加 re-Discovery 边）</li>
+          <li>Fan-out dep 字段：子任务声明依赖，按拓扑序调度</li>
+          <li>ADaPT 式失败→递归分解（改 prompt + 流程）</li>
+          <li>轻量 Checkpoint：delegate step 后序列化 state 到 SQLite</li>
+        </ul>
+        <p style="color:var(--success);font-weight:600">✅ 已落地到 skill v0.4.0</p>
+      </div>
+    </div>
+
+    <div class="phase-card">
+      <div class="phase-num">2</div>
+      <div class="phase-body">
+        <h4>阶段 2：层次化 + 异步化（P1，2-4 周）</h4>
+        <p><strong>runtime 层</strong>——需要改 Hermes 核心，中等等工程量。</p>
+        <ul>
+          <li>Checkpoint 抽象（BaseCheckpointSaver + SQLite 后端 + 四档 rewind）</li>
+          <li>Context auto-compact（三层 memory + 触发阈值 + 保留表）</li>
+          <li>Async delegate 包装现有 background subagent + 多事件 callback</li>
+          <li>ExecutionGuard（limits + hooks）</li>
+          <li>三档隔离（fresh 已有 / explore / fork）</li>
+          <li>Soft constraint 固化机制（compaction 前固化）</li>
+        </ul>
+        <p style="color:var(--accent);font-weight:600">⏳ 只设计，不实施</p>
+      </div>
+    </div>
+
+    <div class="phase-card">
+      <div class="phase-num future">3</div>
+      <div class="phase-body">
+        <h4>阶段 3：自治 runtime（P2，4-8 周）</h4>
+        <p><strong>架构层</strong>——需要突破同步 turn 模型，大工程量。</p>
+        <ul>
+          <li>分级失败恢复（H-RePlan 式）</li>
+          <li>拆解模板库（HCL-GP / MetaGPT SOP）</li>
+          <li>多角色 verification loop（planner/implementer/tester）</li>
+          <li>Execution guard 完整版（auto-mode classifier + protected paths）</li>
+          <li>跨 session resume（cronjob / daemon 模式触发）</li>
+          <li>真正 24/7 自治</li>
+        </ul>
+        <p style="color:var(--text-secondary)">🔮 长期愿景</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== 12. 来源索引 ==================== -->
+  <h2 id="sec12">12. 来源索引</h2>
+
+  <h3>Phase 1 原始报告</h3>
+  <ul>
+    <li><code>phase1-dynamic-replanning.md</code>（514 行，18 方案）</li>
+    <li><code>phase1-task-decomposition.md</code>（662 行，14+ 方案）</li>
+    <li><code>phase1-long-running-runtime.md</code>（309 行，17 方案）</li>
+  </ul>
+
+  <h3>loop-engineering 内部积累</h3>
+  <ul>
+    <li><code>references/self-evolving-loop-research.md</code>（v0.4 候选：Meta-Verifier / Adaptive Rubric / Insight Feed）</li>
+    <li><code>references/agent-skill-routing-research.md</code></li>
+    <li><code>references/glite-arf-analysis.md</code></li>
+    <li><code>references/dynamic-planning-patterns.md</code>（三 P0 实现指南，已落地 skill v0.4.0）</li>
+  </ul>
+
+  <h3>关键外部来源</h3>
+  <table>
+    <tr><th>来源</th><th>可信度</th><th>贡献</th></tr>
+    <tr><td>Kamoi et al., "Can LLMs Make Fair Judgments?" (TACL 2024)</td><td><span class="src-badge green">🟢</span></td><td>自纠正综述——纯 LLM 自评无效，必须外部信号</td></tr>
+    <tr><td>Anthropic "Building Effective Agents" (2024-12-19)</td><td><span class="src-badge green">🟢</span></td><td>5 大 workflow 模式 + 3 大设计原则 + ACI 工程化</td></tr>
+    <tr><td>Anthropic "A Harness for Every Task" (2026-06-02)</td><td><span class="src-badge green">🟢</span></td><td>harness = loop + 控制外壳；dynamic workflows；三大失败模式</td></tr>
+    <tr><td>Claude Code docs — context-window / checkpointing / sub-agents / permission-modes</td><td><span class="src-badge green">🟢</span></td><td>四支柱工程实现 + 保留表 + 四档 rewind + 三档隔离 + auto mode</td></tr>
+    <tr><td>LangGraph Checkpointer</td><td><span class="src-badge green">🟢</span></td><td>durable execution + time-travel</td></tr>
+    <tr><td>MemGPT</td><td><span class="src-badge green">🟢</span></td><td>三层 memory（working/recall/archival）</td></tr>
+    <tr><td>long-running-coding-loop</td><td><span class="src-badge yellow">🟡</span></td><td>12h 自治实战（11/11 功能，$181，0 人工干预）</td></tr>
+    <tr><td>ADaPT (arXiv:2305.04091)</td><td><span class="src-badge green">🟢</span></td><td>失败即递归分解，+27~33% 成功率</td></tr>
+    <tr><td>CRITIC (arXiv:2305.11738)</td><td><span class="src-badge green">🟢</span></td><td>外部工具反馈触发重规划</td></tr>
+    <tr><td>HuggingGPT (NeurIPS 2023)</td><td><span class="src-badge green">🟢</span></td><td>dep 字段显式依赖建模</td></tr>
+    <tr><td>H-RePlan (2026)</td><td><span class="src-badge yellow">🟡</span></td><td>local recovery vs global replanning 分离</td></tr>
+    <tr><td>Reflexion (NeurIPS 2023)</td><td><span class="src-badge green">🟢</span></td><td>跨 trial episodic memory</td></tr>
+    <tr><td>Strands hooks + steering</td><td><span class="src-badge green">🟢</span></td><td>执行可控性基础设施</td></tr>
+  </table>
+
+  <h3>本研究产出文件</h3>
+  <ul>
+    <li><code>~/.hermes/workspace/dynamic-planning-research/gap-map-draft.md</code> — 完整 gap map（主输入）</li>
+    <li><code>~/.hermes/workspace/dynamic-planning-research/phase3-claude-code-harness.md</code> — Claude Code harness 四支柱深挖</li>
+    <li><code>~/.hermes/workspace/dynamic-planning-research/hermes-architecture-assessment.md</code> — Hermes 架构评估</li>
+    <li><code>~/.hermes/workspace/dynamic-planning-research/p1-runtime-design.md</code> — P1 设计文档（Checkpoint/Context auto-compact/Async delegate）</li>
+    <li><code>~/.hermes/profiles/prof_bot/skills/devops/loop-engineering/references/dynamic-planning-patterns.md</code> — 三 P0 实现指南（已落地 skill v0.4.0）</li>
+  </ul>
+
+  <div class="callout info" style="margin-top:40px">
+    <strong>文档信息</strong>
+    Phase 2 完整整合 · 基于 Phase 1 三维度搜索（49 方案/论文/框架）+ loop-engineering v0.3.1 实际实现验证 + Phase 3 Claude Code harness 深挖。<br>
+    创建：2026-07-08 · 格式：prof_bot 浅色主题 HTML 标准（Inter + mermaid.js + max-width 720px）<br>
+    前序：<a href="agent-loop-next-jump-2026-07-01.html">2026-07-01 — Agent Loop 的下一跳：从自动验证到自主进化</a>
+  </div>
 
 </div>
 </body>
