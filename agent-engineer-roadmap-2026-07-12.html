@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agent Engineer 知识体系与学习路线 2026</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🤖</text></svg>" type="image/svg+xml">
+<style>
+/* ========== Claude-Style Learning File v1.1 ========== */
+:root {
+  --bg: #faf9f7; --text: #1a1a1a; --text-secondary: #555;
+  --accent: #d97706; --accent-light: #fef3c7; --border: #e5e0d8;
+  --sidebar-w: 240px;
+  --green: #059669; --red: #dc2626; --blue: #2563eb;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: 'Inter','SF Pro Display',system-ui,-apple-system,sans-serif;
+  background: var(--bg); color: var(--text); line-height: 1.75; font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+}
+.page-container { display:flex; min-height:100vh; }
+#toc-sidebar {
+  position:sticky; top:0; width:var(--sidebar-w); flex-shrink:0;
+  background:#fff; height:100vh; display:flex; flex-direction:column;
+  border-right:1px solid var(--border); padding:0 16px; z-index:100;
+}
+.sidebar-logo { display:flex; align-items:center; gap:10px; padding:18px 4px 14px; border-bottom:1px solid var(--border); flex-shrink:0; }
+.sidebar-logo .logo-icon { font-size:20px; }
+.sidebar-logo .logo-word { font-size:14px; font-weight:700; color:var(--accent); }
+#toc-sidebar nav { flex:1; overflow-y:auto; padding:10px 0; }
+#toc-sidebar nav a {
+  display:block; font-size:13px; line-height:1.5; color:var(--text-secondary);
+  text-decoration:none; padding:4px 8px; border-radius:4px; margin-bottom:1px;
+  transition:all .15s; border-left:3px solid transparent;
+}
+#toc-sidebar nav a:hover { background:var(--accent-light); color:var(--accent); }
+#toc-sidebar nav a.active { background:var(--accent-light); color:var(--accent); font-weight:600; border-left-color:var(--accent); }
+#toc-sidebar nav a.toc-h3 { padding-left:18px; font-size:12px; }
+.sidebar-footer { padding:12px 0; font-size:12px; color:#999; border-top:1px solid var(--border); text-align:center; flex-shrink:0; }
+.sidebar-toggle { display:none; position:fixed; top:12px; left:12px; z-index:101; background:#fff; border:1px solid var(--border); border-radius:6px; padding:6px 12px; font-size:14px; cursor:pointer; }
+
+#main-content { flex:1; margin:0 auto; padding:60px 48px 80px 48px; max-width:900px; }
+
+h2 { font-size:26px; font-weight:700; margin:48px 0 20px; padding-top:8px; border-top:1px solid var(--border); scroll-margin-top:20px; }
+h3 { font-size:20px; font-weight:600; margin:32px 0 12px; scroll-margin-top:20px; }
+h4 { font-size:16px; font-weight:600; margin:20px 0 8px; color:var(--text-secondary); }
+blockquote {
+  border-left:3px solid var(--accent); padding:12px 20px; margin:20px 0;
+  background:var(--accent-light); border-radius:0 6px 6px 0; font-style:italic; color:#7c5e10;
+}
+pre { background:#2d2d2d; color:#e0e0e0; padding:16px 20px; border-radius:8px; overflow-x:auto; font-size:13px; margin:16px 0; }
+pre code { background:none; padding:0; color:inherit; }
+code { background:#f3f0eb; padding:2px 6px; border-radius:3px; font-size:14px; }
+table { width:100%; border-collapse:collapse; margin:20px 0; font-size:14px; }
+th,td { text-align:left; padding:8px 12px; border-bottom:1px solid var(--border); }
+th { font-weight:600; color:var(--text-secondary); font-size:12px; text-transform:uppercase; letter-spacing:0.04em; background:#faf9f7; }
+a { color:var(--accent); text-decoration:none; }
+a:hover { text-decoration:underline; }
+
+/* Hero */
+.hero { padding:20px 0 10px; }
+.hero h1 { font-size:36px; font-weight:800; line-height:1.2; margin-bottom:12px; }
+.hero .subtitle { font-size:17px; color:var(--text-secondary); margin-bottom:20px; }
+.hero .meta { font-size:13px; color:#999; }
+
+/* Cards */
+.card { background:#fff; border:1px solid var(--border); border-radius:8px; padding:20px; margin:16px 0; }
+.card.gap { border-left:4px solid var(--red); }
+.card.mastered { border-left:4px solid var(--green); }
+.card.partial { border-left:4px solid var(--accent); }
+.card h4 { margin-top:0; }
+
+/* Tags */
+.tag { display:inline-block; padding:2px 8px; border-radius:12px; font-size:12px; font-weight:600; margin:2px 4px 2px 0; }
+.tag.gap { background:#fee2e2; color:var(--red); }
+.tag.mastered { background:#d1fae5; color:var(--green); }
+.tag.partial { background:var(--accent-light); color:var(--accent); }
+.tag.new { background:#dbeafe; color:var(--blue); }
+
+/* Paper list */
+.paper { border-left:3px solid var(--accent); padding:12px 16px; margin:12px 0; background:#fff; border-radius:0 6px 6px 0; }
+.paper .paper-title { font-weight:600; font-size:15px; margin-bottom:4px; }
+.paper .paper-meta { font-size:12px; color:var(--text-secondary); margin-bottom:6px; }
+.paper .paper-id { font-family:monospace; color:var(--accent); }
+
+/* Article card */
+.article { padding:12px 0; border-bottom:1px solid var(--border); }
+.article:last-child { border-bottom:none; }
+.article .art-title { font-weight:600; font-size:15px; }
+.article .art-meta { font-size:12px; color:var(--text-secondary); margin:4px 0; }
+.article .art-insights { font-size:14px; color:var(--text-secondary); margin-top:6px; }
+.article .art-insights li { margin-bottom:3px; }
+
+/* Progress bar */
+.progress-bar { height:8px; background:#f0ebe5; border-radius:4px; overflow:hidden; margin:4px 0; }
+.progress-bar .fill { height:100%; border-radius:4px; }
+
+/* Summary box */
+.summary-box { background:var(--accent-light); border:1px solid var(--accent); border-radius:8px; padding:20px 24px; margin:24px 0; }
+.summary-box h3 { margin-top:0; color:#7c5e10; }
+
+/* Mermaid-like flow (CSS only) */
+.flow { display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin:16px 0; }
+.flow .node { background:#fff; border:1px solid var(--border); border-radius:6px; padding:8px 14px; font-size:13px; }
+.flow .arrow { color:var(--accent); font-weight:700; }
+
+@media (max-width:900px) {
+  .page-container { display:block; }
+  #toc-sidebar { display:none; position:fixed; top:0; left:0; z-index:100; width:260px; height:100vh; box-shadow:2px 0 12px rgba(0,0,0,.08); }
+  #toc-sidebar.open { display:flex; }
+  .sidebar-toggle { display:block; }
+  #main-content { padding:60px 24px 80px; }
+}
+</style>
+</head>
+<body>
+
+<button class="sidebar-toggle" onclick="document.getElementById('toc-sidebar').classList.toggle('open')">☰ 目录</button>
+
+<div class="page-container">
+  <div id="toc-sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon">🤖</div>
+      <div class="logo-word">Agent Engineer</div>
+    </div>
+    <nav id="toc-nav"></nav>
+    <div class="sidebar-footer">
+      <a href="https://jimmiebm822-cmd.github.io/ai-learning/" style="color:var(--accent);">← Hub</a>
+    </div>
+  </div>
+
+  <div id="main-content">
+    <!-- HERO -->
+    <div class="hero">
+      <h1>Agent Engineer 知识体系与学习路线</h1>
+      <div class="subtitle">从 Vibe Coder 到 Agent Engineer — 最权威资源全景图 + 知识缺口诊断 + 63 篇前沿论文/文章导读</div>
+      <div class="meta">2026-07-12 · v1.0.0 · 数据来源: Anthropic · OpenAI · Google AI · arXiv · Simon Willison · Lilian Weng · swyx · GitHub</div>
+    </div>
+
+    <blockquote>
+      <strong>核心论断：</strong>Agent Engineering 不是单一技能，而是 7 个知识域的交叉。你已掌握 Stage 2 (Agent Architecture / Loop Engineering)，但<strong>最大缺口在 Context Engineering、Tool Design & MCP、Agent Evaluation、Harness Engineering</strong> — 这四块恰好是 2025-2026 年行业最重要的认知演进。
+    </blockquote>
+
+    <!-- ========== GAP DIAGNOSIS ========== -->
+    <h2 id="sec-gap">知识缺口诊断：你在哪里，缺什么</h2>
+
+    <p>基于你的 <a href="https://github.com/jimmiebm822-cmd/ai-learning/blob/main/ai-learning-path.md">AI 学习路径</a> 和三路并行搜索的 63 篇前沿资源，以下是系统性诊断。</p>
+
+    <div class="summary-box">
+      <h3>一句话结论</h3>
+      <p>你已经掌握了 <strong>Loop Engineering + Adversarial Verification</strong>（Stage 2），这是 Agent Architecture 的核心子集。但你的知识体系有 <strong>4 个 CRITICAL gap</strong> 和 <strong>3 个 MODERATE gap</strong>，恰好是 2025-2026 年行业最重要的认知演进方向。补齐这些 gap，你就从"会用 agent"进化到"能设计 agent system"。</p>
+    </div>
+
+    <h3 id="sec-gap-map">知识地图：7 域 × 掌握度</h3>
+
+    <table>
+      <thead>
+        <tr><th>知识域</th><th>掌握度</th><th>关键缺口</th><th>优先级</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>1. Agent 架构基础</strong></td>
+          <td><span class="tag mastered">✅ 已掌握</span></td>
+          <td>ReAct/Plan-Execute/Reflection 的形式化定义你从实践中理解了，但缺学术框架支撑</td>
+          <td>P3</td>
+        </tr>
+        <tr>
+          <td><strong>2. Context Engineering</strong></td>
+          <td><span class="tag gap">❌ CRITICAL</span></td>
+          <td>从 prompt engineering 到 context engineering 的范式迁移（Anthropic 2025-09）— 你还在用 prompt 思维</td>
+          <td><strong>P0</strong></td>
+        </tr>
+        <tr>
+          <td><strong>3. Tool Design & MCP</strong></td>
+          <td><span class="tag gap">❌ CRITICAL</span></td>
+          <td>Tool 作为确定/非确定系统的契约、MCP 生态、Tool Search、Programmatic Tool Calling</td>
+          <td><strong>P0</strong></td>
+        </tr>
+        <tr>
+          <td><strong>4. Agent Evaluation</strong></td>
+          <td><span class="tag gap">❌ CRITICAL</span></td>
+          <td>Trajectory diagnostics、Agent evals vs single-turn evals、benchmarks (SWE-bench/DeepSWE/UniClawBench)</td>
+          <td><strong>P0</strong></td>
+        </tr>
+        <tr>
+          <td><strong>5. Harness Engineering</strong></td>
+          <td><span class="tag partial">🔄 PARTIAL</span></td>
+          <td>Session/Harness/Sandbox 分离、Long-running agents、Context resets、"Pets vs Cattle"</td>
+          <td><strong>P1</strong></td>
+        </tr>
+        <tr>
+          <td><strong>6. Agent Memory Systems</strong></td>
+          <td><span class="tag partial">🔄 PARTIAL</span></td>
+          <td>你有 Obsidian+Wiki 实践，但缺学术框架：Rate-distortion、Self-optimizing memory、Behavioral state decay</td>
+          <td>P2</td>
+        </tr>
+        <tr>
+          <td><strong>7. Agent Safety & Security</strong></td>
+          <td><span class="tag partial">🔄 PARTIAL</span></td>
+          <td>有 agent-defense-prompt skill，但缺 Lethal Trifecta/Rule of Two/Decomposition attacks/Memory poisoning 全景</td>
+          <td>P2</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3 id="sec-gap-detail">各域详细诊断</h3>
+
+    <div class="card mastered">
+      <h4>1. Agent 架构基础 — <span class="tag mastered">✅ 已掌握</span></h4>
+      <p><strong>你已掌握：</strong>Loop Engineering 五步框架（Discovery→Handoff→Verification→Persistence→Scheduling）、六大模式（Classify-and-act、Fan-out、Adversarial Verification、Generate-and-filter、Tournament、Loop until done）、三大失败模式（Agentic laziness、Self-preferential bias、Goal drift）。</p>
+      <p><strong>需补强：</strong>这些知识来自实践和 Anthropic blog 蒸馏，但缺乏学术形式化。建议阅读 Lilian Weng 的 <a href="https://lilianweng.github.io/posts/2023-06-23-agent/">LLM Powered Autonomous Agents</a>（仍是 canonical reference）建立 Planning + Memory + Tool Use 三组件框架，再读 arXiv 2606.20683 "From Question Answering to Task Completion" 了解 model-harness decoupling 理论。</p>
+    </div>
+
+    <div class="card gap">
+      <h4>2. Context Engineering — <span class="tag gap">❌ CRITICAL</span></h4>
+      <p><strong>为什么 CRITICAL：</strong>Anthropic 2025-09 发表 "Effective Context Engineering for AI Agents"，明确提出 <strong>context engineering > prompt engineering</strong> 的范式迁移。这不是换了个词 — 它意味着你的思维模型需要从"写好 prompt"变成"管理一个有限的 token 预算，在运行时动态加载和驱逐信息"。</p>
+      <p><strong>你缺的具体知识：</strong></p>
+      <ul>
+        <li><strong>Just-in-time context：</strong>不预加载所有数据，维护轻量标识符（文件路径、查询、链接），运行时动态加载 — Claude Code 就是这么做的</li>
+        <li><strong>Context as finite resource：</strong>Agent 在 loop 中生成指数增长的数据，必须循环精炼 — 你的 loop-engineering 有这个直觉但缺形式化</li>
+        <li><strong>Mirrors human cognition：</strong>人不记忆整个语料库 — 用文件系统、收件箱、书签。Agent 也应该这样</li>
+        <li><strong>Progressive disclosure：</strong>Anthropic Agent Skills 的三级加载（metadata → SKILL.md → bundled files）— 你的 Hermes skills 就是这个模式但你可能不知道理论框架</li>
+      </ul>
+      <p><strong>学习材料：</strong><a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents">Anthropic — Effective Context Engineering</a> + <a href="https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills">Agent Skills 开放标准</a></p>
+    </div>
+
+    <div class="card gap">
+      <h4>3. Tool Design & MCP — <span class="tag gap">❌ CRITICAL</span></h4>
+      <p><strong>为什么 CRITICAL：</strong>Tools 是确定系统与非确定 agent 之间的契约。MCP (Model Context Protocol, Anthropic 2024-11) 已成为事实标准。你的 Hermes 有 tools 但没系统学过 tool design 原则。</p>
+      <p><strong>你缺的具体知识：</strong></p>
+      <ul>
+        <li><strong>Tool 作为新型软件：</strong>agent 可能调用 tool、用通用知识回答、或追问 — tool 必须为 agent 设计而非为开发者设计</li>
+        <li><strong>Token 开销问题：</strong>5 个 MCP server (58 个 tools) = ~55K tokens 开销 — 必须按需加载</li>
+        <li><strong>Programmatic Tool Calling：</strong>agent 写代码调用 tool（而非直接调用），中间结果留在代码执行环境 — 不进 context window</li>
+        <li><strong>Tool Use Examples：</strong>JSON schema 无法表达使用模式（何时带可选参数、哪些组合有意义）— 需要示例</li>
+        <li><strong>MCP 安全风险：</strong>Tool poisoning、tool shadowing、rug pulls — Simon Willison 已有多篇分析</li>
+      </ul>
+      <p><strong>学习材料：</strong><a href="https://www.anthropic.com/engineering/writing-tools-for-agents">Writing Effective Tools for Agents</a> + <a href="https://www.anthropic.com/engineering/advanced-tool-use">Advanced Tool Use</a> + <a href="https://www.anthropic.com/engineering/code-execution-with-mcp">Code Execution with MCP</a></p>
+    </div>
+
+    <div class="card gap">
+      <h4>4. Agent Evaluation — <span class="tag gap">❌ CRITICAL</span></h4>
+      <p><strong>为什么 CRITICAL：</strong>你有 adversarial verification rubric，但这不等于 agent evaluation。Agent evals 和 single-turn evals 是根本不同的 — mistakes 会传播和复合。没有系统 evals，你只能 reactive 地发现问题（用户报告 bug），而不是 proactive 地在上线前发现。</p>
+      <p><strong>你缺的具体知识：</strong></p>
+      <ul>
+        <li><strong>核心定义：</strong>Task（单次测试）→ Trial（多次尝试求一致性）→ Grader（评分逻辑）→ Transcript（完整轨迹记录）</li>
+        <li><strong>Trajectory diagnostics：</strong>不只看 pass/fail — 分析 agent 的搜索、读取、编辑、工具调用、验证、回退轨迹（arXiv 2607.06184 的 9 类 action taxonomy）</li>
+        <li><strong>Optimizer-Evaluator 分离：</strong>"An optimizer that grades itself learns to game the metric" — Google 的 flywheel 和你的 adversarial verification 不谋而合</li>
+        <li><strong>Benchmarks 全景：</strong>SWE-bench（代码）、GAIA（通用）、UniClawBench（400 真实任务）、DeepSWE（113 无污染任务）</li>
+        <li><strong>Eval contamination：</strong>模型能识别自己在被测试（Opus 4.6 在 BrowseComp 上发现了答案并解密）— benchmark 可能不可靠</li>
+      </ul>
+      <p><strong>学习材料：</strong><a href="https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents">Demystifying Evals for AI Agents</a> + arXiv 2607.05775 "Beyond the Leaderboard" + arXiv 2607.06184 "Trajectory Diagnostics"</p>
+    </div>
+
+    <div class="card partial">
+      <h4>5. Harness Engineering — <span class="tag partial">🔄 PARTIAL</span></h4>
+      <p><strong>你已掌握：</strong>Harness 是 loop 的第四层（prompt → context → harness → loop），来自 Anthropic "A Harness for Every Task"。</p>
+      <p><strong>你缺的具体知识：</strong></p>
+      <ul>
+        <li><strong>三层虚拟化抽象：</strong>Session（追加日志，outlasts 任何 context window）≠ Harness（调用 Claude + 路由 tool calls 的 loop）≠ Sandbox（执行环境）</li>
+        <li><strong>"Don't adopt a pet"：</strong>初始所有组件在单容器（"pet" — 手工维护、不可丢失）→ 重构为 "cattle"（可互换、brain 与 hands 解耦）</li>
+        <li><strong>Context anxiety：</strong>模型接近 context 上限时提前结束工作 — 需要 context resets（清理 context window），但要小心操作</li>
+        <li><strong>GAN-inspired 评估：</strong>Generator agent 产出 + Evaluator agent 评分 — 把主观判断（"设计好不好"）变成可评分的</li>
+        <li><strong>Long-running agents：</strong>Initializer agent（首次设置环境）+ Coding agent（每次增量推进，留 artifact 给下次）</li>
+      </ul>
+      <p><strong>学习材料：</strong><a href="https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents">Effective Harnesses for Long-Running Agents</a> + <a href="https://www.anthropic.com/engineering/managed-agents">Scaling Managed Agents</a> + <a href="https://www.anthropic.com/engineering/harness-design-long-running-apps">Harness Design for Long-Running Apps</a></p>
+    </div>
+
+    <div class="card partial">
+      <h4>6. Agent Memory Systems — <span class="tag partial">🔄 PARTIAL</span></h4>
+      <p><strong>你已掌握：</strong>Obsidian Vault + LLM Wiki 的记忆管线 v3.0，structured-memory-system 已删除并入 Obsidian。</p>
+      <p><strong>你缺的学术框架：</strong></p>
+      <ul>
+        <li><strong>Rate-distortion 统一框架：</strong>arXiv 2607.08032 — 把 KV cache eviction、prompt pruning、architectural state bounding、agent memory consolidation 四个社区统一到同一个 retain/discard 决策问题</li>
+        <li><strong>Self-optimizing memory：</strong>arXiv 2607.03726 (SelfMem) — agent 学习自己的 memory strategy，而非预定义</li>
+        <li><strong>Behavioral state decay：</strong>arXiv 2607.08716 — 长程任务中决策相关状态散落在不断增长的轨迹中，被推出 context window 后不再影响决策</li>
+        <li><strong>Hierarchical memory：</strong>arXiv 2607.07666 — 三层架构保持 context bounded（中位 301 tokens，max 4050 across 104 runs）</li>
+        <li><strong>Neural procedural memory：</strong>arXiv 2606.29824 — 从 RAG（显式文本注入）到 activation-based（隐式激活引导）的转变</li>
+      </ul>
+    </div>
+
+    <div class="card partial">
+      <h4>7. Agent Safety & Security — <span class="tag partial">🔄 PARTIAL</span></h4>
+      <p><strong>你已掌握：</strong>agent-defense-prompt skill（嵌入式 defense prompt，6,000+ 攻击 0 成功）、Cron injection 扫描器误杀的坑。</p>
+      <p><strong>你缺的全景：</strong></p>
+      <ul>
+        <li><strong>Lethal Trifecta（Willison）：</strong>private data + untrusted content + external communication = dangerous。三者同时存在 = 系统性风险</li>
+        <li><strong>Rule of Two（Meta AI）：</strong>每个 session 最多拥有 2/3 个危险属性。受 Chrome Rule of 2 启发</li>
+        <li><strong>Decomposition attacks：</strong>有害任务拆成看起来无害的子任务 — 单独执行通过安全检查，累积完成恶意意图（arXiv 2606.13994 DECOMPBENCH）</li>
+        <li><strong>Memory poisoning：</strong>arXiv 2607.06595 — 长期记忆成为攻击面，攻击者注入虚假记忆影响后续决策</li>
+        <li><strong>Dual-boundary security：</strong>arXiv 2606.09549 (SecureClaw) — effect sink（action authorization）+ read boundary（plaintext confinement），不能只守一个</li>
+        <li><strong>247 篇安全论文综合：</strong>arXiv 2606.10749 — agent 安全从 text safety 进化为 agentic-specific risks（control flow hijack、tool privilege misuse、state corruption）</li>
+      </ul>
+      <p><strong>学习材料：</strong><a href="https://simonwillison.net/2025/Jun/16/the-lethal-trifecta/">Lethal Trifecta</a> + <a href="https://simonwillison.net/2025/Jun/13/prompt-injection-design-patterns/">Design Patterns for Securing LLM Agents</a></p>
+    </div>
+    <!-- ========== CROSS-CUTTING THEMES ========== -->
+    <h2 id="sec-themes">六大跨领域主题：2025-2026 行业共识</h2>
+
+    <p>三路搜索（官方博客 + arXiv + 行业领袖）收敛出的六个共识，每个都是 Daddy 当前知识体系的补强方向。</p>
+
+    <h3 id="sec-themes-1">① Agent = LLM + Tools + Instructions, running in a loop</h3>
+    <p>Anthropic、OpenAI、Google 三家独立得出同一公式：<strong>Agent ≠ 更聪明的 LLM，而是 LLM 在 loop 中使用 tools 完成任务</strong>。开放问题是编排方式 — 单 agent + many tools vs multi-agent + handoffs。OpenAI 建议"先最大化单 agent 能力再考虑 multi-agent"，Google 推 graph-based orchestration，Anthropic 偏好 subagent fan-out。</p>
+
+    <h3 id="sec-themes-2">② Context Engineering 是新的 Prompt Engineering</h3>
+    <p>Anthropic 2025-09 明确提出。核心洞察：<strong>context window 是有限资源，不是"越大越好"</strong>。Agent 在 loop 中生成指数增长的数据，必须循环精炼。Just-in-time context（维护轻量标识符，运行时动态加载）是 Claude Code 的核心设计。你的 Hermes skills 的 progressive disclosure 三级加载已经暗合了这个原则，但需要系统理解理论框架。</p>
+
+    <h3 id="sec-themes-3">③ Tool Design 是新的 API Design</h3>
+    <p>Tools 是确定系统与非确定 agent 之间的契约。MCP 已成为事实标准（数千个 MCP server、全语言 SDK）。关键挑战：58 个 tools = 55K tokens 开销 → 需要按需加载 + Programmatic Tool Calling（agent 写代码调 tool）。Tool 质量和可发现性是扩展瓶颈。Anthropic 用 agents 优化自己的 tool descriptions — 你也可以这样做。</p>
+
+    <h3 id="sec-themes-4">④ Evaluation 是最难的题</h3>
+    <p>Agent evals 和 single-turn evals 是根本不同的：multi-turn state propagation、creative solutions that surpass static criteria、eval contamination（模型能找到 web 上的 benchmark 答案）。核心原则：<strong>"An optimizer that grades itself learns to game the metric"</strong> — optimizer 和 evaluator 必须解耦。Google 的 Agent Quality Flywheel（Build Test → Ship Monitor → Learn Refine）和你的 adversarial verification 不谋而合。</p>
+
+    <h3 id="sec-themes-5">⑤ 从 Static Deployment 到 Self-Evolving Agents</h3>
+    <p>多个 arXiv 论文指向同一结论：下一代范式是<strong>持续从自身经验学习的 agent</strong>。MetaSkill-Evolve (2607.05297) 实现递归自改进（meta-skill 也在进化）。Failure-driven self-improvement (2606.31270) 从失败轨迹提取可行动信号。Self-evolving RL systems (2607.01120) 提出生产环境中的自进化框架。你已有 self-evolving-loop-research 的 references，但需要补齐学术框架。</p>
+
+    <h3 id="sec-themes-6">⑥ Agent 安全是多边界防御，无银弹</h3>
+    <p>三个独立安全框架收敛：Lethal Trifecta (Willison)、Rule of Two (Meta)、Six Design Patterns (IBM/Google/Microsoft paper)。核心共识：<strong>通用 agent 无法提供可靠安全保证 — 必须通过限制 agent 能力来换取安全</strong>。Memory 已成为新攻击面（memory poisoning）。Decomposition attacks 绕过单步安全检查。Dual-boundary security（effect sink + read boundary）是学术前沿。</p>
+
+    <!-- ========== arXiv PAPERS ========== -->
+    <h2 id="sec-papers">前沿论文导读：36 篇 arXiv 精选</h2>
+
+    <p>以下 36 篇论文覆盖 9 个主题，全部来自 arXiv 2024-2026。每篇标注核心贡献，可直接按主题检索。</p>
+
+    <h3 id="sec-papers-surveys">Survey & Overview（7 篇）</h3>
+
+    <div class="paper">
+      <div class="paper-title">LLM agents security duality: self-security & empowered cybersecurity</div>
+      <div class="paper-meta"><span class="paper-id">arXiv 2606.28450</span> · 2026-06-26 · Xu et al.</div>
+      <p>双视角分类法：agent 自身安全 + agent 赋能网络安全。系统分类攻击面（内部/外部）和缓解策略。映射 agent 参与攻防的完整安全生命周期。</p>
+    </div>
+    <div class="paper">
+      <div class="paper-title">Agents That Know Too Much: Data-Centric Survey of Privacy in LLM Agents</div>
+      <div class="paper-meta"><span class="paper-id">arXiv 2606.26627</span> · 2026-06-25 · Lahjouji & Colaco</div>
+      <p>以数据为中心的 agent 隐私框架。多向量泄露：queries、中间结果、memory、messages。映射任务完成与隐私执行之间的 gap。</p>
+    </div>
+    <div class="paper">
+      <div class="paper-title">From Question Answering to Task Completion: Survey on Agent System and Harness Design</div>
+      <div class="paper-meta"><span class="paper-id">arXiv 2606.20683</span> · 2026-06-14 · Guo et al.</div>
+      <p><strong>⭐ 重点推荐</strong> — Model-harness 框架理解 agent 性能瓶颈在哪。Agent 演进分类：prompt eng → workflows → context eng → harness eng → agent-native training。回答"应该改 model 还是改 harness"。</p>
+    </div>
+    <div class="paper">
+      <div class="paper-title">The Periodic Table of LLM Reasoning</div>
+      <div class="paper-meta"><span class="paper-id">arXiv 2606.11470</span> · 2026-06-09 · Anand et al.</div>
+      <p>300+ 论文的结构化推理范式分类。推理失败模式及其原因。链接推理行为与 prompting 策略、任务设计、模型规模。</p>
+    </div>
+    <div class="paper">
+      <div class="paper-title">Beyond the Leaderboard: Synthesis of Tool-Use, Planning, and Reasoning Failures</div>
+      <div class="paper-meta"><span class="paper-id">arXiv 2607.05775</span> · 2026-07-07 · Albayaydh et al.</div>
+      <p><strong>⭐ 重点推荐</strong> — 综合 27 篇 benchmark/taxonomy/audit 论文（19 个 benchmark），构建跨领域 agent 失败分类法。揭示 leaderboard 分数掩盖的重复失败模式。</p>
+    </div>
+    <div class="paper">
+      <div class="paper-title">Tool Learning with Large Language Models: A Survey</div>
+      <div class="paper-meta"><span class="paper-id">arXiv 2405.17935</span> · 2024-05-28 · Qu et al.</div>
+      <p>Tool learning 管道系统综述：creation → selection → calling → response。为什么 tool learning 帮助 LLM（能力扩展、准确性、grounding）。</p>
+    </div>
+    <div class="paper">
+      <div class="paper-title">Toward Human-Centered Multi-Agent Systems</div>
+      <div class="paper-meta"><span class="paper-id">arXiv 2606.08274</span> · 2026-06-06 · Baloch & Khan</div>
+      <p>人类中心 multi-agent 框架。整合 bounded rationality、文化语境、价值对齐。信任、合作、规范推理是关键 gap。</p>
+    </div>
+
+    <h3 id="sec-papers-arch">Agent Architectures（3 篇）</h3>
+    <div class="paper">
+      <div class="paper-title">Atomic Task Graph: Unified Framework for Agentic Planning and Execution</div>
+      <div class="paper-meta"><span class="paper-id">arXiv 2607.01942</span> · 2026-07-02 · Zhang et al.</div>
+      <p>统一任务图表示（同时覆盖 planning 和 execution）。显式子任务依赖追踪（vs 文本中隐含）。可验证的中间结果跨运行复用。Training-free。</p>
+    </div>
+    <div class="paper">
+      <div class="paper-title">Remember, Don't Re-read: Stateful ReAct Agents</div>
+      <div class="paper-meta"><span class="paper-id">arXiv 2606.14945</span> · 2026-06-12 · Jabbarvaziri</div>
+      <p><strong>⭐ 重点推荐</strong> — Stateful ReAct agent（vs 每步重建）。typed persistent state 跨迭代携带实验历史。Token 复杂度从 O(n²) 降到 O(n) per iteration。你的 Hermes state.db 就是这个思路。</p>
+    </div>
+    <div class="paper">
+      <div class="paper-title">Neural Procedural Memory: Implicit Activation Steering</div>
+      <div class="paper-meta"><span class="paper-id">arXiv 2606.29824</span> · 2026-06-29 · Zhao et al.</div>
+      <p>从 RAG（显式文本注入）到 activation-based（隐式激活引导）的程序性记忆。Training-free activation steering。解决 text-action disconnect。</p>
+    </div>
+
+    <h3 id="sec-papers-multi">Multi-Agent Systems（4 篇）</h3>
+    <div class="paper">
+      <div class="paper-title">WebSwarm: Recursive Multi-Agent Orchestration</div>
+      <div class="paper-meta"><span class="paper-id">arXiv 2607.08662</span> · 2026-07-09 · Song et al.</div>
+      <p>递归委托框架（节点委托子节点）。动态节点实例化 + 局部目标 + 搜索模式。过程级经验在兄弟节点间复用。</p>
+    </div>
+    <div class="paper">
+      <div class="paper-title">Deliberative Collaboration Under Partial Observability</div>
+      <div class="paper-meta"><span class="paper-id">arXiv 2607.06157</span> · 2026-07-07 · Wang et al.</div>
+      <p>部分可观测下的协商式协作形式化模型。可扩展 benchmark 跨多领域。合作决策的共享奖励结构。</p>
+    </div>
+    <div class="paper">
+      <div class="paper-title">Social Structure and Latent Objective Emergence in Multi-Agent Debates</div>
+      <div class="paper-meta"><span class="paper-id">arXiv 2607.02507</span> · 2026-07-02 · Ghaffarizadeh et al.</div>
+      <p>双通道（公开/私下）辩论框架。发现系统性公开-私下分歧由社会结构驱动。无显式 prompt 的潜在目标涌现。跨 10 模型分析。</p>
+    </div>
+    <div class="paper">
+      <div class="paper-title">Hierarchical Memory Overcomes Context Limits in Long-Horizon Multi-Agent</div>
+      <div class="paper-meta"><span class="paper-id">arXiv 2607.07666</span> · 2026-07-08 · Tewari & Kimko</div>
+      <p>三层层次化记忆架构。保持 context bounded（中位 301 tokens, max 4,050 across 104 runs）。专家 worker agent 被领域专家 principal 编排。</p>
+    </div>
+
+    <h3 id="sec-papers-tool">Tool Use & Function Calling（2 篇）</h3>
+    <div class="paper">
+      <div class="paper-title">The "I Don't Know" Filter: Risk-Aware Function Calling</div>
+      <div class="paper-meta"><span class="paper-id">arXiv 2607.04034</span> · 2026-07-04 · Broecker et al.</div>
+      <p>风险感知的 function calling 评估指标。轻量可训练的不确定性过滤器检测幻觉。从准确率导向转为 expected-harm-aware。</p>
+    </div>
+    <div class="paper">
+      <div class="paper-title">Beyond Function Calling: Benchmarking Under Tool-Environment Unreliability</div>
+      <div class="paper-meta"><span class="paper-id">arXiv 2606.25819</span> · 2026-06-24 · Tian et al.</div>
+      <p>首个针对 tool-environment 不可靠性的 benchmark。可恢复的可靠性风险（不只假设干净的 tool 环境）。多步任务含串行、并行、混合工作流。</p>
+    </div>
+
+    <h3 id="sec-papers-bench">Agent Benchmarks（3 篇）</h3>
+    <div class="paper">
+      <div class="paper-title">UniClawBench: Universal Benchmark for Proactive Agents</div>
+      <div class="paper-meta"><span class="paper-id">arXiv 2607.08768</span> · 2026-07-09 · Chen et al.</div>
+      <p>能力驱动（非场景驱动）benchmark 分类。400 双语真实任务跨 5 基础能力。Live Docker 容器评估 + 细粒度 step-by-step checkpoints。解耦 base model 能力与 framework 设计。</p>
+    </div>
+    <div class="paper">
+      <div class="paper-title">DeepSWE: Frontier Coding Agents on Original Long-Horizon Tasks</div>
+      <div class="paper-meta"><span class="paper-id">arXiv 2607.07946</span> · 2026-07-08 · Huang et al.</div>
+      <p>113 个原创任务避免预训练污染。从 91 个活跃 repo 从头编写（非从 merged PR 挖掘）。解决 SWE-bench 的 recall-vs-reasoning 混淆。</p>
+    </div>
+    <div class="paper">
+      <div class="paper-title">What Resolve Rate Hides: Trajectory Structure Diagnostics</div>
+      <div class="paper-meta"><span class="paper-id">arXiv 2607.06184</span> · 2026-07-07 · Shu et al.</div>
+      <p><strong>⭐ 重点推荐</strong> — 9 类 action taxonomy 的编码 agent 轨迹。过程级诊断超越 pass/fail。揭示为什么 run 失败、为什么通过的 run 浪费步骤/tokens。跨 run 轨迹比较方法论。</p>
+    </div>
+
+    <h3 id="sec-papers-memory">Agent Memory Systems（5 篇）</h3>
+    <div class="paper">
+      <div class="paper-title">What to Keep, What to Forget: Rate-Distortion View of Memory Compaction</div>
+      <div class="paper-meta"><span class="paper-id">arXiv 2607.08032</span> · 2026-07-09 · Colaco & Lahjouji</div>
+      <p><strong>⭐ 重点推荐</strong> — 统一 rate-distortion 框架覆盖所有 memory compaction 形式。桥接 4 个独立研究社区（KV cache、prompt pruning、architectural state、agent memory）。retain/discard 决策的形式化刻画。</p>
+    </div>
+    <div class="paper">
+      <div class="paper-title">SelfMem: Self-Optimizing Memory for AI Agents</div>
+      <div class="paper-meta"><span class="paper-id">arXiv 2607.03726</span> · 2026-07-04 · Yang et al.</div>
+      <p>自优化 memory 框架。Agent 学习自己的 memory strategy（vs 预定义）。环境驱动学习消除手动调参。</p>
+    </div>
+    <div class="paper">
+      <div class="paper-title">MemDelta: Controlled Baselines and Hidden Confounds in Agent Memory Eval</div>
+      <div class="paper-meta"><span class="paper-id">arXiv 2606.29914</span> · 2026-06-29 · Wang</div>
+      <p>单变量控制评估协议。暴露 memory benchmark 中的隐藏混淆。发现 verbatim RAG 可以匹配 full-context（反直觉）。</p>
+    </div>
+    <div class="paper">
+      <div class="paper-title">Are We Ready For An Agent-Native Memory System?</div>
+      <div class="paper-meta"><span class="paper-id">arXiv 2606.24775</span> · 2026-06-23 · Zhou et al.</div>
+      <p>将 agent memory 重构为完整 data management system。系统级关注点：cost、架构 trade-offs、robustness。生命周期治理框架。</p>
+    </div>
+    <div class="paper">
+      <div class="paper-title">Remember When It Matters: Proactive Memory Agent</div>
+      <div class="paper-meta"><span class="paper-id">arXiv 2607.08716</span> · 2026-07-09 · Wu et al.</div>
+      <p><strong>⭐ 重点推荐</strong> — "Behavioral state decay" 失败模式识别。主动干预 memory（vs 被动检索）。Plug-and-play memory agent 模块。+8.3pp on Terminal-Bench, +6.8pp on τ²-Bench。</p>
+    </div>
+
+    <h3 id="sec-papers-self">Self-Improving Agents（3 篇）</h3>
+    <div class="paper">
+      <div class="paper-title">MetaSkill-Evolve: Recursive Self-Improvement via Two-Timescale Meta-Skill Evolution</div>
+      <div class="paper-meta"><span class="paper-id">arXiv 2607.05297</span> · 2026-07-06 · Wang et al.</div>
+      <p>递归自改进（meta-skill 也在进化）。双时间尺度框架分离 task skills 和改进 procedures。超越非递归 skill rewriting。</p>
+    </div>
+    <div class="paper">
+      <div class="paper-title">Learning from Failure: Inference-Time Self-Improvement for Computer-Use Agents</div>
+      <div class="paper-meta"><span class="paper-id">arXiv 2606.31270</span> · 2026-06-30 · Sun et al.</div>
+      <p>失败驱动自改进（vs 仅成功）。推理时改进（无需重训）。从失败轨迹提取可行动信号。</p>
+    </div>
+    <div class="paper">
+      <div class="paper-title">Next-Generation Agentic RL Systems Enable Self-Evolving Agents</div>
+      <div class="paper-meta"><span class="paper-id">arXiv 2607.01120</span> · 2026-07-01 · Yan et al.</div>
+      <p>生产环境自进化 agent 的愿景和架构。批判静态部署范式（一切冻结）。持续从 agent 经验学习的框架。</p>
+    </div>
+
+    <h3 id="sec-papers-safety">Agent Safety & Security（5 篇）</h3>
+    <div class="paper">
+      <div class="paper-title">Toward Secure LLM Agents: Threat Surfaces, Attacks, Defenses, and Evaluation</div>
+      <div class="paper-meta"><span class="paper-id">arXiv 2606.10749</span> · 2026-06-09 · Ling et al.</div>
+      <p><strong>⭐ 重点推荐</strong> — 247 篇 agent 安全论文综合。分层防御框架。agentic-specific 安全风险分类（超越 text safety）：control flow hijack、tool privilege misuse、state corruption。</p>
+    </div>
+    <div class="paper">
+      <div class="paper-title">DECOMPBENCH: Benchmarking Agent Safety Against Decomposition Attacks</div>
+      <div class="paper-meta"><span class="paper-id">arXiv 2606.13994</span> · 2026-06-12 · Kothamasu et al.</div>
+      <p>首个 decomposition attack benchmark。子任务单独无害但累积有害。暴露现有 multi-turn/multi-tool 安全 benchmark 的盲区。</p>
+    </div>
+    <div class="paper">
+      <div class="paper-title">When Agents Remember Too Much: Memory Poisoning Attacks</div>
+      <div class="paper-meta"><span class="paper-id">arXiv 2607.06595</span> · 2026-07-06 · Torres et al.</div>
+      <p>Memory poisoning 攻击向量。conversational 和 action-planning agent 漏洞的趋同。长期记忆作为攻击面。</p>
+    </div>
+    <div class="paper">
+      <div class="paper-title">SecureClaw: Dual-Boundary Security Architecture</div>
+      <div class="paper-meta"><span class="paper-id">arXiv 2606.09549</span> · 2026-06-08 · Ma & Schmid</div>
+      <p>双边界安全：effect sink（action authorization）+ read boundary（plaintext confinement）。Opaque handle 系统做敏感数据降密。</p>
+    </div>
+    <div class="paper">
+      <div class="paper-title">SafeClawBench: Separating Semantic, Audit-Evidence, and Sandbox Harm</div>
+      <div class="paper-meta"><span class="paper-id">arXiv 2606.18356</span> · 2026-06-16 · Tian et al.</div>
+      <p>分阶段评估：语义同意 vs 实际造成伤害。600 对抗任务跨 6 个攻击族。覆盖 memory poisoning 和 extraction attacks。</p>
+    </div>
+
+    <h3 id="sec-papers-rl">Reinforcement Learning for Agents（4 篇）</h3>
+    <div class="paper">
+      <div class="paper-title">Information Gain-based Rollout Policy Optimization</div>
+      <div class="paper-meta"><span class="paper-id">arXiv 2607.06223</span> · 2026-07-07 · Zhang et al.</div>
+      <p>信息增益作为 rollout 分配信号。自适应树结构 rollout。显式评估中间状态效用。减少低价值分支的计算浪费。</p>
+    </div>
+    <div class="paper">
+      <div class="paper-title">CompactionRL: RL with Context Compaction for Long-Horizon Agents</div>
+      <div class="paper-meta"><span class="paper-id">arXiv 2607.05378</span> · 2026-07-06 · Li et al.</div>
+      <p>联合优化任务执行和摘要生成。Token 级 loss normalization。跨轨迹 GAE。使 RL 训练突破固定 context window 限制。</p>
+    </div>
+    <div class="paper">
+      <div class="paper-title">STAPO: Selective Trajectory-Aware Policy Optimization</div>
+      <div class="paper-meta"><span class="paper-id">arXiv 2607.04963</span> · 2026-07-06 · Qi et al.</div>
+      <p>归一化熵（vs Shannon 熵）做 step-level supervision。解决 trajectory neglect（agent 在中间步失去目标焦点）。置信度相对于 agent 自身平均行为。</p>
+    </div>
+    <div class="paper">
+      <div class="paper-title">Semantic Consistency Policy Optimization for RL of LLM Agents</div>
+      <div class="paper-meta"><span class="paper-id">arXiv 2606.25852</span> · 2026-06-24 · Xu et al.</div>
+      <p>语义信用不一致问题识别。基于语义相似度的无 value reward shaping。从失败 rollout 中恢复部分正确进展。</p>
+    </div>
+    <!-- ========== OFFICIAL ARTICLES ========== -->
+    <h2 id="sec-articles">官方权威文章索引：20 篇精选</h2>
+
+    <p>来自 Anthropic Engineering/Research、OpenAI、Google Developers Blog 的最权威资源。共 20 篇（Anthropic 15 + OpenAI 2 + Google 3）。每篇标注日期、URL 和核心洞见。</p>
+
+    <h3 id="sec-articles-anthropic">Anthropic（13 Engineering + 2 Research = 15 篇）</h3>
+
+    <div class="article">
+      <div class="art-title"><a href="https://www.anthropic.com/engineering/building-effective-agents">Building Effective Agents</a></div>
+      <div class="art-meta">2024-12-19 · ⭐ 必读</div>
+      <ul class="art-insights">
+        <li>Workflows（预定义路径）vs Agents（动态自主）— 大多数成功实现用简单可组合模式</li>
+        <li>五大 Workflow 模式：Prompt Chaining、Routing、Parallelization、Orchestrator-Workers、Evaluator-Optimizer</li>
+        <li>"找到最简单的方案，只在需要时增加复杂度"</li>
+      </ul>
+    </div>
+    <div class="article">
+      <div class="art-title"><a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents">Effective Context Engineering for AI Agents</a></div>
+      <div class="art-meta">2025-09-29 · ⭐ CRITICAL</div>
+      <ul class="art-insights">
+        <li>Context engineering > Prompt engineering — 管理推理时的最优 token 集</li>
+        <li>Just-in-time context：维护轻量标识符，运行时动态加载</li>
+        <li>Agent loop 生成指数增长数据 → 必须循环精炼</li>
+      </ul>
+    </div>
+    <div class="article">
+      <div class="art-title"><a href="https://www.anthropic.com/engineering/multi-agent-research-system">How We Built Our Multi-Agent Research System</a></div>
+      <div class="art-meta">2025-06-13</div>
+      <ul class="art-insights">
+        <li>Subagent 实现并行 + 压缩 — "search 的本质是 compression"</li>
+        <li>每个 subagent 有独立 context window，探索后压缩关键 tokens 给 lead agent</li>
+        <li>智力到阈值后，multi-agent 变为扩展性能的必要手段</li>
+      </ul>
+    </div>
+    <div class="article">
+      <div class="art-title"><a href="https://www.anthropic.com/engineering/writing-tools-for-agents">Writing Effective Tools for Agents — with Agents</a></div>
+      <div class="art-meta">2025-09-11 · ⭐ CRITICAL</div>
+      <ul class="art-insights">
+        <li>Tools 是确定系统与非确定 agent 的契约 — 为 agent 设计而非为开发者</li>
+        <li>选对的 tool 实现（和 NOT 实现什么）、namespace 边界、返回有意义 context</li>
+        <li>用 agents 优化自己的 tool descriptions</li>
+      </ul>
+    </div>
+    <div class="article">
+      <div class="art-title"><a href="https://www.anthropic.com/engineering/advanced-tool-use">Introducing Advanced Tool Use</a></div>
+      <div class="art-meta">2025-11-24</div>
+      <ul class="art-insights">
+        <li>Tool Search Tool：搜索访问数千 tools 不消耗 context window</li>
+        <li>Programmatic Tool Calling：在代码执行环境中调用 tool</li>
+        <li>Tool Use Examples：超越 schema 的使用模式演示</li>
+      </ul>
+    </div>
+    <div class="article">
+      <div class="art-title"><a href="https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents">Demystifying Evals for AI Agents</a></div>
+      <div class="art-meta">2026-01-09 · ⭐ CRITICAL</div>
+      <ul class="art-insights">
+        <li>Agent evals ≠ single-turn evals — mistakes 传播复合</li>
+        <li>核心定义：Task → Trial → Grader → Transcript</li>
+        <li>没有 evals → 团队陷入 reactive loop（生产中发现问题）</li>
+      </ul>
+    </div>
+    <div class="article">
+      <div class="art-title"><a href="https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents">Effective Harnesses for Long-Running Agents</a></div>
+      <div class="art-meta">2025-11-26 · ⭐ 重点</div>
+      <ul class="art-insights">
+        <li>Initializer agent（首次设置）+ Coding agent（增量推进，留 artifact）</li>
+        <li>Compaction 不够 — frontier models 跨 context window 无法 one-shot 生产级 app</li>
+        <li>失败模式：one-shot 出 context、"context anxiety"（提前收工）</li>
+      </ul>
+    </div>
+    <div class="article">
+      <div class="art-title"><a href="https://www.anthropic.com/engineering/code-execution-with-mcp">Code Execution with MCP</a></div>
+      <div class="art-meta">2025-11-04</div>
+      <ul class="art-insights">
+        <li>MCP 是连接 agent 和 tool/data 的事实标准</li>
+        <li>两大扩展问题：tool 定义吃 context（58 tools = 55K tokens）+ 中间结果吃 token</li>
+        <li>解法：agent 写代码调 tool，中间结果留代码执行环境</li>
+      </ul>
+    </div>
+    <div class="article">
+      <div class="art-title"><a href="https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills">Equipping Agents with Agent Skills</a></div>
+      <div class="art-meta">2025-10-16 (updated 2025-12-18)</div>
+      <ul class="art-insights">
+        <li>Agent Skills = 有组织的 instructions + scripts + resources 文件夹</li>
+        <li>Progressive disclosure：metadata → SKILL.md → bundled files 按需加载</li>
+        <li>开放标准，跨平台可移植</li>
+      </ul>
+    </div>
+    <div class="article">
+      <div class="art-title"><a href="https://www.anthropic.com/engineering/harness-design-long-running-apps">Harness Design for Long-Running App Development</a></div>
+      <div class="art-meta">2026-03-24</div>
+      <ul class="art-insights">
+        <li>GAN-inspired 架构：Generator + Evaluator agent</li>
+        <li>三 agent 架构（planner、generator、evaluator）跨小时级自主编码</li>
+        <li>Context resets 需要但必须小心操作</li>
+      </ul>
+    </div>
+    <div class="article">
+      <div class="art-title"><a href="https://www.anthropic.com/engineering/managed-agents">Scaling Managed Agents: Decoupling Brain from Hands</a></div>
+      <div class="art-meta">2026-04-08 · ⭐ 重点</div>
+      <ul class="art-insights">
+        <li>三层虚拟化：Session（追加日志）≠ Harness（loop）≠ Sandbox（执行）</li>
+        <li>"Don't adopt a pet" — 从 pet（手工维护）到 cattle（可互换）</li>
+        <li>Session ≠ context window — 持久日志 outlasts 任何 context</li>
+      </ul>
+    </div>
+    <div class="article">
+      <div class="art-title"><a href="https://www.anthropic.com/engineering/claude-code-best-practices">Best Practices for Claude Code</a></div>
+      <div class="art-meta">持续更新</div>
+      <ul class="art-insights">
+        <li>给 Claude 验证自己工作的手段（tests、type check、build）</li>
+        <li>先 explore，再 plan，再 code</li>
+        <li>覆盖 config、context window 管理、prompt caching、sessions、permission modes</li>
+      </ul>
+    </div>
+    <div class="article">
+      <div class="art-title"><a href="https://www.anthropic.com/engineering/contextual-retrieval">Contextual Retrieval</a></div>
+      <div class="art-meta">2024-09-19</div>
+      <ul class="art-insights">
+        <li>传统 RAG 失败因为检索去除了上下文</li>
+        <li>Contextual Retrieval 在 embedding 前注入上下文 → 检索准确率大幅提升</li>
+        <li>Reranking 进一步提升性能</li>
+      </ul>
+    </div>
+    <div class="article">
+      <div class="art-title"><a href="https://www.anthropic.com/research/global-workspace">A Global Workspace in Language Models</a></div>
+      <div class="art-meta">2026-07-06 · Research</div>
+      <ul class="art-insights">
+        <li>发现 Claude 内部的 "J-space" — 类似认知科学的 Global Workspace</li>
+        <li>Claude 能报告 J-space 内容、按需控制、用于深思熟虑</li>
+        <li>对 agent 设计的启示：理解模型内部推理可指导更好的架构</li>
+      </ul>
+    </div>
+    <div class="article">
+      <div class="art-title"><a href="https://www.anthropic.com/research/claude-code-expertise">Agentic Coding and Persistent Returns to Expertise</a></div>
+      <div class="art-meta">2026-06-16 · Research · ⭐ 重点</div>
+      <ul class="art-insights">
+        <li>~400K Claude Code session 分析：人做 planning 决策，Claude 做 execution</li>
+        <li>领域专长越高 → 每条指令 Claude 做越多工作</li>
+        <li>7 个月：debugging 占比减半 → 向端到端 agentic 使用转移</li>
+      </ul>
+    </div>
+
+    <h3 id="sec-articles-openai">OpenAI</h3>
+    <div class="article">
+      <div class="art-title"><a href="https://cdn.openai.com/business-guides-and-resources/a-practical-guide-to-building-agents.pdf">A Practical Guide to Building Agents</a> (PDF, 34p)</div>
+      <div class="art-meta">2025 · ⭐ 必读</div>
+      <ul class="art-insights">
+        <li>Agent = Model + Tools + Instructions。LLM 管理 workflow、做决策、识别完成</li>
+        <li>何时建 agent：复杂决策 + 难维护规则 + 重度依赖非结构化数据</li>
+        <li>三种 tool：Data（检索）、Action（交互）、Orchestration（agent 作为 tool）</li>
+        <li>编排模式：单 agent loop / Manager pattern / Decentralized。先最大化单 agent</li>
+        <li>Guardrails = 分层防御 + "An optimizer that grades itself learns to game the metric"</li>
+      </ul>
+    </div>
+    <div class="article">
+      <div class="art-title"><a href="https://github.com/openai/openai-agents-python">OpenAI Agents SDK</a></div>
+      <div class="art-meta">2025-2026 · 活跃维护</div>
+      <ul class="art-insights">
+        <li>轻量但强大的 multi-agent workflow 框架。Provider-agnostic（100+ LLM）</li>
+        <li>Sandbox Agents（容器化长程任务）、Agents as Tools / Handoffs、Guardrails、Tracing</li>
+        <li>Code-first（vs 声明式 graph）— 用编程结构而非 DSL</li>
+      </ul>
+    </div>
+
+    <h3 id="sec-articles-google">Google AI / Developers Blog</h3>
+    <div class="article">
+      <div class="art-title"><a href="https://developers.googleblog.com/en/driving-the-agent-quality-flywheel-from-your-coding-agent/">Driving the Agent Quality Flywheel</a></div>
+      <div class="art-meta">2026 · ⭐ 重点</div>
+      <ul class="art-insights">
+        <li>三阶段飞轮：Build Test → Ship Monitor → Learn Refine</li>
+        <li>五步：Prepare Data → Run Inference → Grade (AutoRaters) → Analyze Failures → Optimize Iterate</li>
+        <li>"The scariest failures aren't the loud ones" — agent 看起来在工作但实际目标错了</li>
+      </ul>
+    </div>
+    <div class="article">
+      <div class="art-title"><a href="https://developers.googleblog.com/en/build-cross-language-multi-agent-team-with-google-agent-development-kit-and-a2a/">Cross-Language Multi-Agent with ADK and A2A</a></div>
+      <div class="art-meta">2026</div>
+      <ul class="art-insights">
+        <li>Agent2Agent (A2A) 协议：跨语言 agent 协作</li>
+        <li>单体 agent 失败三因：context degradation（10-15+ tools 后失控）、blast radius、不可测试</li>
+        <li>解法：拆成专项 microservice agent，每个一个职责 + 窄 tool 集</li>
+      </ul>
+    </div>
+    <div class="article">
+      <div class="art-title"><a href="https://developers.googleblog.com/en/announcing-adk-go-20/">ADK Go 2.0: Graph-Based Workflow Engine</a></div>
+      <div class="art-meta">2026</div>
+      <ul class="art-insights">
+        <li>Graph-based workflow — 节点（agents）+ 边（确定性或动态 handoff）</li>
+        <li>ad-hoc 控制流 "gets brittle fast" — graph 提供视觉清晰和结构化组合</li>
+        <li>动态边：LLM 运行时决定路由</li>
+      </ul>
+    </div>
+
+    <!-- ========== INDUSTRY INSIGHTS ========== -->
+    <h2 id="sec-industry">行业领袖洞见</h2>
+
+    <h3 id="sec-industry-willison">Simon Willison — "Agentic Engineering" 定义者</h3>
+    <blockquote>
+      "An AI agent is an LLM wrecking its environment in a loop." — Simon Willison, 2025-09-30
+    </blockquote>
+    <div class="article">
+      <div class="art-title"><a href="https://simonwillison.net/2026/Feb/23/agentic-engineering-patterns/">Agentic Engineering Patterns</a></div>
+      <div class="art-meta">2026-02-23 · ⭐ 必读</div>
+      <ul class="art-insights">
+        <li>正式定义 "Agentic Engineering" = 专业工程师用 coding agent 放大专长。区别于 "vibe coding"</li>
+        <li>出版章节式 patterns（TDD、code-is-cheap），灵感来自 1994 Design Patterns</li>
+        <li>2025-11 转折点（GPT 5.1 + Claude Opus 4.5）：代码从"大部分能跑"到"几乎总能跑"</li>
+      </ul>
+    </div>
+    <div class="article">
+      <div class="art-title"><a href="https://simonwillison.net/2025/Jun/16/the-lethal-trifecta/">The Lethal Trifecta</a></div>
+      <div class="art-meta">2025-06-16 · ⭐ 安全必读</div>
+      <ul class="art-insights">
+        <li>三个危险能力同时存在 = 系统性风险：private data + untrusted content + external communication</li>
+        <li>LLM 会遵循内容中的指令 — 有用 AND 危险</li>
+      </ul>
+    </div>
+    <div class="article">
+      <div class="art-title"><a href="https://simonwillison.net/2025/Jun/13/prompt-injection-design-patterns/">Design Patterns for Securing LLM Agents</a></div>
+      <div class="art-meta">2025-06-13</div>
+      <ul class="art-insights">
+        <li>六大安全 pattern：Action-Selector、Plan-Then-Execute、LLM Map-Reduce、Dual LLM、Code-Then-Execute、Context-Minimization</li>
+        <li>核心论断：通用 agent 无法提供可靠安全保证 — trade-off 是限制能力换取安全</li>
+      </ul>
+    </div>
+    <div class="article">
+      <div class="art-title"><a href="https://simonwillison.net/2025/Oct/16/claude-skills/">Claude Skills are awesome, maybe bigger than MCP</a></div>
+      <div class="art-meta">2025-10-16</div>
+      <ul class="art-insights">
+        <li>Skills = Markdown + scripts，按需加载，每个只占几十 tokens</li>
+        <li>简单就是重点 — 可能比 MCP 影响更大</li>
+      </ul>
+    </div>
+    <div class="article">
+      <div class="art-title"><a href="https://simonwillison.net/2025/Sep/30/designing-agentic-loops/">Designing Agentic Loops</a></div>
+      <div class="art-meta">2025-09-30</div>
+      <ul class="art-insights">
+        <li>Agent 定义：LLM 在 loop 中使用 tools 达到目标</li>
+        <li>YOLO mode（auto-approve）危险但必要 — Docker sandbox 或 GitHub Codespaces</li>
+      </ul>
+    </div>
+
+    <h3 id="sec-industry-weng">Lilian Weng — 基础架构定义者</h3>
+    <div class="article">
+      <div class="art-title"><a href="https://lilianweng.github.io/posts/2023-06-23-agent/">LLM Powered Autonomous Agents</a></div>
+      <div class="art-meta">2023-06-23 · ⭐ Canonical Reference</div>
+      <ul class="art-insights">
+        <li>三大组件框架：Planning（CoT/ToT/LLM+P + ReAct self-reflection）+ Memory（short-term/long-term）+ Tool Use</li>
+        <li>LLM = agent brain。至今仍是最常被引用的 agent 架构参考</li>
+      </ul>
+    </div>
+
+    <h3 id="sec-industry-swyx">swyx / Latent Space — AI Engineer 布道者</h3>
+    <div class="article">
+      <div class="art-title"><a href="https://swyx.io/">The Rise of the AI Engineer</a></div>
+      <div class="art-meta">swyx.io · 持续更新</div>
+      <ul class="art-insights">
+        <li>推动 AI Engineering 作为独立学科。创办 Latent Space 播客 + AI Engineer 大会</li>
+        <li>2025-2026 重点内容："The Year in Agents"、"The Impossible Triangle of LLM Infra"</li>
+        <li>关键播客：Agent Experience (AX) 作为新 DevX、GitHub's plan for Agents、VendingBench evals</li>
+      </ul>
+    </div>
+    <!-- ========== FRAMEWORK LANDSCAPE ========== -->
+    <h2 id="sec-frameworks">框架生态全景</h2>
+
+    <p>2025-2026 年 agent 框架收敛趋势：从"库"向"harness/runtime"演进。按 GitHub stars 排序。</p>
+
+    <h3 id="sec-frameworks-agent">Agent 框架</h3>
+    <table>
+      <thead><tr><th>框架</th><th>Stars</th><th>定位</th><th>适用场景</th></tr></thead>
+      <tbody>
+        <tr><td><strong>LangChain/LangGraph</strong></td><td>141K+37K</td><td>Graph-based workflows</td><td>最大生态、复杂工作流</td></tr>
+        <tr><td><strong>MetaGPT</strong></td><td>69K</td><td>"First AI Software Company"</td><td>多角色软件协作</td></tr>
+        <tr><td><strong>AutoGen</strong></td><td>60K</td><td>Microsoft 多 agent 对话</td><td>conversational multi-agent</td></tr>
+        <tr><td><strong>CrewAI</strong></td><td>55K</td><td>Role-based 协作</td><td>角色扮演自主 agent</td></tr>
+        <tr><td><strong>OpenAI Agents SDK</strong></td><td>28K</td><td>轻量官方框架</td><td>OpenAI 原生、provider-agnostic</td></tr>
+        <tr><td><strong>LangChain DeepAgents</strong></td><td>26K</td><td>Batteries-included harness</td><td>全功能 agent runtime</td></tr>
+        <tr><td><strong>Pydantic AI</strong></td><td>18K</td><td>Type-safe 生产级</td><td>类型安全、生产部署</td></tr>
+        <tr><td><strong>Qwen-Agent</strong></td><td>17K</td><td>MCP + Code Interpreter + RAG</td><td>中文生态、阿里系</td></tr>
+      </tbody>
+    </table>
+    <p><strong>趋势：</strong>从"库"（提供 building blocks）向"harness"（完整 runtime）收敛。LangChain 推 DeepAgents、OpenAI 推 Sandbox Agents — 都在变成 full-featured agent runtime 而非 library。</p>
+
+    <h3 id="sec-frameworks-mcp">MCP 生态</h3>
+    <table>
+      <thead><tr><th>Repo</th><th>Stars</th><th>说明</th></tr></thead>
+      <tbody>
+        <tr><td>microsoft/mcp-for-beginners</td><td>17K</td><td>MCP 基础教程</td></tr>
+        <tr><td>hangwin/mcp-chrome</td><td>12K</td><td>Chrome 扩展 MCP server</td></tr>
+        <tr><td>tadata-org/fastapi_mcp</td><td>12K</td><td>FastAPI → MCP tools with auth</td></tr>
+        <tr><td>mark3labs/mcp-go</td><td>9K</td><td>Go MCP 实现</td></tr>
+        <tr><td>modelcontextprotocol/registry</td><td>7K</td><td>社区 MCP server 注册表</td></tr>
+        <tr><td>executeautomation/mcp-playwright</td><td>6K</td><td>浏览器自动化 MCP</td></tr>
+      </tbody>
+    </table>
+    <p><strong>MCP 已成为 THE 标准</strong> — 连接 agent 和 tool/data 的事实协议。多语言支持扩展中（Python/Go/TS）。安全问题是 #1 关注点（tool poisoning、shadowing、rug pulls）。</p>
+
+    <h3 id="sec-frameworks-observe">Observability & Eval 工具</h3>
+    <table>
+      <thead><tr><th>工具</th><th>Stars</th><th>能力</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Langfuse</strong></td><td>31K</td><td>开源：tracing、evals、prompt mgmt、cost tracking</td></tr>
+        <tr><td>Arize Phoenix</td><td>—</td><td>OpenInference 标准 tracing</td></tr>
+        <tr><td>AgentOps</td><td>—</td><td>Agent 专属监控 + replay</td></tr>
+        <tr><td>Helicone</td><td>—</td><td>Usage/cost/latency</td></tr>
+        <tr><td>LangSmith</td><td>—</td><td>LangChain 商业版</td></tr>
+      </tbody>
+    </table>
+    <p><strong>你的 gap：</strong>Hermes 没有接入任何 observability 工具。建议先试 Langfuse（开源、tracing+evals+cost 三合一），至少对 cron job 和 subagent 调用做 tracing。</p>
+
+    <h3 id="sec-frameworks-coding">Coding Agents（直接相关）</h3>
+    <table>
+      <thead><tr><th>Repo</th><th>Stars</th><th>说明</th></tr></thead>
+      <tbody>
+        <tr><td>anthropics/claude-code</td><td>138K</td><td>终端 agentic 编码工具</td></tr>
+        <tr><td>openai/codex</td><td>97K</td><td>轻量编码 agent (Rust)</td></tr>
+        <tr><td>system-prompts-and-models-of-ai-tools</td><td>142K</td><td>Claude Code/Cursor/Devin/Codex 的 system prompt 合集</td></tr>
+        <tr><td>learn-claude-code</td><td>71K</td><td>Nano Claude Code-like agent harness</td></tr>
+        <tr><td>claude-code-best-practice</td><td>62K</td><td>从 vibe coding 到 agentic engineering</td></tr>
+      </tbody>
+    </table>
+
+    <!-- ========== LEARNING ROADMAP ========== -->
+    <h2 id="sec-roadmap">学习路线：按优先级行动</h2>
+
+    <p>基于 gap 诊断，以下是按优先级排序的具体行动清单。每个 item 标注预计时间。</p>
+
+    <h3 id="sec-roadmap-p0">P0 — CRITICAL（飞行途中完成）</h3>
+    <div class="card gap">
+      <h4>1. Context Engineering 范式迁移</h4>
+      <p><strong>做什么：</strong>读 Anthropic "Effective Context Engineering"（2025-09-29），做笔记：你的 Hermes 哪些地方还在用 prompt 思维 vs context 思维。</p>
+      <p><strong>关键问题：</strong>你的 cron job prompt 是否预加载了太多信息？能否用 just-in-time context 模式（维护轻量标识符，运行时加载）？</p>
+      <p><strong>预计时间：</strong>45 min 阅读 + 30 min 笔记</p>
+      <p><strong>URL：</strong><a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents">Effective Context Engineering</a> + <a href="https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills">Agent Skills</a></p>
+    </div>
+    <div class="card gap">
+      <h4>2. Tool Design 原则 + MCP 深入</h4>
+      <p><strong>做什么：</strong>读 Anthropic "Writing Effective Tools for Agents"（2025-09-11）+ "Advanced Tool Use"（2025-11-24）。对照你的 Hermes tools 检查：是否为 agent 设计？token 效率？返回有意义 context？</p>
+      <p><strong>关键问题：</strong>你的 tool descriptions 能否更精简？是否需要 Tool Use Examples？能否用 Programmatic Tool Calling 模式？</p>
+      <p><strong>预计时间：</strong>60 min 阅读 + 30 min 对照检查</p>
+      <p><strong>URL：</strong><a href="https://www.anthropic.com/engineering/writing-tools-for-agents">Writing Tools</a> + <a href="https://www.anthropic.com/engineering/advanced-tool-use">Advanced Tool Use</a> + <a href="https://www.anthropic.com/engineering/code-execution-with-mcp">Code Execution with MCP</a></p>
+    </div>
+    <div class="card gap">
+      <h4>3. Agent Evaluation 方法论</h4>
+      <p><strong>做什么：</strong>读 Anthropic "Demystifying Evals for AI Agents"（2026-01-09）+ arXiv 2607.06184 "Trajectory Diagnostics"。为你的 Hermes pipeline 设计一个最小 eval 框架。</p>
+      <p><strong>关键问题：</strong>你的日报 pipeline 有 eval 吗？如何衡量产出质量？能否用 trajectory diagnostics 而非 pass/fail？</p>
+      <p><strong>预计时间：</strong>45 min 阅读 + 45 min 设计 eval 框架</p>
+      <p><strong>URL：</strong><a href="https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents">Demystifying Evals</a> + arXiv 2607.06184</p>
+    </div>
+    <div class="card gap">
+      <h4>4. OpenAI Practical Guide + Anthropic Building Effective Agents</h4>
+      <p><strong>做什么：</strong>读 OpenAI "A Practical Guide to Building Agents" (PDF 34p) + Anthropic "Building Effective Agents"（2024-12-19）。建立 Agent = Model + Tools + Instructions 的完整心智模型。</p>
+      <p><strong>预计时间：</strong>60 min 阅读</p>
+      <p><strong>URL：</strong><a href="https://cdn.openai.com/business-guides-and-resources/a-practical-guide-to-building-agents.pdf">OpenAI Guide PDF</a> + <a href="https://www.anthropic.com/engineering/building-effective-agents">Building Effective Agents</a></p>
+    </div>
+
+    <h3 id="sec-roadmap-p1">P1 — HIGH（本周完成）</h3>
+    <div class="card partial">
+      <h4>5. Harness Engineering 三部曲</h4>
+      <p>读 Anthropic 三篇：Effective Harnesses → Managed Agents → Harness Design for Long-Running Apps。理解 Session ≠ Harness ≠ Sandbox 分离。对照你的 Hermes：state.db = Session？agent loop = Harness？terminal = Sandbox？</p>
+      <p><strong>预计时间：</strong>90 min</p>
+      <p><strong>URL：</strong><a href="https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents">Effective Harnesses</a> + <a href="https://www.anthropic.com/engineering/managed-agents">Managed Agents</a> + <a href="https://www.anthropic.com/engineering/harness-design-long-running-apps">Harness Design</a></p>
+    </div>
+    <div class="card partial">
+      <h4>6. Agent Safety 全景</h4>
+      <p>读 Simon Willison 的 Lethal Trifecta + Design Patterns for Securing LLM Agents + Meta Rule of Two。对照你的 agent-defense-prompt skill：是否有遗漏？</p>
+      <p><strong>预计时间：</strong>60 min</p>
+      <p><strong>URL：</strong><a href="https://simonwillison.net/2025/Jun/16/the-lethal-trifecta/">Lethal Trifecta</a> + <a href="https://simonwillison.net/2025/Jun/13/prompt-injection-design-patterns/">Design Patterns</a> + <a href="https://simonwillison.net/2025/Nov/2/new-prompt-injection-papers/">Rule of Two</a></p>
+    </div>
+    <div class="card partial">
+      <h4>7. Lilian Weng 基础架构 + arXiv Survey</h4>
+      <p>读 Lilian Weng "LLM Powered Autonomous Agents"（canonical reference）+ arXiv 2606.20683 "From QA to Task Completion"。建立学术框架支撑你的实践知识。</p>
+      <p><strong>预计时间：</strong>75 min</p>
+      <p><strong>URL：</strong><a href="https://lilianweng.github.io/posts/2023-06-23-agent/">Lilian Weng Blog</a> + arXiv 2606.20683</p>
+    </div>
+
+    <h3 id="sec-roadmap-p2">P2 — MEDIUM（下周）</h3>
+    <div class="card partial">
+      <h4>8. Agent Memory 学术框架</h4>
+      <p>读 5 篇 memory 论文（Rate-distortion、SelfMem、Behavioral state decay、Hierarchical、Neural procedural）。对照你的 Obsidian+Wiki 管线，评估哪些学术框架可以提升你的实践。</p>
+      <p><strong>预计时间：</strong>120 min · arXiv IDs: 2607.08032, 2607.03726, 2607.08716, 2607.07666, 2606.29824</p>
+    </div>
+    <div class="card partial">
+      <h4>9. Observability 工具接入</h4>
+      <p>试用 Langfuse（开源），对 Hermes cron job + subagent 做 tracing。至少看到 cost breakdown 和 token usage per session。</p>
+      <p><strong>预计时间：</strong>2h · <a href="https://github.com/langfuse/langfuse">Langfuse GitHub</a></p>
+    </div>
+    <div class="card partial">
+      <h4>10. Self-Improving Agents 前沿</h4>
+      <p>读 3 篇 self-improving 论文（MetaSkill-Evolve、Failure-driven、Self-evolving RL）。评估能否应用到你的 Hermes skill 自进化。</p>
+      <p><strong>预计时间：</strong>60 min · arXiv IDs: 2607.05297, 2606.31270, 2607.01120</p>
+    </div>
+
+    <h3 id="sec-roadmap-p3">P3 — ONGOING（持续）</h3>
+    <ul>
+      <li>RL for Agents（4 篇论文: 2607.06223, 2607.05378, 2607.04963, 2606.25852）— 补齐 Stage 1 的 RL/RLVR gap</li>
+      <li>Follow Simon Willison 的 "Agentic Engineering Patterns" 系列（持续更新）</li>
+      <li>Follow Latent Space 播客（关键 episode: AX、GitHub Agents、VendingBench）</li>
+      <li>读 arXiv 2607.05775 "Beyond the Leaderboard" — 19 个 benchmark 的失败模式综合</li>
+      <li><strong>Human-in-the-loop</strong>：OpenAI Agents SDK 和 Google ADK 都内置 HITL 支持 — 你的 Hermes kanban 已有类似概念，可深入学习其设计模式</li>
+      <li><strong>Multimodal agents</strong>：Computer-use agents（arXiv 2606.31270）和多模态 LLM（GPT-5 vision、Claude vision）是未来方向 — 当前文件未深入，建议关注后续发展</li>
+    </ul>
+
+    <div class="summary-box">
+      <h3>飞行学习包总结</h3>
+      <p><strong>P0 四项（约 5.5h）：</strong>Context Engineering + Tool Design/MCP + Agent Evaluation + OpenAI Guide/Building Effective Agents</p>
+      <p><strong>P1 三项（约 3.75h）：</strong>Harness Engineering + Agent Safety + Lilian Weng/arXiv Survey</p>
+      <p><strong>总飞行阅读量：</strong>~9h，覆盖 62 篇前沿资源中的 ~15 篇核心文章</p>
+      <p><strong>落地行动：</strong>每读一篇，在 Obsidian 记录 3 条 takeaway + 1 条 Hermes skill 改进提案</p>
+    </div>
+
+    <h2 id="sec-footer">附录：数据来源与方法论</h2>
+    <p><strong>研究方法：</strong>三路并行 subagent 搜索，每路独立 context、独立 tool trace。</p>
+    <ul>
+      <li><strong>Stream A（官方）：</strong>Anthropic Engineering/Research blog + OpenAI blog/PDF + Google Developers Blog — 20 篇精选</li>
+      <li><strong>Stream B（学术）：</strong>arXiv API 9 轮搜索（surveys、architectures、multi-agent、tool use、benchmarks、memory、self-improving、safety、RL）— 36 篇</li>
+      <li><strong>Stream C（行业）：</strong>Simon Willison blog（5 篇）+ Lilian Weng（1 篇）+ swyx/Latent Space（1 篇）+ GitHub API（4 轮搜索：frameworks、MCP、observability、coding agents）+ 2 个 awesome list</li>
+    </ul>
+    <p><strong>质量保证：</strong>Loop Engineering v0.4.0 — Discovery → Fan-out（3 并行）→ Synthesize → Adversarial Verification → Fix → Finalize</p>
+    <p><strong>生成时间：</strong>2026-07-12 · <strong>版本：</strong>v1.0.0 · <strong>模型：</strong>GLM-5.2</p>
+    <p style="color:#999; margin-top:32px; border-top:1px solid var(--border); padding-top:16px;">🤖 Generated by Prof.Bot · Hermes Agent · <a href="https://jimmiebm822-cmd.github.io/ai-learning/">← Back to AI Learning Hub</a></p>
+  </div>
+</div>
+
+<script>
+// TOC Generation (Claude-style)
+(function(){
+  const main = document.getElementById('main-content');
+  const nav  = document.getElementById('toc-nav');
+  const headings = main.querySelectorAll('h2[id],h3[id]');
+  if(!headings.length) return;
+
+  let num = 0, sub = 0;
+  headings.forEach(h => {
+    if(h.tagName === 'H2') { num++; sub = 0; }
+    else sub++;
+    if(!h.id) h.id = 'sec-' + num + (h.tagName === 'H3' ? '-' + sub : '');
+    const a = document.createElement('a');
+    a.href = '#' + h.id;
+    a.className = h.tagName === 'H3' ? 'toc-h3' : '';
+    a.textContent = (h.tagName === 'H2' ? num + '. ' : '')
+      + h.textContent.trim()
+        .replace(/^\d+\.\d*\s*/, '')
+        .replace(/^\d+\.\s*/, '');
+    nav.appendChild(a);
+  });
+
+  const links = nav.querySelectorAll('a');
+  let clickLock = false, lockTimer = null, activeId = null;
+
+  function computeActive() {
+    let current = null;
+    headings.forEach(h => {
+      if(h.getBoundingClientRect().top <= 80) current = h.id;
+    });
+    return current || headings[0].id;
+  }
+
+  function setActive(id) {
+    if(id === activeId) return;
+    activeId = id;
+    links.forEach(l => l.classList.toggle('active', l.getAttribute('href') === '#' + id));
+  }
+
+  function update() {
+    if(clickLock) return;
+    const id = computeActive();
+    if(id) setActive(id);
+  }
+
+  let raf = null;
+  window.addEventListener('scroll', () => {
+    if(raf) return;
+    raf = requestAnimationFrame(() => { raf = null; update(); });
+  }, {passive:true});
+
+  new IntersectionObserver(() => update(), {rootMargin:'-20px 0px -80% 0px'})
+    .observe(main);
+
+  nav.addEventListener('click', e => {
+    const a = e.target.closest('a');
+    if(!a) return;
+    e.preventDefault();
+    const id = a.getAttribute('href').slice(1);
+    const target = document.getElementById(id);
+    if(!target) return;
+    clickLock = true; clearTimeout(lockTimer);
+    setActive(id);
+    target.scrollIntoView({behavior:'smooth', block:'start'});
+    lockTimer = setTimeout(() => { clickLock = false; update(); }, 300);
+  });
+
+  nav.addEventListener('wheel', e => {
+    const atTop = nav.scrollTop <= 0;
+    const atBottom = nav.scrollTop + nav.clientHeight >= nav.scrollHeight - 1;
+    if((e.deltaY > 0 && atBottom) || (e.deltaY < 0 && atTop)) e.preventDefault();
+  }, {passive:false});
+
+  update();
+})();
+</script>
+
+</body>
+</html>
