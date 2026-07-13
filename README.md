@@ -7,7 +7,7 @@ Daddy's personal AI learning repository — distilled knowledge, patterns, and s
 [ai-learning-path.md](ai-learning-path.md) 是整体学习路径，分 5 个阶段，明确每个阶段的目标、材料、输出形式和当前状态。每日学习内容应优先映射到当前主攻阶段。
 
 - 当前主线：**阶段 2（Agent 架构）→ 阶段 3（Vibe Coding 工程化）**
-- 最大缺口：阶段 3 尚未系统化
+- 最大缺口：4 个 CRITICAL gap — Context Engineering、Tool Design & MCP、Agent Evaluation、Harness Engineering（详见 [Agent Engineer Roadmap](agent-engineer-roadmap-2026-07-12.html)）
 
 ## Contents
 
@@ -22,12 +22,21 @@ Daddy's personal AI learning repository — distilled knowledge, patterns, and s
 - **Learning file**: [vibe-coding/vibe-coding-workflow.md](vibe-coding/vibe-coding-workflow.md)
 - **Key takeaway**: Vibe coding needs a workflow — Vibe Check → Clarify → Decide Mode → Plan → Build → Test → Iterate → Package.
 
+### Agent Engineer Roadmap (July 2026) ⭐ NEW
+- **Learning file**: [agent-engineer-roadmap-2026-07-12.html](agent-engineer-roadmap-2026-07-12.html) (Claude-style, 72KB, self-contained)
+- **Data sources**: Anthropic Engineering/Research · OpenAI · Google AI · arXiv (36 papers) · Simon Willison · Lilian Weng · swyx · GitHub API
+- **Gap diagnosis**: 4 CRITICAL gaps identified — Context Engineering, Tool Design & MCP, Agent Evaluation, Harness Engineering
+- **Flight study pack**: P0 (~5.5h) + P1 (~3.75h) = ~9h of curated reading
+- **Quality**: Adversarial verification 4.5/5, all issues fixed
+- **Key takeaway**: Agent ≠ smarter LLM, but LLM in a loop with tools. Context engineering > prompt engineering. "An optimizer that grades itself learns to game the metric."
+
 ## Structure
 
 ```
 ai-learning/
 ├── README.md
 ├── ai-learning-path.md
+├── agent-engineer-roadmap-2026-07-12.html   ⭐ Agent Engineer 知识体系+gap诊断+飞行学习包
 ├── loop-engineering/
 │   ├── loop-engineering-learning.html
 │   ├── loop-engineering-learning.md
