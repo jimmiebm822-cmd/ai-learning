@@ -30,6 +30,12 @@ Daddy's personal AI learning repository — distilled knowledge, patterns, and s
 - **Quality**: Adversarial verification 4.5/5, all issues fixed
 - **Key takeaway**: Agent ≠ smarter LLM, but LLM in a loop with tools. Context engineering > prompt engineering. "An optimizer that grades itself learns to game the metric."
 
+### Agent Memory System (July 2026) ⭐ NEW
+- **Deployment guide**: [agent-memory-system/agent-memory-system-deployment.md](agent-memory-system/agent-memory-system-deployment.md) + [HTML](agent-memory-system/agent-memory-system-deployment.html)
+- **What**: Obsidian + LLM Wiki long-term memory system for AI agents — "compile once, continuously accumulate"
+- **Architecture**: Three-layer storage (Agent runtime / Knowledge Base / Workspace) + three cron pipeline (22:00 memory index → 12:00 Wiki sync → 23:00 Meta-Verifier)
+- **Key insight**: LLM Wiki Pattern (Karpathy) > RAG for agent memory — pre-compiled knowledge with cross-references, contradiction tracking, and progressive disclosure
+
 ## Structure
 
 ```
@@ -37,6 +43,9 @@ ai-learning/
 ├── README.md
 ├── ai-learning-path.md
 ├── agent-engineer-roadmap-2026-07-12.html   ⭐ Agent Engineer 知识体系+gap诊断+飞行学习包
+├── agent-memory-system/                      ⭐ Obsidian + LLM Wiki 记忆系统部署指南
+│   ├── agent-memory-system-deployment.md
+│   └── agent-memory-system-deployment.html
 ├── loop-engineering/
 │   ├── loop-engineering-learning.html
 │   ├── loop-engineering-learning.md
