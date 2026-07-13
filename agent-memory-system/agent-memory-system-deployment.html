@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agent Memory System: Obsidian + LLM Wiki 部署指南</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧠</text></svg>" type="image/svg+xml">
+<style>
+:root {
+  --bg: #faf9f7; --text: #1a1a1a; --text-secondary: #555;
+  --accent: #d97706; --accent-light: #fef3c7; --border: #e5e0d8;
+  --sidebar-w: 240px; --green: #059669; --red: #dc2626; --blue: #2563eb;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: 'Inter','SF Pro Display',system-ui,-apple-system,sans-serif;
+  background: var(--bg); color: var(--text); line-height: 1.75; font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+}
+.page-container { display:flex; min-height:100vh; }
+#toc-sidebar {
+  position:sticky; top:0; width:var(--sidebar-w); flex-shrink:0;
+  background:#fff; height:100vh; display:flex; flex-direction:column;
+  border-right:1px solid var(--border); padding:0 16px; z-index:100;
+}
+.sidebar-logo { display:flex; align-items:center; gap:10px; padding:18px 4px 14px; border-bottom:1px solid var(--border); flex-shrink:0; }
+.sidebar-logo .logo-icon { font-size:20px; }
+.sidebar-logo .logo-word { font-size:14px; font-weight:700; color:var(--accent); }
+#toc-sidebar nav { flex:1; overflow-y:auto; padding:10px 0; }
+#toc-sidebar nav a {
+  display:block; font-size:13px; line-height:1.5; color:var(--text-secondary);
+  text-decoration:none; padding:4px 8px; border-radius:4px; margin-bottom:1px;
+  transition:all .15s; border-left:3px solid transparent;
+}
+#toc-sidebar nav a:hover { background:var(--accent-light); color:var(--accent); }
+#toc-sidebar nav a.active { background:var(--accent-light); color:var(--accent); font-weight:600; border-left-color:var(--accent); }
+#toc-sidebar nav a.toc-h3 { padding-left:18px; font-size:12px; }
+.sidebar-footer { padding:12px 0; font-size:12px; color:#999; border-top:1px solid var(--border); text-align:center; flex-shrink:0; }
+.sidebar-toggle { display:none; position:fixed; top:12px; left:12px; z-index:101; background:#fff; border:1px solid var(--border); border-radius:6px; padding:6px 12px; font-size:14px; cursor:pointer; }
+#main-content { flex:1; margin:0 auto; padding:60px 48px 80px 48px; max-width:900px; }
+h2 { font-size:26px; font-weight:700; margin:48px 0 20px; padding-top:8px; border-top:1px solid var(--border); scroll-margin-top:20px; }
+h3 { font-size:20px; font-weight:600; margin:32px 0 12px; scroll-margin-top:20px; }
+h4 { font-size:16px; font-weight:600; margin:20px 0 8px; color:var(--text-secondary); }
+blockquote { border-left:3px solid var(--accent); padding:12px 20px; margin:20px 0; background:var(--accent-light); border-radius:0 6px 6px 0; font-style:italic; color:#7c5e10; }
+pre { background:#2d2d2d; color:#e0e0e0; padding:16px 20px; border-radius:8px; overflow-x:auto; font-size:13px; margin:16px 0; }
+pre code { background:none; padding:0; color:inherit; }
+code { background:#f3f0eb; padding:2px 6px; border-radius:3px; font-size:14px; }
+table { width:100%; border-collapse:collapse; margin:20px 0; font-size:14px; }
+th,td { text-align:left; padding:8px 12px; border-bottom:1px solid var(--border); }
+th { font-weight:600; color:var(--text-secondary); font-size:12px; text-transform:uppercase; letter-spacing:0.04em; background:#faf9f7; }
+a { color:var(--accent); text-decoration:none; }
+a:hover { text-decoration:underline; }
+.hero { padding:20px 0 10px; }
+.hero h1 { font-size:36px; font-weight:800; line-height:1.2; margin-bottom:12px; }
+.hero .subtitle { font-size:17px; color:var(--text-secondary); margin-bottom:20px; }
+.hero .meta { font-size:13px; color:#999; }
+.summary-box { background:var(--accent-light); border:1px solid var(--accent); border-radius:8px; padding:20px 24px; margin:24px 0; }
+.summary-box h3 { margin-top:0; color:#7c5e10; }
+@media (max-width:900px) {
+  .page-container { display:block; }
+  #toc-sidebar { display:none; position:fixed; top:0; left:0; z-index:100; width:260px; height:100vh; box-shadow:2px 0 12px rgba(0,0,0,.08); }
+  #toc-sidebar.open { display:flex; }
+  .sidebar-toggle { display:block; }
+  #main-content { padding:60px 24px 80px; }
+}
+</style>
+</head>
+<body>
+<button class="sidebar-toggle" onclick="document.getElementById('toc-sidebar').classList.toggle('open')">☰ 目录</button>
+<div class="page-container">
+  <div id="toc-sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon">🧠</div>
+      <div class="logo-word">Memory System</div>
+    </div>
+    <nav id="toc-nav"></nav>
+    <div class="sidebar-footer"><a href="https://jimmiebm822-cmd.github.io/ai-learning/" style="color:var(--accent);">← Hub</a></div>
+  </div>
+  <div id="main-content">
+    <div class="hero">
+      <h1>Agent Memory System</h1>
+      <div class="subtitle">Obsidian + LLM Wiki 部署指南 — 为 AI Agent 构建"编译一次、持续增值"的长期记忆系统</div>
+      <div class="meta">2026-07-13 · v1.0.0 · 基于实战系统剥离业务信息后对外共享</div>
+    </div>
+    
+    <p>1|# Agent Memory System: Obsidian + LLM Wiki 部署指南</p>
+<p>2|</p>
+<p>3|> <strong>目标</strong>：为 AI Agent 构建一个"编译一次、持续增值"的长期记忆系统。本文档剥离了所有业务信息，只保留可复现的架构和部署步骤。</p>
+<p>4|></p>
+<p>5|> <strong>适用读者</strong>：正在使用 Hermes Agent / Claude Code / 类似 AI Agent 框架，希望给 Agent 装上"跨会话记忆"的开发者。</p>
+<p>6|></p>
+<p>7|> <strong>版本</strong>：v1.0.0 · 2026-07-13</p>
+<p>8|</p>
+<p>9|---</p>
+<p>10|</p>
+<p>11|## 1. 为什么需要这个系统</p>
+<p>12|</p>
+<p>13|LLM Agent 的核心限制：<strong>context window 是有限的</strong>。每次会话开始，Agent 没有上一次的任何记忆。传统解决方案是 RAG — 但 RAG 在每次查询时从原始文档重新发现知识，不累积结构、不标记矛盾、不建交叉引用。</p>
+<p>14|</p>
+<p>15|<strong>LLM Wiki Pattern</strong>（来自 Karpathy）反过来：<strong>编译一次</strong>，编译出的 wiki 持续维护、累积结构、累积交叉引用、累积已标记的矛盾。</p>
+<p>16|</p>
+<p>17|```</p>
+<p>18|raw 源 → [LLM 编译] → interlinked .md wiki → [LLM Q&A / lint] → 持续增值</p>
+<p>19|```</p>
+<p>20|</p>
+<p>21|| 维度 | RAG | LLM Wiki |</p>
+<p>22||------|-----|----------|</p>
+<p>23|| 知识组织 | 查询时重组 | 预先编译，持续累积 |</p>
+<p>24|| 交叉引用 | 查询时发现 | 已内建 <code>[[wikilinks]]</code> |</p>
+<p>25|| 矛盾处理 | 可能重复呈现矛盾 | 已标记，供 review |</p>
+<p>26|| 综合质量 | 每次重新综合 | 反映已 ingest 的全部内容 |</p>
+<p>27|</p>
+<p>28|---</p>
+<p>29|</p>
+<p>30|## 2. 系统架构总览</p>
+<p>31|</p>
+<p>32|### 三层存储架构</p>
+<p>33|</p>
+<p>34|```</p>
+<p>35|┌─────────────────────────────────────────────────┐</p>
+<p>36|│  Layer 1: Agent Runtime (~/.hermes/)            │</p>
+<p>37|│  ├── skills/          ← 可执行知识（Agent 调用）  │</p>
+<p>38|│  ├── cron/             ← 定时自动化              │</p>
+<p>39|│  ├── profiles/         ← 多角色隔离              │</p>
+<p>40|│  └── workspace/        ← 临时产出               │</p>
+<p>41|├─────────────────────────────────────────────────┤</p>
+<p>42|│  Layer 2: Knowledge Base (Desktop/)              │</p>
+<p>43|│  ├── LLM Wiki/         ← 编译后的知识库          │</p>
+<p>44|│  │   ├── SCHEMA.md     ← 结构约定               │</p>
+<p>45|│  │   ├── index.md      ← 内容目录               │</p>
+<p>46|│  │   ├── log.md        ← 操作日志               │</p>
+<p>47|│  │   ├── concepts/      ← 概念页                │</p>
+<p>48|│  │   ├── entities/      ← 实体页                │</p>
+<p>49|│  │   ├── comparisons/   ← 对比页                │</p>
+<p>50|│  │   ├── queries/       ← 查询结果页            │</p>
+<p>51|│  │   └── raw/           ← 不可变原始素材         │</p>
+<p>52|│  └── Obsidian Vault/    ← 每日记忆索引           │</p>
+<p>53|│      └── 每日日志/      ← YYYY-MM-DD.md         │</p>
+<p>54|├─────────────────────────────────────────────────┤</p>
+<p>55|│  Layer 3: Workspace (~/workspace/)              │</p>
+<p>56|│  └── 临时草稿、实验性产出（不持久化）              │</p>
+<p>57|└─────────────────────────────────────────────────┘</p>
+<p>58|```</p>
+<p>59|</p>
+<p>60|<strong>核心原则</strong>：</p>
+<p>61|- L1 是工具箱 — Agent 运行时、skills、cron 配置</p>
+<p>62|- L2 是权威数据源 — 知识库本体，Desktop 上方便人直接查看</p>
+<p>63|- L3 是草稿本 — 临时产出，不作为知识源</p>
+<p>64|</p>
+<p>65|### 记忆管线（3 个 Cron Job）</p>
+<p>66|</p>
+<p>67|```</p>
+<p>68|  22:00                    12:00                    23:00</p>
+<p>69|  ┌──────────┐            ┌──────────────┐        ┌──────────────┐</p>
+<p>70|  │ 记忆索引  │ ────────→  │ Wiki 模块化  │ ────→  │ Meta-Verifier │</p>
+<p>71|  │ Scan 对话 │  每日日志  │ 同步         │ Wiki   │ 跨管线元验证  │</p>
+<p>72|  │ 提取记忆  │  传递      │ 拆解注入     │ 更新   │ 失败模式聚合  │</p>
+<p>73|  └──────────┘            └──────────────┘        └──────────────┘</p>
+<p>74|     Obsidian                  LLM Wiki              信任分更新</p>
+<p>75|    每日日志.md              concepts/*.md          reports/*.json</p>
+<p>76|```</p>
+<p>77|</p>
+<p>78|---</p>
+<p>79|</p>
+<p>80|## 3. LLM Wiki 部署</p>
+<p>81|</p>
+<p>82|### 3.1 目录结构</p>
+<p>83|</p>
+<p>84|```</p>
+<p>85|LLM Wiki/</p>
+<p>86|├── SCHEMA.md           ← 结构约定 + tag taxonomy（Agent 每次会话先读）</p>
+<p>87|├── index.md            ← 内容目录（每页附一行摘要）</p>
+<p>88|├── log.md              ← 操作日志（每个写操作追加一行）</p>
+<p>89|├── _meta/              ← 元数据（lint 报告等）</p>
+<p>90|├── concepts/           ← 概念页（方法论、模式、框架）</p>
+<p>91|├── entities/           ← 实体页（工具、平台、模型）</p>
+<p>92|├── comparisons/        ← 对比页（A vs B 选型）</p>
+<p>93|├── queries/            ← 查询结果页（复杂问题的编译答案）</p>
+<p>94|└── raw/                ← 不可变原始素材</p>
+<p>95|    ├── articles/       ← 文章原文</p>
+<p>96|    ├── papers/         ← 论文原文</p>
+<p>97|    ├── transcripts/    ← 对话/播客 transcript</p>
+<p>98|    └── assets/         ← 图片等</p>
+<p>99|```</p>
+<p>100|</p>
+<p>101|### 3.2 SCHEMA.md — 结构约定</p>
+<p>102|</p>
+<p>103|SCHEMA.md 是整个系统的"宪法"。Agent 在每次会话开始必须先读这个文件。它定义：</p>
+<p>104|</p>
+<p>105|<strong>文件命名规则</strong>：</p>
+<p>106|- 英文、小写、连字符，无空格（如 <code>agent-orchestration.md</code>）</p>
+<p>107|- 中文概念用英文 slug，正文可中文</p>
+<p>108|</p>
+<p>109|<strong>页面长度限制</strong>：</p>
+<p>110|- 每页上限 <strong>60 行</strong>（确保可独立加载、精准路由）</p>
+<p>111|- 超过 60 行 → 按子主题"有机拆解"为子页面（不是机械切割）</p>
+<p>112|- 子页面在父页面的 frontmatter 中用 <code>sub_pages</code> 列出</p>
+<p>113|</p>
+<p>114|<strong>YAML Frontmatter 格式</strong>：</p>
+<p>115|</p>
+<p>116|```yaml</p>
+<p>117|---</p>
+<p>118|title: Page Title</p>
+<p>119|created: YYYY-MM-DD</p>
+<p>120|updated: YYYY-MM-DD</p>
+<p>121|type: entity | concept | comparison | query | summary</p>
+<p>122|tags: [from taxonomy]</p>
+<p>123|sources: [raw/articles/source-name.md]</p>
+<p>124|# 子页面集合的父页面使用：</p>
+<p>125|sub_pages: [sub-slug-1, sub-slug-2]</p>
+<p>126|# 可选质量信号：</p>
+<p>127|confidence: high | medium | low</p>
+<p>128|contested: true</p>
+<p>129|contradictions: [other-page-slug]</p>
+<p>130|---</p>
+<p>131|</p>
+<p>132|# 页面标题</p>
+<p>133|</p>
+<p>134|> 一句话摘要（做什么用的）</p>
+<p>135|</p>
+<p>136|## 正文内容</p>
+<p>137|</p>
+<p>138|每页至少 2 个 [[wikilinks]] 出站链接。</p>
+<p>139|</p>
+<p>140|^[raw/articles/source-file.md]  ← provenance 标记</p>
+<p>141|```</p>
+<p>142|</p>
+<p>143|<strong>raw/ 子目录的 Frontmatter</strong>：</p>
+<p>144|</p>
+<p>145|```yaml</p>
+<p>146|---</p>
+<p>147|source_url: https://example.com/article</p>
+<p>148|ingested: YYYY-MM-DD</p>
+<p>149|sha256: <hex digest of the raw content below the frontmatter></p>
+<p>150|---</p>
+<p>151|```</p>
+<p>152|</p>
+<p>153|<code>sha256</code> 让未来重新 ingest 同一 URL 时检测内容漂移（相同→跳过，不同→标记）。</p>
+<p>154|</p>
+<p>155|### 3.3 Tag Taxonomy（必须先定义再用）</p>
+<p>156|</p>
+<p>157|SCHEMA.md 中定义的 tag 表是<strong>封闭的</strong> — 页面上的每个 tag 必须出现在 taxonomy 表中。新增 tag 先加到 SCHEMA.md 再用。</p>
+<p>158|</p>
+<p>159|建议的分类维度（根据你的领域调整）：</p>
+<p>160|</p>
+<p>161|```</p>
+<p>162|Models:       model, llm, inference, context-engineering</p>
+<p>163|Platforms:    hermes, obsidian, wsl, claude-code, codex</p>
+<p>164|Practices:    vibe-coding, agent-orchestration, debugging, automation, cron</p>
+<p>165|Domain:       (你的业务领域 tag)</p>
+<p>166|```</p>
+<p>167|</p>
+<p>168|### 3.4 核心工作流</p>
+<p>169|</p>
+<p>170|<strong>Ingest（知识摄入）</strong>：</p>
+<p>171|1. 原始素材放入 <code>raw/articles/</code> 或 <code>raw/papers/</code></p>
+<p>172|2. Agent 读 SCHEMA.md → 读 index.md → 读 log.md（最近 30 行）</p>
+<p>173|3. Agent 提炼知识到 wiki 页面，建 <code>[[wikilinks]]</code> 交叉引用</p>
+<p>174|4. 更新 <code>index.md</code> 添加新页面条目</p>
+<p>175|5. 追加 <code>log.md</code> 记录操作</p>
+<p>176|</p>
+<p>177|<strong>Q&A（知识查询）</strong>：</p>
+<p>178|1. Agent 读 SCHEMA.md → 读 index.md 定位相关页面</p>
+<p>179|2. 读具体页面回答问题</p>
+<p>180|3. 有价值的答案"filing"回 wiki（更新已有页面或创建新页面）</p>
+<p>181|</p>
+<p>182|<strong>Lint（健康检查）</strong>：</p>
+<p>183|- 找 orphan 页（无入站链接）</p>
+<p>184|- 找断链（<code>[[wikilink]]</code> 指向不存在的页面）</p>
+<p>185|- 找 frontmatter 缺失的页面</p>
+<p>186|- 找 stale 内容（<code>updated</code> 日期过旧）</p>
+<p>187|- 找矛盾标记（<code>contested: true</code>）</p>
+<p>188|</p>
+<p>189|---</p>
+<p>190|</p>
+<p>191|## 4. Obsidian 每日日志部署</p>
+<p>192|</p>
+<p>193|### 4.1 日志格式</p>
+<p>194|</p>
+<p>195|每日日志文件命名：<code>YYYY-MM-DD.md</code>，存放在 Obsidian Vault 的 <code>每日日志/</code> 目录。</p>
+<p>196|</p>
+<p>197|```yaml</p>
+<p>198|---</p>
+<p>199|created: 2026-07-12</p>
+<p>200|tags: [daily-log, memory-index]</p>
+<p>201|type: daily</p>
+<p>202|---</p>
+<p>203|</p>
+<p>204|# 2026-07-12 记忆索引</p>
+<p>205|</p>
+<p>206|> 本日志仅包含具有长期价值的记忆。事务性内容已过滤。</p>
+<p>207|</p>
+<p>208|## 技术决策</p>
+<p>209|</p>
+<p>210|- <strong>决策标题</strong>：决策内容描述。涉及 [[related-wiki-page]]。</p>
+<p>211|</p>
+<p>212|## 方法论突破</p>
+<p>213|</p>
+<p>214|- <strong>方法论标题</strong>：方法论描述。</p>
+<p>215|</p>
+<p>216|## 知识积累</p>
+<p>217|</p>
+<p>218|- <strong>知识标题</strong>：知识描述。详见 [[related-wiki-page]]。</p>
+<p>219|</p>
+<p>220|---</p>
+<p>221|> 📚 待 wiki-sync 拆解：</p>
+<p>222|> - [[page-name]] → 拆解方向说明</p>
+<p>223|```</p>
+<p>224|</p>
+<p>225|### 4.2 内容过滤规则</p>
+<p>226|</p>
+<p>227|<strong>❌ 直接丢弃的内容</strong>：</p>
+<p>228|- Cron 运行元数据（跑了多少次、有无新邮件、运行时间）</p>
+<p>229|- 日常事务性操作（启动了某个服务、打开了某个 session）</p>
+<p>230|- 邮件摘要内容（属于邮件系统，不属于长期记忆）</p>
+<p>231|- 纯执行性操作没有长期价值的</p>
+<p>232|</p>
+<p>233|<strong>✅ 需要捕捉的内容</strong>：</p>
+<p>234|</p>
+<p>235|| 类别 | 判断标准 | 示例 |</p>
+<p>236||------|---------|------|</p>
+<p>237|| <strong>技术决策</strong> | 涉及架构选择、方向判断、trade-off 分析 | "决定用模块化分解而非单体架构" |</p>
+<p>238|| <strong>方法论突破</strong> | 新发现的方法、模式、改进 | "三路并行搜索+综合产出工作流" |</p>
+<p>239|| <strong>系统异常</strong> | 涉及系统性问题（非偶发） | "跨 profile 协作发现隔离问题" |</p>
+<p>240|| <strong>知识积累</strong> | 新学到的、可复用的知识 | "Context Engineering 是 prompt eng 的范式迁移" |</p>
+<p>241|</p>
+<p>242|### 4.3 设计原则</p>
+<p>243|</p>
+<p>244|1. <strong>不是流水账</strong> — 目标是产出简洁但有深度的记忆索引，供明天的 wiki-sync 拆解和路由</p>
+<p>245|2. <strong>每条必须可路由</strong> — 每条记忆要能对应到一个 wiki 页面（已有或待创建）</p>
+<p>246|3. <strong>底部待拆解区</strong> — 日志末尾标注"待 wiki-sync 拆解"的清单，指导下一步同步</p>
+<p>247|</p>
+<p>248|---</p>
+<p>249|</p>
+<p>250|## 5. 记忆管线部署（3 个 Cron Job）</p>
+<p>251|</p>
+<p>252|### 5.1 Cron 1: 记忆索引（每日 22:00）</p>
+<p>253|</p>
+<p>254|<strong>目标</strong>：扫描今天的对话，提取具有长期价值的内容，写入 Obsidian 每日日志。</p>
+<p>255|</p>
+<p>256|<strong>Cron 配置</strong>：</p>
+<p>257|```json</p>
+<p>258|{</p>
+<p>259|  "id": "memory-index-cron",</p>
+<p>260|  "name": "Obsidian 记忆索引",</p>
+<p>261|  "schedule": { "kind": "cron", "expr": "0 22 * * *" },</p>
+<p>262|  "skills": ["obsidian"],</p>
+<p>263|  "enabled_toolsets": ["terminal", "file", "session_search"]</p>
+<p>264|}</p>
+<p>265|```</p>
+<p>266|</p>
+<p>267|<strong>Agent Prompt 核心</strong>：</p>
+<p>268|```</p>
+<p>269|你是长期记忆 curator。扫描今天的对话，提取具有长期价值的内容，写入 Obsidian 每日日志。</p>
+<p>270|这不是流水账。目标是产出简洁但有深度的记忆索引，供明天的 wiki-sync 管线逐条拆解和路由。</p>
+<p>271|</p>
+<p>272|## 内容过滤规则</p>
+<p>273|</p>
+<p>274|### ❌ 直接丢弃：</p>
+<p>275|- cron 运行元数据</p>
+<p>276|- 纯事务性操作</p>
+<p>277|- 邮件摘要内容</p>
+<p>278|</p>
+<p>279|### ✅ 需要捕捉：</p>
+<p>280|| 类别 | 判断标准 |</p>
+<p>281||------|---------|</p>
+<p>282|| 技术决策 | 涉及架构选择、方向判断、trade-off |</p>
+<p>283|| 方法论突破 | 新发现的方法、模式、改进 |</p>
+<p>284|| 系统异常 | 涉及系统性问题（非偶发） |</p>
+<p>285|| 知识积累 | 新学到的、可复用的知识 |</p>
+<p>286|</p>
+<p>287|## 输出格式</p>
+<p>288|写入 /path/to/Obsidian Vault/每日日志/{今天日期}.md</p>
+<p>289|按 4 个分区组织：技术决策 / 方法论突破 / 系统异常 / 知识积累</p>
+<p>290|末尾加"待 wiki-sync 拆解"清单。</p>
+<p>291|```</p>
+<p>292|</p>
+<p>293|### 5.2 Cron 2: Wiki 模块化同步（每日 12:00）</p>
+<p>294|</p>
+<p>295|<strong>目标</strong>：读昨天的每日日志，逐条拆解，增量注入 Wiki 已有页面（不创建"日记"页）。</p>
+<p>296|</p>
+<p>297|<strong>Cron 配置</strong>：</p>
+<p>298|```json</p>
+<p>299|{</p>
+<p>300|  "id": "wiki-sync-cron",</p>
+<p>301|  "name": "Obsidian→Wiki 模块化同步",</p>
+<p>302|  "schedule": { "kind": "cron", "expr": "0 12 * * *" },</p>
+<p>303|  "skills": ["obsidian-wiki-sync", "obsidian", "llm-wiki"]</p>
+<p>304|}</p>
+<p>305|```</p>
+<p>306|</p>
+<p>307|<strong>Agent Prompt 核心</strong>：</p>
+<p>308|```</p>
+<p>309|执行 Obsidian 记忆索引 → LLM Wiki 模块化同步。</p>
+<p>310|</p>
+<p>311|## 核心原则</p>
+<p>312|<strong>不创建"日记"页。不整篇搬运。</strong> 把昨天的记忆索引逐条拆解，增量注入 Wiki 已有页面。</p>
+<p>313|</p>
+<p>314|## Step 1: 定位源文件</p>
+<p>315|读 /path/to/Obsidian Vault/每日日志/{昨天日期}.md</p>
+<p>316|</p>
+<p>317|## Step 2: 读取 Wiki 现状</p>
+<p>318|读以下文件作为路由上下文：</p>
+<p>319|- /path/to/LLM Wiki/index.md — 已有页面目录</p>
+<p>320|- /path/to/LLM Wiki/SCHEMA.md — 约定和规则</p>
+<p>321|- /path/to/LLM Wiki/log.md（最近 30 行）— 近期活动</p>
+<p>322|</p>
+<p>323|## Step 3: 模块化拆解</p>
+<p>324|逐条读取记忆索引中的每个项目。</p>
+<p>325|</p>
+<p>326|对每条内容执行判断：</p>
+<p>327|| 内容特征 | 动作 |</p>
+<p>328||---------|------|</p>
+<p>329|| 涉及已有 concept 页的主题 | 搜索 index.md 匹配页面 → 增量更新 |</p>
+<p>330|| 涉及已有 entity 页的主题 | 同上 → 增量更新 |</p>
+<p>331|| 全新概念且符合创建阈值 | 按 SCHEMA.md 规范创建新页面 |</p>
+<p>332|| 纯事务性/过时信息 | 跳过 |</p>
+<p>333|</p>
+<p>334|## Step 4: 更新索引和日志</p>
+<p>335|- 更新 index.md 添加新页面条目</p>
+<p>336|- 追加 log.md 记录所有操作</p>
+<p>337|- 每个更新过的页面更新 updated 日期</p>
+<p>338|```</p>
+<p>339|</p>
+<p>340|### 5.3 Cron 3: Meta-Verifier（每日 23:00）</p>
+<p>341|</p>
+<p>342|<strong>目标</strong>：跨管线的元验证 — 聚合失败模式、趋势分析、信任分更新。</p>
+<p>343|</p>
+<p>344|<strong>Cron 配置</strong>：</p>
+<p>345|```json</p>
+<p>346|{</p>
+<p>347|  "id": "meta-verifier-cron",</p>
+<p>348|  "name": "Meta-Verifier (每日 23:00)",</p>
+<p>349|  "schedule": { "kind": "cron", "expr": "0 23 * * *" },</p>
+<p>350|  "skills": ["meta-verifier"],</p>
+<p>351|  "enabled_toolsets": ["terminal", "file", "skills"]</p>
+<p>352|}</p>
+<p>353|```</p>
+<p>354|</p>
+<p>355|<strong>Agent Prompt 核心</strong>：</p>
+<p>356|```</p>
+<p>357|你是 Meta-Verifier — 跨管线的元验证 agent。</p>
+<p>358|</p>
+<p>359|## Step 1: 收集验证报告</p>
+<p>360|从 reports/ 目录读取所有 verification_report_*.json。筛选最近 7 天。</p>
+<p>361|</p>
+<p>362|## Step 2: 失败模式聚合</p>
+<p>363|按四个维度聚合：failure_category / check / data_source_ref / pipeline</p>
+<p>364|</p>
+<p>365|## Step 3: 趋势分析</p>
+<p>366|对比 7 日均值 vs 前 7 日均值，判断趋势：improving / stable / worsening</p>
+<p>367|</p>
+<p>368|## Step 4: 跨管线关联</p>
+<p>369|检查不同管线的 issues 是否共享 data_source_ref</p>
+<p>370|</p>
+<p>371|## Step 5: 新失败模式发现</p>
+<p>372|对比已知 failure_patterns.json，发现新出现的 check+failure_category 组合</p>
+<p>373|</p>
+<p>374|## Step 6: 信任分更新</p>
+<p>375|读 trust_scores.json，按规则更新每个 verifier_id 的信任分</p>
+<p>376|</p>
+<p>377|## Step 7: 生成 insight</p>
+<p>378|输出 top 3 anomalies（按 severity 排序）</p>
+<p>379|```</p>
+<p>380|</p>
+<p>381|---</p>
+<p>382|</p>
+<p>383|## 6. 关键设计原则</p>
+<p>384|</p>
+<p>385|### 6.1 编译一次，持续增值</p>
+<p>386|传统 RAG 在每次查询时从原始文档重新发现知识。LLM Wiki Pattern 反过来：编译一次，持续维护。优势在于交叉引用和矛盾标记是累积的。</p>
+<p>387|</p>
+<p>388|### 6.2 模块化分解（不整篇搬运）</p>
+<p>389|每日日志的每条记忆，按主题拆解到对应的 wiki 页面。<strong>不创建"日记"页，不整篇搬运</strong>。这确保每个 wiki 页面聚焦一个主题，可独立加载。</p>
+<p>390|</p>
+<p>391|### 6.3 增量注入（更新已有页面）</p>
+<p>392|新知识优先注入已有页面（增量更新 <code>updated</code> 日期），只在"全新概念且符合创建阈值"时才创建新页面。这防止 wiki 膨胀。</p>
+<p>393|</p>
+<p>394|### 6.4 Progressive Disclosure（渐进式加载）</p>
+<p>395|- Agent 会话开始：只加载 SCHEMA.md + index.md（几十行）</p>
+<p>396|- 定位到相关页面后：加载具体页面（≤60 行）</p>
+<p>397|- 需要原始素材时：从 raw/ 按需加载</p>
+<p>398|- 这与 Anthropic 的 Context Engineering 原则完全一致</p>
+<p>399|</p>
+<p>400|### 6.5 Provenance Tracking</p>
+<p>401|每个 wiki 页面在 frontmatter 中标注 <code>sources</code>，页面末尾用 <code>^[raw/articles/source.md]</code> 标注来源。raw/ 中的文件计算 <code>sha256</code>，让未来重新 ingest 时检测内容漂移。</p>
+<p>402|</p>
+<p>403|### 6.6 闭环验证</p>
+<p>404|22:00 记忆索引 → 12:00 Wiki 同步 → 23:00 Meta-Verifier。三个 cron 形成闭环：产出 → 消化 → 验证。Meta-Verifier 确保管线质量持续提升。</p>
+<p>405|</p>
+<p>406|---</p>
+<p>407|</p>
+<p>408|## 7. 部署步骤</p>
+<p>409|</p>
+<p>410|### Step 1: 创建 LLM Wiki 目录结构</p>
+<p>411|```bash</p>
+<p>412|mkdir -p ~/Desktop/"LLM Wiki"/{concepts,entities,comparisons,queries,raw/{articles,papers,transcripts,assets},_meta}</p>
+<p>413|```</p>
+<p>414|</p>
+<p>415|### Step 2: 编写 SCHEMA.md</p>
+<p>416|参考第 3.2 节的模板。关键：定义你的 tag taxonomy、页面长度限制（建议 60 行）、frontmatter 格式。</p>
+<p>417|</p>
+<p>418|### Step 3: 初始化 index.md 和 log.md</p>
+<p>419|```bash</p>
+<p>420|echo "# Wiki Index\n\n> 内容目录。Last updated: $(date +%Y-%m-%d)\n" > ~/Desktop/"LLM Wiki"/index.md</p>
+<p>421|echo "# Wiki Log\n\n> 操作日志。\n" > ~/Desktop/"LLM Wiki"/log.md</p>
+<p>422|```</p>
+<p>423|</p>
+<p>424|### Step 4: 创建 Obsidian 每日日志目录</p>
+<p>425|```bash</p>
+<p>426|mkdir -p ~/Desktop/"Obsidian Vault"/每日日志/</p>
+<p>427|```</p>
+<p>428|</p>
+<p>429|### Step 5: 用 Obsidian 打开 LLM Wiki 作为独立 Vault</p>
+<p>430|- 打开 Obsidian → Open folder as vault → 选择 <code>LLM Wiki/</code></p>
+<p>431|- 这让你能在 Obsidian 中可视化 wiki 的 wikilinks 和 graph view</p>
+<p>432|</p>
+<p>433|### Step 6: 部署 3 个 Cron Job</p>
+<p>434|参考第 5 节的配置。关键是：</p>
+<p>435|- <strong>22:00 记忆索引</strong>：需要 <code>session_search</code> 工具来扫描当天对话</p>
+<p>436|- <strong>12:00 Wiki 同步</strong>：需要 <code>obsidian-wiki-sync</code> skill（或等效的同步逻辑）</p>
+<p>437|- <strong>23:00 Meta-Verifier</strong>：可选但推荐 — 确保管线质量</p>
+<p>438|</p>
+<p>439|### Step 7: 验证管线</p>
+<p>440|1. 手动触发 22:00 cron → 检查每日日志是否生成</p>
+<p>441|2. 手动触发 12:00 cron → 检查 Wiki 页面是否更新</p>
+<p>442|3. 检查 index.md 和 log.md 是否正确更新</p>
+<p>443|</p>
+<p>444|---</p>
+<p>445|</p>
+<p>446|## 8. Pitfalls（踩坑记录）</p>
+<p>447|</p>
+<p>448|1. <strong>不要创建"日记"页</strong> — 每日日志是 Obsidian 侧的临时索引，不是 Wiki 页面。Wiki 同步时必须拆解到已有主题页面。</p>
+<p>449|2. <strong>60 行限制是硬性的</strong> — 超过就拆子页面。这确保 progressive disclosure 有效。</p>
+<p>450|3. <strong>Tag taxonomy 是封闭的</strong> — 新 tag 先加到 SCHEMA.md 再用。否则 tag 会失控。</p>
+<p>451|4. <strong>raw/ 是只读的</strong> — Agent 只读不写 raw/。原始素材不可变。</p>
+<p>452|5. <strong>每日日志不是流水账</strong> — 严格过滤事务性内容。只保留有长期价值的记忆。</p>
+<p>453|6. <strong>Meta-Verifier 不是可选的</strong> — 没有它，管线会悄悄退化（失败模式累积而不被发现）。</p>
+<p>454|7. <strong>路径用 Desktop 而非 ~/</strong> — 知识库放在 Desktop 确保人也能直接查看，不只是 Agent 的黑盒。</p>
+<p>455|8. <strong>Obsidian 作为 Wiki 的 IDE</strong> — 用 Obsidian 打开 LLM Wiki 目录，利用 graph view 可视化交叉引用。</p>
+<p>456|</p>
+<p>457|---</p>
+<p>458|</p>
+<p>459|## 9. 与 Anthropic Context Engineering 的对应</p>
+<p>460|</p>
+<p>461|这个系统的设计原则与 Anthropic 2025-09 提出的 Context Engineering 高度一致：</p>
+<p>462|</p>
+<p>463|| Anthropic 原则 | 本系统实现 |</p>
+<p>464||---------------|-----------|</p>
+<p>465|| Just-in-time context | Agent 只加载 SCHEMA + index，按需加载具体页面 |</p>
+<p>466|| Context as finite resource | 60 行限制 + 模块化拆解 = 精准 token 控制 |</p>
+<p>467|| Progressive disclosure | 三级加载：metadata → SKILL.md → bundled files |</p>
+<p>468|| Mirrors human cognition | 人用文件系统/收件箱/书签；Agent 用 Wiki/Obsidian/cron |</p>
+<p>469|</p>
+<p>470|---</p>
+<p>471|</p>
+<p>472|*"Creating a workflow helps combat agent failure modes by orchestrating separate subagents with their own context windows and focused, isolated goals." — Anthropic*</p>
+<p>473|</p>
+<p>474|*"The essence of search is compression." — Anthropic Multi-Agent Research System*</p>
+<p>475|</p>
+<p>476|*"An optimizer that grades itself learns to game the metric." — Google Agent Quality Flywheel*</p>
+<p>477|</p>
+    
+    <p style="color:#999; margin-top:32px; border-top:1px solid var(--border); padding-top:16px;">🧠 Generated by Prof.Bot · Hermes Agent · <a href="https://jimmiebm822-cmd.github.io/ai-learning/">← Back to AI Learning Hub</a></p>
+  </div>
+</div>
+<script>
+(function(){
+  const main = document.getElementById('main-content');
+  const nav = document.getElementById('toc-nav');
+  const headings = main.querySelectorAll('h2[id],h3[id]');
+  if(!headings.length) return;
+  let num = 0, sub = 0;
+  headings.forEach(h => {
+    if(h.tagName === 'H2') { num++; sub = 0; }
+    else sub++;
+    if(!h.id) h.id = 'sec-' + num + (h.tagName === 'H3' ? '-' + sub : '');
+    const a = document.createElement('a');
+    a.href = '#' + h.id;
+    a.className = h.tagName === 'H3' ? 'toc-h3' : '';
+    a.textContent = (h.tagName === 'H2' ? num + '. ' : '') + h.textContent.trim().replace(/^\d+\.\d*\s*/, '').replace(/^\d+\.\s*/, '');
+    nav.appendChild(a);
+  });
+  const links = nav.querySelectorAll('a');
+  let activeId = null, clickLock = false, lockTimer = null;
+  function computeActive() { let c = null; headings.forEach(h => { if(h.getBoundingClientRect().top <= 80) c = h.id; }); return c || headings[0].id; }
+  function setActive(id) { if(id === activeId) return; activeId = id; links.forEach(l => l.classList.toggle('active', l.getAttribute('href') === '#' + id)); }
+  function update() { if(clickLock) return; const id = computeActive(); if(id) setActive(id); }
+  let raf = null;
+  window.addEventListener('scroll', () => { if(raf) return; raf = requestAnimationFrame(() => { raf = null; update(); }); }, {passive:true});
+  new IntersectionObserver(() => update(), {rootMargin:'-20px 0px -80% 0px'}).observe(main);
+  nav.addEventListener('click', e => {
+    const a = e.target.closest('a'); if(!a) return; e.preventDefault();
+    const id = a.getAttribute('href').slice(1); const target = document.getElementById(id); if(!target) return;
+    clickLock = true; clearTimeout(lockTimer); setActive(id);
+    target.scrollIntoView({behavior:'smooth', block:'start'});
+    lockTimer = setTimeout(() => { clickLock = false; update(); }, 300);
+  });
+  nav.addEventListener('wheel', e => {
+    const atTop = nav.scrollTop <= 0; const atBottom = nav.scrollTop + nav.clientHeight >= nav.scrollHeight - 1;
+    if((e.deltaY > 0 && atBottom) || (e.deltaY < 0 && atTop)) e.preventDefault();
+  }, {passive:false});
+  update();
+})();
+</script>
+</body>
+</html>
